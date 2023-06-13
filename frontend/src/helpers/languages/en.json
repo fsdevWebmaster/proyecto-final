@@ -1,0 +1,12 @@
+{
+    "meta": {
+        "title": "Master Project - Fullstack",
+        "description": "Web application - Container Flow Controller "
+    },
+    "app": {
+        "title": "Welcome"
+    },
+    "loader": {
+        "text": "loading..."
+    }
+}
