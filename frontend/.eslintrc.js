@@ -1,4 +1,4 @@
-{
+module.exports = {
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
     "ecmaFeatures": {
@@ -6,8 +6,9 @@
       "useJSXTextNode": true
     },
     "ecmaVersion": 2018,
+    "project": "tsconfig.json",
+    "tsconfigRootDir": __dirname,
     "sourceType": "module",
-    "project": "./tsconfig.json"
   },
   "extends": [
     "airbnb-typescript",
