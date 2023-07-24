@@ -1,7 +1,10 @@
-require('dotenv').config({ path: '.env' }); // Cargar las variables de entorno de .env
+// require('dotenv').config({ path: '.env' }); // Cargar las variables de entorno de .env
+import dotenv from 'dotenv';
+dotenv.config();
 
 // config.js
-const  mongoose  = require('mongoose');
+import mongoose from 'mongoose';
+// const  mongoose  = require('mongoose');
 
 //Para trabajo local 
 const localMongoURI = process.env.LOCAL_MONGO_URI; // Obtener la URL de conexión para desarrollo local desde las variables de entorno
@@ -9,7 +12,7 @@ const localMongoURI = process.env.LOCAL_MONGO_URI; // Obtener la URL de conexió
 const prodMongoURI = process.env.PROD_MONGO_URI; // Obtener la URL de conexión para producción desde las variables de entorno
 
 
-const connectDB = async () => {
+export const connectDB = async () => {
   try {
     let mongoURI = localMongoURI; // Configuración inicial para desarrollo local
 
@@ -20,9 +23,7 @@ const connectDB = async () => {
 
     await mongoose.connect(mongoURI, {
       useNewUrlParser: true,
-      useUnifiedTopology: true,
-      useCreateIndex: true,
-      useFindAndModify: false,
+      useUnifiedTopology: true
     });
     console.log('Conexión exitosa a MongoDB');
   } catch (error) {
@@ -31,6 +32,6 @@ const connectDB = async () => {
   }
 };
 
-module.exports = connectDB;
+// module.exports = connectDB;
 
-module.exports = config;
+// module.exports = config;
