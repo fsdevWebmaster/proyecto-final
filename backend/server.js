@@ -1,8 +1,10 @@
 import express from 'express';
 import dotenv from 'dotenv';
+dotenv.config();
 import cors from 'cors';
 import routes from './routes/app.routes.js';
-dotenv.config();
+import { connectDB } from './database/config.js';
+
 const app = express();
 
 // cors - json
@@ -14,7 +16,10 @@ app.use(express.json());
 // routes
 app.use('/api', routes);
 
-
-app.listen(process.env.PORT, () => {
-  console.log(`Api server listening at :${process.env.PORT}`);
-}); 
+connectDB().then((result) => {
+  app.listen(process.env.PORT, () => {
+    console.log(`Api server listening at :${process.env.PORT}`);
+  }); 
+}).catch((err) => {
+  console.log('Error handling:', err);
+});
