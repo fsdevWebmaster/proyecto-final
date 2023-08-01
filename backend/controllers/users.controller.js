@@ -2,6 +2,7 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import User from '../models/user.model.js';
 
+
 export const register = (req, res) => {
   let { body } = req;
   bcrypt.hash(body.password, 10, (error, hash) => {
@@ -19,6 +20,8 @@ export const register = (req, res) => {
           msg: "Wrong or missing data."
         });
       });
+    
+    res.status(201).json({ added: true, regData });
   });
 }
 
@@ -66,5 +69,9 @@ export const login = (req, res) => {
         msg: "Error getting user."
       });
     });
+  res.json({ 
+    msg: 'Pending find user by email. authenticate and generate jwt.',
+    body 
+  });
 }
 
