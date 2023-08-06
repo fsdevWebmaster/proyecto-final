@@ -1,20 +1,23 @@
 // Container.js
 
-const mongoose = require('mongoose');
+//const mongoose = require('mongoose');
+import mongoose from 'mongoose';
+
 
 const containerSchema = new mongoose.Schema({
-  numeroContenedor: {
+  containerNumber: {
     type: String,
     required: true,
     unique: true,
   },
-  estatus: {
+  status: {
     type: String,
-    enum: ['En transito', 'En carga', 'En descarga', 'Devuelto'],
-    default: 'En transito',
+    enum: ['In transit', 'In charge', 'In discharge', 'Returned'],
+    default: 'In transit',
   },
 });
 
 const Container = mongoose.model('Container', containerSchema);
 
-module.exports = Container;
+//module.exports = Container;
+export default Container;
