@@ -75,3 +75,19 @@ export const login = (req, res) => {
   });
 }
 
+export const profile = (req, res) => {
+  const { userId } = req.body;
+
+  if (!userId) {
+    return res.status(400).json({ error: 'Missing user id' })
+  }
+
+  User.findById(userId)
+    .then((result) => {
+      return res.json({ profile: result })
+    }).catch((err) => {
+      console.log("Error getting user profile", err)
+      return res.status(404).json({ error: 'User not found' })
+    });
+}
+
