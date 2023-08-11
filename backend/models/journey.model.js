@@ -4,6 +4,7 @@ import mongoose from 'mongoose';
 const extendSchema = require('mongoose-extend-schema');
 
 //Revisar la importacion de extendSchema y la funcionalidad. heredar los atributos de los otros modelos 
+//g3puMlDnyjMonOTo
 const journeySchema = extendSchema(containerSchema, {
 
     journeyId: {
