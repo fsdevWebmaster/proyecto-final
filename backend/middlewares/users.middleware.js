@@ -1,3 +1,4 @@
+import jwt from "jsonwebtoken"
 
 export const userAuth = (req, res, next) => {
   if (req.headers.authorization) {
@@ -7,9 +8,16 @@ export const userAuth = (req, res, next) => {
         error: 'Missing or invalid token.'
       })
     }
-    else {
-      next();
-    }
+
+    jwt.verify(token, process.env.LOGIN_SECRET, (error, result) => {
+      if (error) {
+        return res.status(401).json({ error: "Missing or invalid token" })
+      }
+
+      if (result) {
+        next()
+      }
+    })
   }
   else {
     return res.status(400).json({
