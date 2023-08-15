@@ -1,8 +1,5 @@
 // Container.js
-
-//const mongoose = require('mongoose');
 import mongoose from 'mongoose';
-
 
 const containerSchema = new mongoose.Schema({
   containerNumber: {
@@ -14,5 +11,4 @@ const containerSchema = new mongoose.Schema({
 
 const Container = mongoose.model('Container', containerSchema);
 
-//module.exports = Container;
 export default Container;

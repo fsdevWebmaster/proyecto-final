@@ -1,7 +1,6 @@
 // Journey.js
 
 import mongoose from 'mongoose';
-
 const journeySchema = new mongoose.Schema({
 
     entryDate:{
