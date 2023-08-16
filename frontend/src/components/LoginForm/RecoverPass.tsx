@@ -24,7 +24,6 @@ import {useRefMounted} from '@hooks';
 import CloseIcon from '@mui/icons-material/Close';
 
 import { useTranslation } from 'react-i18next';
-// import Logo from 'src/components/LogoSign';
 import CheckTwoToneIcon from '@mui/icons-material/CheckTwoTone';
 
 const Transition = forwardRef(function Transition(
@@ -184,7 +183,7 @@ const RecoverPass = () => {
                     sx={{
                       mt: 3
                     }}
-                    color="primary"
+                    style={{ backgroundColor: '#3E3E3E' }}
                     disabled={Boolean(touched.email && errors.email)}
                     onClick={handleOpenDialog}
                     type="submit"
@@ -207,7 +206,7 @@ const RecoverPass = () => {
             >
               {t('Want to try to sign in again?')}
             </Typography>{' '}
-            <Link component={RouterLink} to="/account/login-basic">
+            <Link component={RouterLink} to="/login">
               <b>Click here</b>
             </Link>
           </Box>
