@@ -2,11 +2,6 @@ import dotenv from 'dotenv';
 dotenv.config();
 import mongoose from 'mongoose';
 
-// require('dotenv').config({ path: '.env' }); // Cargar las variables de entorno de .env
-
-// config.js
-// const  mongoose  = require('mongoose');
-
 //Para trabajo local 
 const localMongoURI = process.env.LOCAL_MONGO_URI; // Obtener la URL de conexión para desarrollo local desde las variables de entorno
 //Para trabajo en Prod

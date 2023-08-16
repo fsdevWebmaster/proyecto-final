@@ -1,6 +1,7 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import User from '../models/user.model.js';
+import Role from '../models/role.model.js';
 import Driver from '../models/driver.model.js';
 
 export const register = (req, res) => {
@@ -11,17 +12,17 @@ export const register = (req, res) => {
     const regUser = new User(regData);
     regUser.save()
       .then((result) => {
-        res.status(201).json({
+        return res.status(201).json({
           created: result
         })
       }).catch((err) => {
         console.log("Error saving new user:", err);
-        res.status(400).json({
+        return res.status(400).json({
           msg: "Wrong or missing data."
         });
       });
     
-    res.status(201).json({ added: true, regData });
+    return res.status(201).json({ added: true, regData });
   });
 }
 
@@ -69,26 +70,42 @@ export const login = (req, res) => {
         msg: "Error getting user."
       });
     });
-  res.json({ 
-    msg: 'Pending find user by email. authenticate and generate jwt.',
-    body 
-  });
 }
 
-export const profile = (req, res) => {
-  const { userId } = req.body;
-
+export const getProfile = (req, res) => {
+  const { userId } = req.query
   if (!userId) {
-    return res.status(400).json({ error: 'Missing user id' })
+    return res.status(404).json({ error: 'Missing user id.' })
   }
 
   User.findById(userId)
+    .populate("roles")
     .then((result) => {
-      return res.json({ profile: result })
+      return res.json(result)
     }).catch((err) => {
       console.log("Error getting user profile", err)
       return res.status(404).json({ error: 'User not found' })
-    });
+    });  
+}
+
+export const updateProfile = (req, res) => {
+  const updData = { ...req.body }
+  delete updData.password
+  
+  if (!updData.userId) {
+    return res.status(400).json({ error: 'Wrong or missing userId.' })
+  }
+
+  if (Object.keys(updData).length <= 1) {
+    return res.status(400).json({ error: 'Nothing to update.' })
+  }
+
+  User.findByIdAndUpdate(updData.userId, updData, { returnOriginal: false })
+  .then((result) => {
+    return res.json(result)
+  }).catch((err) => {
+    return res.status(404).json({ error: 'User not found' })
+  });
 }
 
 export const newDriver = (req, res) => {

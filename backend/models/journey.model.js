@@ -1,8 +1,7 @@
 // Journey.js
 
 import mongoose from 'mongoose';
-//Revisar la importacion de extendSchema y la funcionalidad. heredar los atributos de los otros modelos 
-//g3puMlDnyjMonOTo
+
 const journeySchema = new mongoose.Schema({
 
     entryDate:{
