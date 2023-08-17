@@ -13,7 +13,6 @@ export const userAuth = (req, res, next) => {
       if (error) {
         return res.status(401).json({ error: "Missing or invalid token" })
       }
-
       if (result) {
         next()
       }

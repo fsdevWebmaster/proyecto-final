@@ -2,7 +2,8 @@ import express from "express";
 import { 
   register, 
   login, 
-  profile, 
+  getProfile,
+  updateProfile,
   newDriver, 
   getDriver, 
   searchDriver,
