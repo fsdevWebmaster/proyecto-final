@@ -4,38 +4,28 @@ import { Formik } from 'formik';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 
 import {
-  Box,
   Button,
-  FormHelperText,
   TextField,
-  Checkbox,
-  Typography,
-  Link,
-  FormControlLabel,
   CircularProgress
 } from '@mui/material';
-// import useAuth from 'src/hooks/useAuth';
 import {useRefMounted} from '@hooks';
 import { useTranslation } from 'react-i18next';
 
 export const LoginForm: FC = () => {
-  // const { login } = useAuth() as any;
-  // TO-DO
+
   const isMountedRef = useRefMounted();
   const { t }: { t: any } = useTranslation();
   const navigate = useNavigate();
 
   const initValues = {
-    email: 'admin@example.com',
-    password: 'Admin',
-    terms: true,
+    email: '',
+    password: '',
     submit: null
   };
 
   const handleSubmit = async (values: any,
     { setErrors, setStatus, setSubmitting }: any): Promise<void> => {
         try {
-            // await login(values.email, values.password);
             navigate('/dashboard')
             if (isMountedRef.current) {
               setStatus({ success: true });
@@ -61,11 +51,7 @@ export const LoginForm: FC = () => {
           .required(t('The email field is required')),
         password: Yup.string()
           .max(255)
-          .required(t('The password field is required')),
-        terms: Yup.boolean().oneOf(
-          [true],
-          t('You must agree to our terms and conditions')
-        )
+          .required(t('The password field is required'))
       })}
       onSubmit={handleSubmit}
     >
@@ -82,6 +68,7 @@ export const LoginForm: FC = () => {
           <TextField
             error={Boolean(touched.email && errors.email)}
             fullWidth
+            required
             margin="normal"
             autoFocus
             helperText={touched.email && errors.email}
@@ -96,6 +83,7 @@ export const LoginForm: FC = () => {
           <TextField
             error={Boolean(touched.password && errors.password)}
             fullWidth
+            required
             margin="normal"
             helperText={touched.password && errors.password}
             label={t('Password')}
@@ -106,57 +94,36 @@ export const LoginForm: FC = () => {
             value={values.password}
             variant="outlined"
           />
-          <Box
-            alignItems="center"
-            display={{ xs: 'block', md: 'flex' }}
-            justifyContent="space-between"
-          >
-            <Box display={{ xs: 'block', md: 'flex' }}>
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={values.terms}
-                    name="terms"
-                    color="primary"
-                    onChange={handleChange}
-                  />
-                }
-                label={
-                  <>
-                    <Typography variant="body2">
-                      {t('I accept the')}{' '}
-                      <Link component="a" href="#">
-                        {t('terms and conditions')}
-                      </Link>
-                      .
-                    </Typography>
-                  </>
-                }
-              />
-            </Box>
-            <Link component={RouterLink} to="/recover-password">
-              <b>{t('Lost password?')}</b>
-            </Link>
-          </Box>
+            <Button
+              sx={{
+                mt: 1.5
+              }}
+              style={{ backgroundColor: '#3E3E3E' }}
+              startIcon={isSubmitting ? <CircularProgress size="1rem" /> : null}
+              disabled={isSubmitting}
+              type="submit"
+              size="medium"
+              variant="contained"
+            >
+              {t('Sign in')}
+            </Button>
 
-          {Boolean(touched.terms && errors.terms) && (
-            <FormHelperText error>{errors.terms}</FormHelperText>
-          )}
-
-          <Button
-            sx={{
-              mt: 3
-            }}
-            color="primary"
-            startIcon={isSubmitting ? <CircularProgress size="1rem" /> : null}
-            disabled={isSubmitting}
-            type="submit"
-            fullWidth
-            size="large"
-            variant="contained"
-          >
-            {t('Sign in')}
-          </Button>
+            <Button
+              sx={{
+                mt: 4,
+                mb:2
+              }}
+              component={RouterLink} to="/recover-password"
+              style={{ backgroundColor: '#3E3E3E' }}
+              startIcon={isSubmitting ? <CircularProgress size="1rem" /> : null}
+              disabled={isSubmitting}
+              type="submit"
+              fullWidth
+              size="large"
+              variant="contained"
+            >
+              {t('Reset password')}
+            </Button>
         </form>
       )}
     </Formik>
