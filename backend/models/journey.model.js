@@ -1,7 +1,6 @@
 // Journey.js
 
 import mongoose from 'mongoose';
-
 const journeySchema = new mongoose.Schema({
 
     entryDate:{
@@ -21,7 +20,7 @@ const journeySchema = new mongoose.Schema({
       ref: "Reason"
     },
     dateOut:{
-      type: Date
+      type: Date,
     },
 } );
 
