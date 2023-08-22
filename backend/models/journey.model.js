@@ -5,7 +5,7 @@ import mongoose from 'mongoose';
 const journeySchema = new mongoose.Schema({
 
     entryDate:{
-      type: date,
+      type: Date,
       required: true
     },
     driver:{
@@ -21,8 +21,7 @@ const journeySchema = new mongoose.Schema({
       ref: "Reason"
     },
     dateOut:{
-      type: date,
-      required: true
+      type: Date
     },
 } );
 

@@ -2,11 +2,12 @@ import express from "express";
 import { 
   register, 
   login, 
-  profile, 
   newDriver, 
   getDriver, 
   searchDriver,
-  updateDriver 
+  updateDriver,
+  getProfile, 
+  updateProfile
 } from "../controllers/users.controller.js";
 import { userAuth } from "../middlewares/users.middleware.js";
 const router = express.Router();
