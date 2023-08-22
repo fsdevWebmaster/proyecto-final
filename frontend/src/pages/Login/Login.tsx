@@ -2,29 +2,13 @@ import { Link as RouterLink } from 'react-router-dom';
 import {
   Box,
   Card,
-  Link,
-  Tooltip,
   Typography,
   Container,
-  Alert,
   styled
 } from '@mui/material';
 import { Helmet } from 'react-helmet-async';
 import { LoginForm } from '@components'
 import { useTranslation } from 'react-i18next';
-/*import useAuth from 'src/hooks/useAuth';
-import Auth0Login from '../LoginAuth0';
-import FirebaseAuthLogin from '../LoginFirebaseAuth';
-import JWTLogin from '../LoginJWT';
-import AmplifyLogin from '../LoginAmplify';
-import Logo from 'src/components/LogoSign';*/
-
-/*const icons = {
-  Auth0: '/static/images/logo/auth0.svg',
-  FirebaseAuth: '/static/images/logo/firebase.svg',
-  JWT: '/static/images/logo/jwt.svg',
-  Amplify: '/static/images/logo/amplify.svg'
-};*/
 
 const CardImg = styled(Card)(
   ({ theme }) => `
@@ -73,13 +57,13 @@ const TopWrapper = styled(Box)(
 );
 
 const Login = () => {
-  // const { method } = useAuth() as any;
+  
   const { t } = useTranslation();
 
   return (
     <>
       <Helmet>
-        <title>Login</title>
+        <title>{t('Login')}</title>
       </Helmet>
       <MainContent>
         <TopWrapper>
@@ -101,31 +85,8 @@ const Login = () => {
                 >
                   {t('Sign in')}
                 </Typography>
-                <Typography
-                  variant="h4"
-                  color="text.secondary"
-                  fontWeight="normal"
-                  sx={{
-                    mb: 3
-                  }}
-                >
-                  {t('Fill in the fields below to sign into your account.')}
-                </Typography>
               </Box>
               <LoginForm />
-              <Box my={4}>
-                <Typography
-                  component="span"
-                  variant="subtitle2"
-                  color="text.primary"
-                  fontWeight="bold"
-                >
-                  {t('Don’t have an account, yet?')}
-                </Typography>{' '}
-                <Link component={RouterLink} to="/account/register-basic">
-                  <b>Sign up here</b>
-                </Link>
-              </Box>
             </Card>
           </Container>
         </TopWrapper>
@@ -135,4 +96,3 @@ const Login = () => {
 }
 
 export default Login;
-
