@@ -24,6 +24,8 @@ import ChevronRightTwoToneIcon from '@mui/icons-material/ChevronRightTwoTone';
 // import type { ApexOptions } from 'apexcharts';
 import {Text} from '@components';
 import MonetizationOnTwoToneIcon from '@mui/icons-material/MonetizationOnTwoTone';
+import { observer } from 'mobx-react';
+import { MxLoginStore } from '@stores/LoginStore';
 
 const DotLegend = styled('span')(
   ({ theme }) => `
@@ -111,7 +113,8 @@ const UserBoxDescription = styled(Typography)(
 `
 );
 
-export const HeaderUserBox = () => {
+export const HeaderUserBox = observer(() => {
+
   const { t }: { t: any } = useTranslation();
   const theme = useTheme();
 
@@ -140,6 +143,7 @@ export const HeaderUserBox = () => {
     try {
       handleClose();
       // await logout();
+      MxLoginStore.logout();
       navigate('/');
     } catch (err) {
       console.error(err);
@@ -338,4 +342,4 @@ export const HeaderUserBox = () => {
       </Popover>
     </>
   );
-}
+})

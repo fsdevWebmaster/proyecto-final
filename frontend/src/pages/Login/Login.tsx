@@ -63,7 +63,7 @@ const Login = () => {
   return (
     <>
       <Helmet>
-        <title>{t('Login')}</title>
+        <title>{t('pages.login.title')}</title>
       </Helmet>
       <MainContent>
         <TopWrapper>
@@ -83,7 +83,7 @@ const Login = () => {
                     mb: 1
                   }}
                 >
-                  {t('Sign in')}
+                  {t('pages.login.header')}
                 </Typography>
               </Box>
               <LoginForm />

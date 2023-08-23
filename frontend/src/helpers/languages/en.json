@@ -8,5 +8,13 @@
     },
     "loader": {
         "text": "loading..."
+    },
+    "pages": {
+        "login": {
+            "title": "Log In",
+            "header": "Sign In",
+            "btnLogin": "Submit",
+            "btnReset": "Reset"
+        }
     }
 }

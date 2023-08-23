@@ -23,6 +23,8 @@ import UnfoldMoreTwoToneIcon from '@mui/icons-material/UnfoldMoreTwoTone';
 import AccountBoxTwoToneIcon from '@mui/icons-material/AccountBoxTwoTone';
 import LockOpenTwoToneIcon from '@mui/icons-material/LockOpenTwoTone';
 import AccountTreeTwoToneIcon from '@mui/icons-material/AccountTreeTwoTone';
+import { observer } from 'mobx-react';
+import { MxLoginStore } from '@stores/LoginStore';
 
 const MenuUserBox = styled(Box)(
   ({ theme }) => `
@@ -60,7 +62,7 @@ const UserBoxDescription = styled(Typography)(
 `
 );
 
-export const SidebarTopSection = () => {
+export const SidebarTopSection = observer(() => {
   const { t }: { t: any } = useTranslation();
   const theme = useTheme();
 
@@ -90,6 +92,7 @@ export const SidebarTopSection = () => {
     try {
       handleClose();
       // await logout();
+      MxLoginStore.logout();
       navigate('/');
     } catch (err) {
       console.error(err);
@@ -244,4 +247,4 @@ export const SidebarTopSection = () => {
       </Popover>
     </Box>
   );
-}
+})
