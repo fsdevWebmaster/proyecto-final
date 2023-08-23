@@ -5,6 +5,7 @@ import cors from 'cors';
 import { connectDB } from './database/config.js';
 import routes from './routes/app.routes.js';
 import journeyRouter from './routes/journey.routes.js';
+import containerRouter from './routes/container.routes.js';
 const app = express();
 
 // cors - json
@@ -16,6 +17,7 @@ app.use(express.json());
 // routes
 app.use('/api', routes);
 app.use('/api', journeyRouter)
+app.use('/api', containerRouter)
 
 connectDB()
   .then((result) => {
