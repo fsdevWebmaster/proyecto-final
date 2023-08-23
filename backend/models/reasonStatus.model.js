@@ -10,9 +10,9 @@ const reasonStatusSchema = new mongoose.Schema({
     status: {
       type: String,
       enum: ['In transit', 'In charge', 'In discharge', 'On Hold', 'Approved', 'Canceled'],
-      default: 'In transit',
+      required: true
     },
-    reasonStatus: {
+    description: {
       type: String
     }
 } );
