@@ -1,5 +1,5 @@
 import * as Yup from 'yup';
-import type { FC } from 'react';
+import { useEffect, type FC } from 'react';
 import { Formik } from 'formik';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 
@@ -10,8 +10,12 @@ import {
 } from '@mui/material';
 import {useRefMounted} from '@hooks';
 import { useTranslation } from 'react-i18next';
+import { MxLoginStore } from '@stores/LoginStore';
+import { JWTHelper } from '@helpers/jwtHelper';
+import { MxUserStore } from '@stores/UserStore';
+import { observer } from 'mobx-react';
 
-export const LoginForm: FC = () => {
+export const LoginForm: FC = observer(() => {
 
   const isMountedRef = useRefMounted();
   const { t }: { t: any } = useTranslation();
@@ -23,23 +27,70 @@ export const LoginForm: FC = () => {
     submit: null
   };
 
+  const initProfile = async (token: string) => {
+    const info = JWTHelper.decodeToken(token);
+
+    if (info!.id) {
+      await MxUserStore.initProfile(info.id);
+    }
+  }
+
+  const login = async (user: string, pass: string, callback?: Function) => {
+    const response = await MxLoginStore.loginUser(user, pass);
+
+    if (response.data) {
+      const { token } = response.data;
+
+      if (token) {
+        MxLoginStore.setSession(token);
+        await initProfile(token);
+        callback!();
+      }
+    } else {
+      MxLoginStore.resetAuth();
+      MxLoginStore.setSession(null);
+    }
+  }
+
   const handleSubmit = async (values: any,
     { setErrors, setStatus, setSubmitting }: any): Promise<void> => {
-        try {
-            navigate('/dashboard')
-            if (isMountedRef.current) {
-              setStatus({ success: true });
-              setSubmitting(false);
-            }
-          } catch (err: any) {
-            console.error(err);
-            if (isMountedRef.current) {
-              setStatus({ success: false });
-              setErrors({ submit: err.message });
-              setSubmitting(false);
-            }
+
+      try {
+        await login(values.email, values.password, () => {
+          if (isMountedRef.current) {
+            setStatus({ success: true });
+            setSubmitting(false);
           }
+          navigate('/dashboard');
+        });
+
+      } catch (err: any) {
+        if (isMountedRef.current) {
+          setStatus({ success: false });
+          setErrors({ submit: err.message });
+          setSubmitting(false);
+        }
+      }
   }
+
+  useEffect(() => {
+
+    const checkLogin = async() => {
+      const localToken = MxLoginStore.getAccessToken();
+      if (localToken) {
+        MxLoginStore.setSession(localToken);
+        await initProfile(localToken);
+
+        const user = MxUserStore.userInfo;
+        
+        if (user) {
+          navigate('/dashboard');
+        }
+      }
+    }
+
+     checkLogin();
+  },[]);
 
   return (
     <Formik
@@ -128,4 +179,4 @@ export const LoginForm: FC = () => {
       )}
     </Formik>
   );
-};
+});
