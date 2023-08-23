@@ -1,10 +1,12 @@
 // JourneyLog.js
 
 import mongoose, { Schema } from 'mongoose';
+import Step from './step.model';
 
 const journeyLogSchema = new mongoose.Schema({
   step: {
-    type: String,
+    type: Schema.Types.ObjectId,
+    ref: "Step",
     required: true
   },
   stepValue: {
