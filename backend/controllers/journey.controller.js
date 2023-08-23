@@ -18,7 +18,7 @@ export const newJourney = (req, res) => {
   let insData = { ...req.body }
   // mock entry date
   const now = new Date()
-  insData = { ...insData, entryDate: now }
+  insData = { ...insData, entryDate: now, status: '64e51075dc9071b3342697ef' }
   const journey = new Journey(insData);
   journey.save()
     .then(async (result) => {
@@ -34,6 +34,15 @@ export const newJourney = (req, res) => {
       return res.json(result)
     }).catch((err) => {
       return res.status(500).json({ TODO: `error handling ${err}` })
+    });
+}
+
+export const getInTransit = (req, res) => {
+  Journey.find({ status: '64e51414dc9071b3342697fa' })
+    .then((result) => {
+      return res.json(result)
+    }).catch((err) => {
+      return res.status(500).json({ TODO: `Error handling ${err}` })
     });
 }
 
