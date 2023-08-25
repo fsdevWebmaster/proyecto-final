@@ -2,14 +2,14 @@
 
 import mongoose from 'mongoose';
 
-const reasonStatusSchema = new mongoose.Schema({
+const statusSchema = new mongoose.Schema({
     user:{
         type: mongoose.Schema.Types.ObjectId,
         ref: "User"    
     },
     status: {
       type: String,
-      enum: ['In transit', 'In charge', 'In discharge', 'On Hold', 'Approved', 'Canceled'],
+      enum: ['On Hold', 'On transit', 'On load', 'On unload', 'Approved', 'Canceled'],
       required: true
     },
     description: {
@@ -17,6 +17,6 @@ const reasonStatusSchema = new mongoose.Schema({
     }
 } );
 
-const Reason = mongoose.model('Reason', reasonStatusSchema);
+const Status = mongoose.model('Status', statusSchema);
 
-export default Reason;
+export default Status;

@@ -1,7 +1,8 @@
 // JourneyLog.js
 
 import mongoose, { Schema } from 'mongoose';
-import Step from './step.model';
+import Step from './step.model.js';
+import Reason from './reasonStatus.model.js';
 
 const journeyLogSchema = new mongoose.Schema({
   step: {
@@ -16,6 +17,11 @@ const journeyLogSchema = new mongoose.Schema({
   journeyId: {
     type: Schema.Types.ObjectId,
     ref: "Journey",
+    required: true
+  },
+  status: {
+    type: Schema.Types.ObjectId,
+    ref: "Status",
     required: true
   }
 }, {
