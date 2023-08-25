@@ -14,23 +14,18 @@ export const newContainer = (req, res) => {
 };
 
 export const getJourneyByContainerNumber = (req, res) => {
-  const containerNumber = req.params.containerNumber;
-
-  Journey.findOne({ 'container.containerNumber': containerNumber })
-    .populate('driver')
-    .populate('container')
-    .populate('status')
-    .exec((err, journey) => {
-      if (err) {
-        return res.status(500).json({ error: 'Error while searching for journey.' });
-      }
-
-      if (!journey) {
+  const {containerNumber} = req.params;
+  const journey = Journey.findOne({containerNumber})    
+    .then(result =>{
+      console.log(result);
+      if (!result) {
         return res.status(404).json({ message: 'Journey not found for the given container number.' });
       }
-
-      return res.json(journey);
-    });
+      return res.json(result)
+    })
+    .catch(error =>{
+      return res.status(500).json({ error: 'Error while searching for journey.' });
+    })
 };
 
 export const newJourney = (req, res) => {
