@@ -5,8 +5,7 @@ import {
   getInTransit, 
   newContainer, 
   newJourney, 
-  createJourneyLog, 
-  updateJourneyLog 
+  createJourneyLog
 } from "../controllers/journey.controller.js";
 
 journeyRouter.post('/container', userAuth, newContainer)

@@ -6,13 +6,12 @@ import { connectDB } from './database/config.js';
 import routes from './routes/app.routes.js';
 import journeyRouter from './routes/journey.routes.js';
 import containerRouter from './routes/container.routes.js';
-const app = express();
+import { socketApp } from './socket-server.js';
+export const app = express();
 
 // cors - json
 app.use(cors());
 app.use(express.json());
-
-// middlewares
 
 // routes
 app.use('/api', routes);
@@ -29,3 +28,6 @@ connectDB()
 app.listen(process.env.LOCAL_PORT, () => {
   console.log(`Api server listening at :${process.env.LOCAL_PORT}`);
 }); 
+
+// socket server
+socketApp
