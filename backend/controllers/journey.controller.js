@@ -90,3 +90,12 @@ export const createJourneyLog = async (req, res) => {
         return res.status(500).json({ TODO: `Error handling ${err}` })
       });
 }
+
+export const getSteps = (req, res) => {
+  Step.find()
+    .then((result) => {
+      return res.json(result)
+    }).catch((err) => {
+      return res.status(500).json({ TODO: `Error handling ${err}` })
+    });
+}
