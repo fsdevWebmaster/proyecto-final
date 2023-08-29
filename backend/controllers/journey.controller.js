@@ -74,6 +74,7 @@ export const createJourneyLog = async (req, res) => {
   const creatingLog = new JourneyLog(createData)
   creatingLog.save()
     .then(async (result) => {
+      // update journey
       await result.populate("journeyId")
       let journey = result.journeyId
       journey.status = result.status;
@@ -89,4 +90,35 @@ export const createJourneyLog = async (req, res) => {
       }).catch((err) => {
         return res.status(500).json({ TODO: `Error handling ${err}` })
       });
+}
+
+export const updateJourneyLog = (req, res) => {
+  const { journeyLogId, stepValue } = req.body
+  JourneyLog.findByIdAndUpdate(journeyLogId, { stepValue }, { new: true })
+    .then((result) => {
+      return res.json(result)
+    }).catch((err) => {
+      return res.status(500).json({ TODO: `Error handling ${err}` })
+    });
+}
+
+export const getJourneyLog = (req, res) => {
+  const { journey } = req.params
+  JourneyLog.find({ journeyId: journey })
+  .then((result) => {
+      return res.json(result)
+    }).catch((err) => {
+      return res.status(500).json({ TODO: `Error handling ${err}` })
+    });
+}
+
+export const getStepJourneys = (req, res) => {
+  const { step } = req.params
+  JourneyLog.find({ step , stepValue: "--"})
+    .then((result) => {
+      console.log(result)
+    }).catch((err) => {
+      console.error(`Error handling ${err}`)
+    });
+  return res.json({ ok: true });
 }
