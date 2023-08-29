@@ -12,8 +12,6 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// middlewares
-
 // routes
 app.use('/api', routes);
 app.use('/api', journeyRouter)

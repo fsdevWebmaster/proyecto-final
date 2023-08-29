@@ -5,13 +5,14 @@ import {
   getInTransit, 
   newContainer, 
   newJourney, 
-  createJourneyLog, 
-  updateJourneyLog 
+  createJourneyLog,
+  getJourneyLog
 } from "../controllers/journey.controller.js";
 
 journeyRouter.post('/container', userAuth, newContainer)
 journeyRouter.post('/journey', userAuth, newJourney);
 journeyRouter.get('/in-transit', userAuth, getInTransit);
 journeyRouter.post('/journey-log', userAuth, createJourneyLog);
+journeyRouter.get('/journey-log/:journey', userAuth, getJourneyLog);
 
 export default journeyRouter;
