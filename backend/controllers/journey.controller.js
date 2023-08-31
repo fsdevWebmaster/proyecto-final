@@ -94,9 +94,19 @@ export const createJourneyLog = async (req, res) => {
 export const getJourneyLog = (req, res) => {
   const { journey } = req.params
   JourneyLog.find({journeyId: journey})
-  .then((result) => {
+    .then((result) => {
       return res.json(result)
     }).catch((err) => {
       return res.status(500).json({ TODO: `Error handling ${err}` })
     });
 }
+    
+export const getSteps = (req, res) => {
+  Step.find()
+    .then((result) => {
+      return res.json(result)
+    }).catch((err) => {
+      return res.status(500).json({ TODO: `Error handling ${err}` })
+    });
+}
+
