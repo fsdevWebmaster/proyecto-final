@@ -25,7 +25,18 @@ const journeyLogSchema = new mongoose.Schema({
     required: true
   }
 }, {
-  timestamps: true
+  timestamps: true,
+  toJSON: { 
+    virtuals:true,
+    transform: function(doc, ret, options) {
+      ret.id = doc._id
+      delete ret.__v
+      delete ret.createdAt
+      delete ret.updatedAt
+      delete ret._id
+      return ret
+    }
+  }
 })
 
 const JourneyLog = mongoose.model('JourneyLog', journeyLogSchema);
