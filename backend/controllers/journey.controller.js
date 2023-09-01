@@ -119,16 +119,6 @@ export const updateJourneyLog = (req, res) => {
 
 export const getJourneyLog = (req, res) => {
   const { journey } = req.params
-  JourneyLog.find({journeyId: journey})
-    .then((result) => {
-      return res.json(result)
-    }).catch((err) => {
-      return res.status(500).json({ TODO: `Error handling ${err}` })
-    });
-}
-
-export const getJourneyLog = (req, res) => {
-  const { journey } = req.params
   JourneyLog.find({ journeyId: journey })
     .then((result) => {
       return res.json(result)
