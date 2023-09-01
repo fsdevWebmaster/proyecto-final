@@ -22,11 +22,3 @@ root.render(
     </BrowserRouter>
   </HelmetProvider>
 );
-
-/*ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
-  <React.StrictMode>
-    <HelmetProvider>
-      <App />
-    </HelmetProvider>
-  </React.StrictMode>
-);*/

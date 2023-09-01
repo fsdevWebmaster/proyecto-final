@@ -2,9 +2,12 @@ import { lazy } from 'react';
 import { RouteObject } from 'react-router';
 import { Navigate } from "react-router-dom";
 import { Loader } from "@components";
+import { Authorization } from '@components';
 
 const Recovery = Loader(lazy(() => import('@components/LoginForm/RecoverPass')))
 const Layout = Loader(lazy(() => import('../layouts/Main/MainLayout')));
+
+// Auth
 
 // Pages
 const Login = Loader(lazy(() => import('@pages/Login/Login')))
@@ -36,7 +39,7 @@ export const routes: RouteObject[] = [
   {
     path: 'dashboard',
     id: 'dashboard',
-    element: <Layout />,
+    element: <Authorization><Layout /></Authorization>,
     children: [
       {
         path: '',
