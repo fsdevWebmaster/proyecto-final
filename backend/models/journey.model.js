@@ -1,23 +1,30 @@
 // Journey.js
 
-import mongoose from 'mongoose';
+import mongoose from "mongoose"
+
 const journeySchema = new mongoose.Schema({
 
-    driver:{
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Driver"
-    },
-    container:{
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Container"
-    },
-    status:{
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Status"
-    },
-    exitDate:{
-      type: Date,
-    },
+  driver:{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Driver",
+    required: true
+  },
+  driverDoc: {
+    type: String
+  },
+  container:{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Container",
+    required: true
+  },
+  containerNumber: {
+    type: String
+  },
+  step:{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Step",
+    required: true
+  },
 }, {
   timestamps: true,
   toJSON: {
@@ -29,8 +36,9 @@ const journeySchema = new mongoose.Schema({
       return ret
     })
   }
-} );
+})
 
-const Journey = mongoose.model('Journey', journeySchema);
+const Journey = mongoose.model("Journey", journeySchema)
 
-export default Journey;
+export default Journey
+
