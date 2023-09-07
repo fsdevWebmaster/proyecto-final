@@ -2,6 +2,7 @@ import Container from "../models/container.model.js";
 import Journey from "../models/journey.model.js";
 import JourneyLog from "../models/journeyLog.model.js";
 import Step from "../models/step.model.js";
+const mockUserId = "64da7c0f484e531a6eeebbfc"
 
 export const newContainer = (req, res) => {
   const { containerNumber } = req.body
@@ -15,49 +16,48 @@ export const newContainer = (req, res) => {
     });
 }
 
-export const newJourney = (req, res) => {
-  let insData = { ...req.body }
-  insData = { ...insData, status: process.env.STATUS_ON_HOLD }
-  const journey = new Journey(insData);
-  journey.save()
-    .then(async (result) => {
-      // gate
-      const gateData = {
-        step: process.env.STEP_GATE,
-        stepValue: "--",
-        journeyId: result._id,
-        status: process.env.STATUS_ON_HOLD
-      }
-      const gateLog = await newJourneyLog(gateData)
-      if (!gateLog) {
-        return res.status(500).json({ TODO: `error handling. Error creating new journey log` })
-      }
-      // yard
-      const yardData = {
-        step: process.env.STEP_YARD,
-        stepValue: "--",
-        journeyId: result._id,
-        status: process.env.STATUS_ON_HOLD
-      }
-      const yardLog = await newJourneyLog(yardData)
-      if (!yardLog) {
-        return res.status(500).json({ TODO: `error handling. Error creating new journey log` })
-      }
-      return res.json({ gateLog, yardLog })
-    }).catch((err) => {
-      return res.status(500).json({ TODO: `error handling ${err}` })
-    });
+export const createJourney = async (req, res) => {
+  let createData = req.body
+  const journey = new Journey(createData)
+  await journey.save()
+  await journey.populate("container")
+  await journey.populate("driver")
+  await journey.populate("step")
+  journey.containerNumber = journey.container.containerNumber;
+  journey.driverDoc = journey.driver.idDoc
+  await journey.save()
+  createIniLogs(journey)
+
+  return res.json(createData)
 }
 
-export const newJourneyLog = async (logData) => {
-  const newLog = new JourneyLog(logData)
-  try {
-    const saveResult = await newLog.save()
-    return saveResult
-  } catch (error) {
-    console.log("Error creating journey log", error)
-    return false
+const createIniLogs = async (journey) => {
+  // gate
+  let gateLogData = {
+    journey: journey._id,
+    step: journey.step,
+    stepValue: null,
+    user: mockUserId,
+    description: ""
   }
+  const gateLog = new JourneyLog(gateLogData)
+  gateLog.save()
+
+  // yard
+  const journeyStep = gateLog.step;
+  let yardLogData = {
+    journey: journey._id,
+    step: journeyStep.next,
+    stepValue: null,
+    user: mockUserId,
+    description: ""
+  }
+  const yardLog = new JourneyLog(yardLogData)
+  yardLog.save()
+
+  // update journey step
+  journey.step = journeyStep.next
+  journey.save()
 }
 
 export const getInTransit = (req, res) => {
@@ -112,14 +112,30 @@ export const getJourneyLog = (req, res) => {
     });
 }
 
-export const getJourneyLog = (req, res) => {
-  const { journey } = req.params
-  JourneyLog.find({ journeyId: journey })
-    .then((result) => {
-      return res.json(result)
-    }).catch((err) => {
-      return res.status(500).json({ TODO: `Error handling ${err}` })
-    });
+export const updateJourney = async (req, res) => {
+  const updBody = req.body;
+  const journey = await Journey.findById(updBody.journey)
+  // update actual log step value
+  const actualLog = await JourneyLog.findOne({ journey: updBody.journey, step: journey.step })
+  actualLog.stepValue = updBody.value
+  await actualLog.save()
+
+  // update journey step
+  await journey.populate("step")
+  journey.step = journey.step.next
+  await journey.save()
+
+  // create new journey log
+  const newLog = new JourneyLog({
+    journey: updBody.journey,
+    step: journey.step,
+    stepValue: null,
+    user: mockUserId,
+    description: ""
+  })
+  await newLog.save()
+
+  return res.json(actualLog);
 }
 
 export const getSteps = (req, res) => {
