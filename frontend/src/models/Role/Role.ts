@@ -1,14 +1,15 @@
 enum RoleLevel {
-  ADMINISTRATOR,
+  ADMIN,
   DRIVER, // chofer
   GATE, // porteria
   INSPECTOR,
-  ANALIZER, // medidor
+  ANALYST, // medidor
 }
 
 export type UserRole = keyof typeof RoleLevel;
 
 export type Role = {
   id: string;
+  code: number;
   role: UserRole;
 }

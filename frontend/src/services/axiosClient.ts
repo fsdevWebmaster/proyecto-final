@@ -1,17 +1,21 @@
 import axios, { AxiosError, AxiosInstance, AxiosResponse, InternalAxiosRequestConfig } from "axios";
 
 const axiosInstance = (instance: AxiosInstance | null = null): AxiosInstance => {
+  /*
+   review vite proxy configuration
   const viteEnv = import.meta.env.VITE_APP_APIS;
   const baseURL = viteEnv;
 
   const axiosInterceptors = axios.create({
     baseURL,
-  });  
+  });*/ 
+
+  const axiosInterceptors = axios.create();
 
   const axiosSetup = instance || axiosInterceptors
 
   const onRequest = (config: InternalAxiosRequestConfig): InternalAxiosRequestConfig => {
-    console.info(`[request] [${JSON.stringify(config)}]`);
+    //console.info(`[request] [${JSON.stringify(config)}]`);
     return config;
   }
 

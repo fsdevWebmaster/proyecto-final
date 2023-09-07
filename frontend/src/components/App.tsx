@@ -24,9 +24,8 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import ThemeProvider from '@styles/theme/ThemeProvider';
 import { CssBaseline } from '@mui/material';
 import { SnackbarProvider } from 'notistack';
-import '@helpers/i18n';
-
 import { routes } from '../routes/routes';
+import '@helpers/i18n';
 
 export const App = () => {
   const content = useRoutes(routes);
