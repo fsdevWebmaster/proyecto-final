@@ -15,6 +15,10 @@
             "header": "Sign In",
             "btnLogin": "Submit",
             "btnReset": "Reset"
+        },
+        "dashboard": {
+            "title": "Dashboard",
+            "main": "Welcome {{name}}"
         }
     }
 }

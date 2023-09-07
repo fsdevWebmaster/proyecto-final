@@ -5,7 +5,7 @@ import { Loader } from "@components";
 import { Authorization } from '@components';
 
 const Recovery = Loader(lazy(() => import('@components/LoginForm/RecoverPass')))
-const Layout = Loader(lazy(() => import('../layouts/Main/MainLayout')));
+const Layout = Loader(lazy(() => import('@layouts/Main/MainLayout')));
 
 // Auth
 
@@ -13,6 +13,7 @@ const Layout = Loader(lazy(() => import('../layouts/Main/MainLayout')));
 const Login = Loader(lazy(() => import('@pages/Login/Login')))
 const Profile = Loader(lazy(() => import('@pages/Profile/Profile')))
 const Users = Loader(lazy(() => import('@pages/Users/Users')))
+const Containers = Loader(lazy(() => import('@pages/Container/Containers')));
 const Dashboard = Loader(lazy(() => import('@pages/Dashboard/Dashboard')))
 const CreateUser = Loader(lazy(() => import('@pages/CreateUser/CreateUser')))
 const DriverRegistration = Loader(lazy(() => import('@pages/Driver/DriverRegistration')))
@@ -20,6 +21,14 @@ const ContainerRegistration = Loader(lazy(() => import('@pages/Container/Contain
 const GoalDashboard = Loader(lazy(() => import('@pages/Goal/GoalDashboard')))
 const AdminDashboard = Loader(lazy(() => import('@pages/Admin/AdminDashboard')))
 const Goal = Loader(lazy(() => import('@pages/Goal/Goal')))
+
+
+//docs
+const Documantation = Loader(lazy(() => import('@pages/Doc/Documentation')));
+
+// Status Pages
+const Status404 = Loader(lazy(() => import('@pages/Status/Status404')));
+const Status500 = Loader(lazy(() => import('@pages/Status/Status500')));
 
 export const routes: RouteObject[] = [
   {
@@ -32,19 +41,29 @@ export const routes: RouteObject[] = [
     element: <Login />
   },
   {
+    path: '*',
+    element: <Status404 />
+  },
+  {
     path: 'recover-password',
     id: 'recover',
     element: <Recovery />
   },
   {
-    path: 'dashboard',
-    id: 'dashboard',
-    element: <Authorization><Layout /></Authorization>,
+    path: 'main',
+    id: 'main',
+    // element: <Authorization><Layout /></Authorization>,
+    element: <Layout />,
     children: [
       {
         path: '',
-        id: 'main',
+        id: 'dashboard',
         element: <Dashboard />
+      },
+      {
+        path: 'doc',
+        id: 'doc',
+        element: <Documantation />
       },
       {
         path: 'profile',
@@ -56,6 +75,11 @@ export const routes: RouteObject[] = [
         id: 'users',
         element: <Users />
       },
+      {
+        path: 'containers',
+        id: 'containers',
+        element: <Containers />,
+      },      
       {
         path: 'create-user',
         id: 'createuser',
@@ -87,5 +111,5 @@ export const routes: RouteObject[] = [
         element: <AdminDashboard />
       }
     ]
-  }
+  },
 ];
