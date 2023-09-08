@@ -1,7 +1,6 @@
 import express from "express";
 const journeyRouter = express.Router();
 import { userAuth } from "../middlewares/users.middleware.js";
-import { newContainer, newJourney, getJourneyByContainerNumber } from "../controllers/journey.controller.js";
 import { 
   getInTransit, 
   newContainer, 
