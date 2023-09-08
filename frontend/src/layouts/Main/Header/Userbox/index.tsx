@@ -26,6 +26,7 @@ import {Text} from '@components';
 import MonetizationOnTwoToneIcon from '@mui/icons-material/MonetizationOnTwoTone';
 import { observer } from 'mobx-react';
 import { MxLoginStore } from '@stores/LoginStore';
+import { MxUserStore } from '@stores/UserStore';
 
 const DotLegend = styled('span')(
   ({ theme }) => `
@@ -117,16 +118,11 @@ export const HeaderUserBox = observer(() => {
 
   const { t }: { t: any } = useTranslation();
   const theme = useTheme();
+  const { userInfo } = MxUserStore;
 
   const navigate = useNavigate();
 
   // const { user, logout } = useAuth();
-  const user = {
-    name: 'Jose Z',
-    avatar: '',
-    jobtitle: 'Senior FE'
-  };
-  // TO-DO
 
   const ref = useRef<any>(null);
   const [isOpen, setOpen] = useState<boolean>(false);
@@ -138,6 +134,8 @@ export const HeaderUserBox = observer(() => {
   const handleClose = (): void => {
     setOpen(false);
   };
+
+  const currentRole = userInfo?.roles.length ? userInfo.roles[0].role : '';
 
   const handleLogout = async (): Promise<void> => {
     try {
@@ -221,7 +219,7 @@ export const HeaderUserBox = observer(() => {
   return (
     <>
       <UserBoxButton color="primary" ref={ref} onClick={handleOpen}>
-        <UserAvatar alt={user.name} src={user.avatar} />
+        <UserAvatar alt={userInfo?.name} src={userInfo?.avatar} />
       </UserBoxButton>
       <Popover
         disableScrollLock
@@ -243,11 +241,11 @@ export const HeaderUserBox = observer(() => {
           }}
           display="flex"
         >
-          <Avatar variant="rounded" alt={user.name} src={user.avatar} />
+          <Avatar variant="rounded" alt={userInfo?.name} src={userInfo?.avatar} />
           <UserBoxText>
-            <UserBoxLabel variant="body1">{user.name}</UserBoxLabel>
+            <UserBoxLabel variant="body1">{userInfo?.name}</UserBoxLabel>
             <UserBoxDescription variant="body2">
-              {user.jobtitle}
+              {currentRole}
             </UserBoxDescription>
           </UserBoxText>
         </MenuUserBox>

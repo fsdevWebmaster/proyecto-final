@@ -25,6 +25,7 @@ import LockOpenTwoToneIcon from '@mui/icons-material/LockOpenTwoTone';
 import AccountTreeTwoToneIcon from '@mui/icons-material/AccountTreeTwoTone';
 import { observer } from 'mobx-react';
 import { MxLoginStore } from '@stores/LoginStore';
+import { MxUserStore } from '@stores/UserStore';
 
 const MenuUserBox = styled(Box)(
   ({ theme }) => `
@@ -65,17 +66,13 @@ const UserBoxDescription = styled(Typography)(
 export const SidebarTopSection = observer(() => {
   const { t }: { t: any } = useTranslation();
   const theme = useTheme();
+  const { userInfo } = MxUserStore;
 
   const navigate = useNavigate();
   const location = useLocation();
   // const { user, logout } = useAuth();
 
-  // TO-DO
-  const user = {
-    name: 'Jose Z',
-    avatar: '',
-    jobtitle: 'Senior FE'
-  };
+  const currentRole = userInfo?.roles.length ? userInfo.roles[0].role : '';
 
   const ref = useRef<any>(null);
   const [isOpen, setOpen] = useState<boolean>(false);
@@ -115,8 +112,8 @@ export const SidebarTopSection = observer(() => {
           mb: 2,
           mx: 'auto'
         }}
-        alt={user.name}
-        src={user.avatar}
+        alt={userInfo?.name}
+        src={userInfo?.avatar}
       />
 
       <Typography
@@ -125,7 +122,7 @@ export const SidebarTopSection = observer(() => {
           color: `${theme.colors.alpha.trueWhite[100]}`
         }}
       >
-        {user.name}
+        {userInfo?.name}
       </Typography>
       <Typography
         variant="subtitle1"
@@ -133,7 +130,7 @@ export const SidebarTopSection = observer(() => {
           color: `${theme.colors.alpha.trueWhite[70]}`
         }}
       >
-        {user.jobtitle}
+        {currentRole}
       </Typography>
       <IconButton
         size="small"
@@ -174,13 +171,13 @@ export const SidebarTopSection = observer(() => {
           }}
           display="flex"
         >
-          <Avatar variant="rounded" alt={user.name} src={user.avatar} />
+          <Avatar variant="rounded" alt={userInfo?.name} src={userInfo?.avatar} />
           <UserBoxText>
             <UserBoxLabel className="popoverTypo" variant="body1">
-              {user.name}
+              {userInfo?.name}
             </UserBoxLabel>
             <UserBoxDescription className="popoverTypo" variant="body2">
-              {user.jobtitle}
+              {currentRole}
             </UserBoxDescription>
           </UserBoxText>
         </MenuUserBox>

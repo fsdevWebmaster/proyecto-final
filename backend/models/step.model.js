@@ -1,25 +1,39 @@
-// steo.model.js
+// Step.js
 
-import mongoose, { Schema } from 'mongoose';
+import mongoose from 'mongoose';
 
 const stepSchema = new mongoose.Schema({
   name: {
     type: String,
     required: true
   },
-  status: {
-    type: Boolean,
+  order: {
+    type: Number,
     required: true
   },
   previous: {
-    type: Schema.Types.ObjectId,
-    ref: "Step"
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Step",
   },
   next: {
-    type: Schema.Types.ObjectId,
-    ref: "Step"
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Step",
+  },
+  isActive: {
+    type: Boolean,
+    default: true
   }
-} );
+}, {
+  toJSON: {
+    virtuals: true,
+    transform: (doc, ret) => {
+      delete ret._id
+      delete ret.__v
+      ret.id = doc._id
+      return ret
+    }
+  }
+});
 
 const Step = mongoose.model('Step', stepSchema);
 
