@@ -15,6 +15,22 @@ export const newContainer = (req, res) => {
       return res.status(500).json({ TODO: `error handling ${err}` })
     });
 }
+export const getJourneyByContainerNumber = (req, res) => {
+  const {containerNumber} = req.params;
+  const journey = Journey.findOne({containerNumber})    
+    .then(result =>{
+      console.log(result);
+      if (!result) {
+        return res.status(404).json({ message: 'Journey not found for the given container number.' });
+      }
+      return res.json(result)
+    })
+    .catch(error =>{
+      return res.status(500).json({ error: 'Error while searching for journey.' });
+    })
+  }
+    
+    
 
 export const createJourney = async (req, res) => {
   let createData = req.body
