@@ -3,16 +3,19 @@ import JourneyLog from "../models/journeyLog.model.js";
 import Step from "../models/step.model.js";
 const mockUserId = "64da7c0f484e531a6eeebbfc"
 
-
-export const getJourneyByContainerNumber = (req, res) => {
-  const {containerNumber} = req.params;
+export const getJourneyByContainerNumber = (req, res, next) => {
+  const { containerNumber } = req.params;
+  if (!containerNumber || containerNumber.includes(":")) {
+    next(new Error("Missing data"))
+  }
   const journey = Journey.findOne({containerNumber})    
     .then(result =>{
-      console.log(result);
       if (!result) {
         return res.status(404).json({ message: 'Journey not found for the given container number.' });
       }
-      return res.json(result)
+      else {
+        return res.json(result)
+      }
     })
     .catch(error =>{
       return res.status(500).json({ error: 'Error while searching for journey.' });
@@ -86,8 +89,8 @@ export const createJourneyLog = async (req, res, next) => {
   creatingLog.save()
     .then(async (result) => {
       // update journey
-      await result.populate("journeyId")
-      let journey = result.journeyId
+      await result.populate("journey")
+      let journey = result.journey
       journey.status = result.status;
       journey.save()
         .then((journeyResult) => {
@@ -96,9 +99,11 @@ export const createJourneyLog = async (req, res, next) => {
             logResult: result
           })
         }).catch((err) => {
+          console.log("save journey error::", err)
           next(err)
         });
       }).catch((err) => {
+        console.log("creatingLog error::", err)
         next(err)
       });
 }
@@ -123,14 +128,22 @@ export const getJourneyLog = (req, res, next) => {
     });
 }
 
-export const updateJourney = async (req, res) => {
+export const updateJourney = async (req, res, next) => {
   const updBody = req.body;
   try {
+    if (!updBody.journey || !updBody.step) {
+      next(new Error("Missing data"))
+    }
     const journey = await Journey.findById(updBody.journey)
     // update actual log step value
-    const actualLog = await JourneyLog.findOne({ journey: updBody.journey, step: journey.step })
-    actualLog.stepValue = updBody.value
-    await actualLog.save()
+    const actualLog = await JourneyLog.findOne({ journey: updBody.journey, step: journey.step }).exec()
+    if (!actualLog) {
+      next(new Error('Not found'))
+    }
+    else {
+      actualLog.stepValue = updBody.value
+      await actualLog.save()
+    }
   
     // update journey step
     await journey.populate("step")

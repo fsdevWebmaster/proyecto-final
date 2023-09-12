@@ -34,16 +34,11 @@ export const login = (req, res, next) => {
       // check password
       bcrypt.compare(body.password, found.password, function(err, result) {
         if (err) {
-          return res.status(500).json({
-            msg: "Internal server error",
-            err
-          });
+          next(new Error("Server error"))
         }
         else {
           if (!result) {
-            return res.status(401).json({
-              msg: "Wrong or missing data."
-            });
+            next(new Error("Missing data"))
           }
           // generate jwt
           const payload = {
@@ -55,9 +50,6 @@ export const login = (req, res, next) => {
       });
     }).catch((err) => {
       next(err)
-      // return res.status(500).json({
-      //   msg: "Error getting user."
-      // });
     });
 }
 
