@@ -1,20 +1,9 @@
-import Container from "../models/container.model.js";
 import Journey from "../models/journey.model.js";
 import JourneyLog from "../models/journeyLog.model.js";
 import Step from "../models/step.model.js";
 const mockUserId = "64da7c0f484e531a6eeebbfc"
 
-export const newContainer = (req, res) => {
-  const { containerNumber } = req.body
-  const container = new Container()
-  container.containerNumber = containerNumber
-  container.save()
-    .then((result) => {
-      return res.json(result)
-    }).catch((err) => {
-      return res.status(500).json({ TODO: `error handling ${err}` })
-    });
-}
+
 export const getJourneyByContainerNumber = (req, res) => {
   const {containerNumber} = req.params;
   const journey = Journey.findOne({containerNumber})    
