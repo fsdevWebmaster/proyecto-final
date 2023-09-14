@@ -13,7 +13,18 @@ const roleSchema = new mongoose.Schema({
       type: String,
       required: true
     },
-} );
+}, {
+  toJSON: {
+    virtuals: true,
+    transform: (doc, ret) => {
+      delete ret._id
+      delete ret.__v
+      ret.id = doc.id
+      return ret
+    }
+
+  }  
+});
 
 const Role = mongoose.model('Role', roleSchema);
 

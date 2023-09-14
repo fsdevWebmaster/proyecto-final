@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken';
 import User from '../models/user.model.js';
 import Role from '../models/role.model.js';
 
-export const register = (req, res) => {
+export const register = (req, res, next) => {
   let { body } = req;
   bcrypt.hash(body.password, 10, (error, hash) => {
     let regData = { ...body };
@@ -11,26 +11,17 @@ export const register = (req, res) => {
     const regUser = new User(regData);
     regUser.save()
       .then((result) => {
-        return res.status(201).json({
-          created: result
-        })
+        return res.status(201).json(result);
       }).catch((err) => {
-        console.log("Error saving new user:", err);
-        return res.status(400).json({
-          msg: "Wrong or missing data."
-        });
+        next(err);
       });
-    
-    return res.status(201).json({ added: true, regData });
   });
 }
 
-export const login = (req, res) => {
+export const login = (req, res, next) => {
   let { body } = req;
   if (!body.username || !body.password) {
-    return res.status(400).json({
-      msg: "Wrong or missing data."
-    });
+    next(new Error("Missing data"))  
   }
   // find user by email
   User.find({ email: body.username })
@@ -38,23 +29,16 @@ export const login = (req, res) => {
       const found = result[0];
       // not found
       if (!found) {
-        return res.status(404).json({
-          msg: "User does not exist."
-        })
+        next(new Error("Not found"))
       }
       // check password
       bcrypt.compare(body.password, found.password, function(err, result) {
         if (err) {
-          return res.status(500).json({
-            msg: "Internal server error",
-            err
-          });
+          next(new Error("Server error"))
         }
         else {
           if (!result) {
-            return res.status(401).json({
-              msg: "Wrong or missing data."
-            });
+            next(new Error("Missing data"))
           }
           // generate jwt
           const payload = {
@@ -65,13 +49,11 @@ export const login = (req, res) => {
         }
       });
     }).catch((err) => {
-      return res.status(500).json({
-        msg: "Error getting user."
-      });
+      next(err)
     });
 }
 
-export const getProfile = (req, res) => {
+export const getProfile = (req, res, next) => {
   const { userId } = req.query
   if (!userId) {
     return res.status(404).json({ error: 'Missing user id.' })
@@ -82,27 +64,29 @@ export const getProfile = (req, res) => {
     .then((result) => {
       return res.json(result)
     }).catch((err) => {
-      console.log("Error getting user profile", err)
-      return res.status(404).json({ error: 'User not found' })
+      next(err)
     });  
 }
 
-export const updateProfile = (req, res) => {
+export const updateProfile = (req, res, next) => {
   const updData = { ...req.body }
   delete updData.password
   
   if (!updData.userId) {
-    return res.status(400).json({ error: 'Wrong or missing userId.' })
+    next(new Error('Missing data'))
   }
 
   if (Object.keys(updData).length <= 1) {
-    return res.status(400).json({ error: 'Nothing to update.' })
+    next(new Error('Nothing to update'))
   }
 
   User.findByIdAndUpdate(updData.userId, updData, { returnOriginal: false })
   .then((result) => {
+    if (!result) {
+      next(new Error("Not found"))      
+    }
     return res.json(result)
   }).catch((err) => {
-    return res.status(404).json({ error: 'User not found' })
+    next(err)
   });
 }
