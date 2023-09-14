@@ -8,7 +8,6 @@ import { useNavigate } from "react-router";
 export const GoalForm: FC = () => {
 
   const isMountedRef = useRefMounted()
-  const { t }: { t: any } = useTranslation()
   const navigate = useNavigate()
 
   const initSValues = {
@@ -17,6 +16,7 @@ export const GoalForm: FC = () => {
     driver: '',
     fuelLoad: ''
   }
+
 
   const handleSubmit = async (values: any,
     { setErrors, setStatus, setSubmitting }: any): Promise<void> => {
@@ -54,68 +54,15 @@ export const GoalForm: FC = () => {
           <Box
             display='flex'
             flexDirection= 'column'
-            m={1.5}
-            p={2}
+            mx={0}
+            p={0}
             sx={{
               minWidth: 0,
               minHeight: 0,
-              backgroundColor: '#EBEBEB',
+              backgroundColor: '#FFFFFF',
               borderRadius: 1
             }}
           >
-            <Typography
-              fontWeight={'fontWeightMedium'}
-              variant="h4"
-              m= {2}
-            >
-              {t('Container information')}
-            </Typography>
-
-            <Box
-              display={"flex"}
-              alignItems={"center"}
-              justifyContent={"center"}
-              gap={15}
-            >
-              <Box
-                display={"flex"}
-                alignContent= 'center'
-                flexDirection= 'column'
-              >
-                <Typography>
-                  {t('Date')}
-                </Typography>
-                <Typography>
-                  {t('Container')}
-                </Typography>
-                <Typography>
-                  {t('Driver')}
-                </Typography>
-                <Typography>
-                  {t('Fuel Load')}
-                </Typography>
-              </Box>
-
-              <Box
-                display={"flex"}
-                alignContent={"center"}
-                flexDirection={"column"}
-              >
-                <Typography
-                >
-                    {`15/05/2023 10:00`}
-                </Typography>
-                <Typography>
-                  {`container`}
-                </Typography>
-                <Typography>
-                  {`Nombre Conductor`}
-                </Typography>
-                <Typography>
-                  {`fuelLoad`}
-                </Typography>
-              </Box>
-            </Box>
           </Box>
         </form>
       )}

@@ -8,6 +8,11 @@ import {
 import { Helmet } from "react-helmet-async";
 import { useTranslation } from "react-i18next";
 import { GoalForm } from "@components/GoalForm/GoalForm";
+import { SearchFrom } from "@components/Search/SearchForm";
+import { ContainerModel } from "@models/Container/Container";
+import { useState } from "react";
+import { useSearch } from "@components/Search/useSearch";
+
 
 const MainContent = styled(Box)(
   () =>`
@@ -28,21 +33,27 @@ const TopWrapper = styled(Box)(
 )
 
 const Goal = () => {
+  const { handleSearchItem, containers } = useSearch();
   const { t } = useTranslation()
+  const [selectedContainer, setSelectedContainer] = useState<ContainerModel | null>()
+
+  const handleContainer = (container:ContainerModel) => {
+    setSelectedContainer(container)
+  }
 
   return (
     <>
       <Helmet>
-        <title>{t('Goal')}</title>
+        <title>{t('Portería')}</title>
       </Helmet>
       <MainContent>
         <TopWrapper>
           <Container maxWidth='sm'>
             <Card
               sx={{
-                px: 4,
-                pt: 5,
-                pb: 3
+                px: 5,
+                pt: 4,
+                pb: 5
               }}
             >
               <Box>
@@ -52,9 +63,22 @@ const Goal = () => {
                     mb: 1
                   }}
                 >
-                  {t('Goal')}
+                  {t('Portería')}
                 </Typography>
               </Box>
+              { selectedContainer && 
+                <Box pb={2}>
+                  <Typography
+                    variant="h4"
+                  >
+                    Contenedor: { selectedContainer.containerNumber }
+                  </Typography>
+                </Box>
+              }
+              <SearchFrom 
+                searchType="containers"
+                sendSelected={(container) => handleContainer(container)} 
+              />
               <GoalForm />
             </Card>
           </Container>
