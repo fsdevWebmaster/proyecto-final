@@ -4,6 +4,7 @@ import { Formik } from "formik";
 import { useNavigate } from "react-router";
 
 import {
+  Button,
   TextField
 } from "@mui/material";
 
@@ -18,14 +19,14 @@ export const ContainerRegistryForm: FC = () => {
   const navigate = useNavigate();
 
   const initValues = {
-    chasis: '',
-    color: ''
+    containerNumber: ''
   }
 
   const handleSubmit = async (values: any,
     { setErrors, setStatus, setSubmitting }: any): Promise<void> => {
       try {
-        navigate('/dashboard')
+        console.log(values)
+        // navigate('/dashboard')
         if (isMountedRef.current) {
             setStatus({ success: true })
             setSubmitting(false)
@@ -44,9 +45,9 @@ export const ContainerRegistryForm: FC = () => {
     <Formik
       initialValues={initValues}
       validationSchema={Yup.object().shape({
-        chasis: Yup.string()
+        containerNumber: Yup.string()
           .max(255)
-          .required(t('The chasis field ir required'))
+          .required(t('El número de contenedor es obligatorio.'))
       })}
       onSubmit={handleSubmit}
     >
@@ -61,20 +62,21 @@ export const ContainerRegistryForm: FC = () => {
       }): JSX.Element => (
         <form noValidate onSubmit={handleSubmit}>
           <TextField
-            error={Boolean(touched.chasis && errors.chasis)}
+            error={Boolean(touched.containerNumber && errors.containerNumber)}
             fullWidth
             required
             margin="normal"
             autoFocus
-            helperText={touched.chasis && errors.chasis}
-            label={t('Chasis')}
-            name="chasis"
+            helperText={touched.containerNumber && errors.containerNumber}
+            label={t('Número del contenedor')}
+            name="containerNumber"
             onBlur={handleBlur}
             onChange={handleChange}
             type="text"
-            value={values.chasis}
+            value={values.containerNumber}
             variant="outlined"
           />
+        <Button type='submit'>Guardar</Button>
         </form>
       )}
     </Formik>
