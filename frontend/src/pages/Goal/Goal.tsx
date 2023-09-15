@@ -5,7 +5,8 @@ import {
   Container,
   IconButton,
   Typography,
-  styled
+  styled,
+  useTheme
 } from "@mui/material";
 import DeleteIcon from '@mui/icons-material/Delete';
 
@@ -16,6 +17,7 @@ import { SearchForm } from "@components/Search/SearchForm";
 import { ContainerModel } from "@models/Container/Container";
 import { useEffect, useState } from "react";
 import { SearchItem, useSearch } from "@components/Search/useSearch";
+import { PageLayout } from "@layouts/Page/PageLayout";
 
 
 const MainContent = styled(Box)(
@@ -38,6 +40,7 @@ const TopWrapper = styled(Box)(
 
 const Goal = () => {
   const { t } = useTranslation()
+  const theme = useTheme();
   const [container, setContainer] = useState<SearchItem | null>()
   const [driver, setDriver] = useState<SearchItem | null>()
 
@@ -62,15 +65,19 @@ const Goal = () => {
 
   const handleJourney = () => {
     
-    console.log("Send data to endpoint:",  { container, driver } )
+    console.log("TODO: Send data to endpoint:",  { container, driver } )
 
   }
 
   return (
-    <>
-      <Helmet>
-        <title>{t('Portería')}</title>
-      </Helmet>
+    <PageLayout
+      seoTitle='Gate'
+      title='Gate'
+      buttonConfig={{
+        visible: true, 
+        title: 'Create User', 
+        action: () => alert('To-do')}
+      }>
       <MainContent>
         <TopWrapper>
           <Container maxWidth='sm'>
@@ -81,22 +88,15 @@ const Goal = () => {
                 pb: 5
               }}
             >
-              <Box>
+              <Box mb={2}>
                 <Typography
                   variant="h2"
                   sx={{
-                    mb: 1
+                    mb: 1,
+                    color: theme.colors.primary.dark
                   }}
                 >
-                  {t('Portería')}
-                </Typography>
-                <Typography
-                  variant="h4"
-                  sx={{
-                    mb: 1
-                  }}
-                >
-                  {t('Nuevo recorrido')}
+                  {t('New journey')}
                 </Typography>
               </Box>
               { container && 
@@ -108,7 +108,8 @@ const Goal = () => {
                     display: "flex", 
                     justifyContent: "space-between",
                     alignItems: "center",
-                    backgroundColor: "#f5f5f5",
+                    color: "#FFFFFF",
+                    bgcolor: theme.colors.secondary.light,
                     borderRadius: "5px"
                   }}
                 >
@@ -118,7 +119,7 @@ const Goal = () => {
                     Contenedor: { container.containerNumber }
                   </Typography>
                   <IconButton edge="end" onClick={() => deleteSelected("container")}>
-                    <DeleteIcon />
+                    <DeleteIcon sx={{ color: "#FFFFFF" }} />
                   </IconButton>
                 </Box>
               }
@@ -127,12 +128,13 @@ const Goal = () => {
                 <Box 
                   px={4}
                   py={1}
-                  mb={1}
+                  mb={2}
                   sx={{ 
                     display: "flex", 
                     justifyContent: "space-between",
                     alignItems: "center",
-                    backgroundColor: "#f5f5f5",
+                    color: "#FFFFFF",
+                    bgcolor: theme.colors.secondary.light,
                     borderRadius: "5px"
                   }}
                 >
@@ -142,13 +144,17 @@ const Goal = () => {
                     Conductor: { driver.name }
                   </Typography>
                   <IconButton edge="end" onClick={() => deleteSelected("driver")}>
-                    <DeleteIcon />
+                    <DeleteIcon sx={{ color: "#FFFFFF" }} />
                   </IconButton>
                 </Box>
               }
               
               { container && driver && 
-                <Button color="primary" onClick={handleJourney}>
+                <Button 
+                  sx={{ mt: 1 }}
+                  variant="contained" 
+                  onClick={handleJourney}
+                >
                   Registrar entrada
                 </Button>
               }
@@ -157,25 +163,22 @@ const Goal = () => {
               { !container && 
                 <SearchForm 
                   searchType="containers"
-                  formTitle="Buscar contenedores"
+                  formTitle="Search containers"
                   sendSelected={(container) => handleContainer(container)} 
                 />
               }
               { !driver && 
                 <SearchForm 
                   searchType="drivers"
-                  formTitle="Buscar conductores"
+                  formTitle="Search drivers"
                   sendSelected={(driver) => handleDriver(driver)} 
                 />
               }
-
-              {/* <GoalForm /> */}
-
             </Card>
           </Container>
         </TopWrapper>
-      </MainContent>
-    </>
+      </MainContent>      
+    </PageLayout>
   )
 }
 
