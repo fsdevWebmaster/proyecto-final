@@ -1,10 +1,65 @@
 import { useTranslation } from 'react-i18next';
-import { Box, Divider, List, ListItem, ListItemButton, ListItemText, TextField, Typography } from '@mui/material'
+import { Box, Divider, List, ListItem, ListItemButton, ListItemText, TextField, Typography, IconButton, Alert, Button } from '@mui/material';
 
-import { ContainerModel } from "@models/Container/Container";
-import { useSearch } from './useSearch';
-import { number, string } from 'yup';
+import { ContainerModel, Driver } from "@models";
+import { SearchItem, useSearch } from './useSearch';
 
+type Props = {
+  sendSelected: (selectedItem:SearchItem) => void
+  searchType: string
+  formTitle: string
+}
+
+export const SearchForm = ({ sendSelected, searchType, formTitle }: Props) => {
+  const { t }: { t: any } = useTranslation()
+  const { handleSearchItem, baseList, showField, searchValue } = useSearch(searchType)
+
+  const handleSelected = (e:any, item:SearchItem) => {
+    sendSelected(item)
+  }
+
+  return (
+    <>
+      <Typography
+        fontWeight={'fontWeightMedium'}
+        variant="h4"
+        mx= {1}
+        margin={0}
+        marginBottom={1}
+      >
+        {t(`${ formTitle }`)}
+        { searchValue }
+      </Typography>    
+    <Box>
+      <TextField 
+        name="seachField" 
+        onChange={(e) => handleSearchItem(e)}
+        fullWidth
+      />
+      { searchValue && baseList.length > 0 &&
+        <List>
+          { baseList.map(item =>(
+            <Box key={item[showField]} >
+              <ListItem>
+                <ListItemButton onClick={(e) => handleSelected(e, item)}>
+                  <ListItemText primary={item[showField]} />
+                </ListItemButton>
+              </ListItem>
+              <Divider/>
+            </Box>
+          ))}
+        </List>
+      }
+      { searchValue && baseList.length === 0 &&
+        <Alert severity="info" sx={{ display: "flex", alignItems: "center" }}>
+          No se ha encontado ningún resultado
+          <Button>Crear nuevo</Button>
+        </Alert>
+      }
+    </Box>
+    </>
+  )
+}
 
 
 // const container = {
@@ -45,59 +100,3 @@ import { number, string } from 'yup';
 //   name: string;
 //   }
 
-
-
-
-
-
-type Props = {
-  items: []
-
-  sendSelected: (selectedItem:ContainerModel) => void
-  searchType: string
-}
-
-
-
-export const SearchFrom = ({ sendSelected }: Props) => {
-
-  const { t }: { t: any } = useTranslation()
-
-  const handleSelected = (e:any, container:ContainerModel) => {
-    sendSelected(container)
-  }
-
-  return (
-    <>
-      <Typography
-        fontWeight={'fontWeightMedium'}
-        variant="h4"
-        mx= {1}
-        margin={0}
-        marginBottom={1}
-      >
-        {t('Search container')}
-      </Typography>    
-    <Box>
-      <TextField 
-        name="containerNumber" 
-        onChange={handleSearchItem}
-        fullWidth
-      />
-
-      <List>
-        { containers.map(container =>(
-          <Box key={container.id} >
-            <ListItem>
-              <ListItemButton onClick={(e) => handleSelected(e, container)}>
-                <ListItemText primary={container.containerNumber} />
-              </ListItemButton>
-            </ListItem>
-            <Divider/>
-          </Box>
-        ))}
-      </List>
-    </Box>
-    </>
-  )
-}

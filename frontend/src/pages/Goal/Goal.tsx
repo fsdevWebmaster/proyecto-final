@@ -1,17 +1,21 @@
 import {
   Box,
+  Button,
   Card,
   Container,
+  IconButton,
   Typography,
   styled
 } from "@mui/material";
+import DeleteIcon from '@mui/icons-material/Delete';
+
 import { Helmet } from "react-helmet-async";
 import { useTranslation } from "react-i18next";
 import { GoalForm } from "@components/GoalForm/GoalForm";
-import { SearchFrom } from "@components/Search/SearchForm";
+import { SearchForm } from "@components/Search/SearchForm";
 import { ContainerModel } from "@models/Container/Container";
-import { useState } from "react";
-import { useSearch } from "@components/Search/useSearch";
+import { useEffect, useState } from "react";
+import { SearchItem, useSearch } from "@components/Search/useSearch";
 
 
 const MainContent = styled(Box)(
@@ -33,12 +37,33 @@ const TopWrapper = styled(Box)(
 )
 
 const Goal = () => {
-  const { handleSearchItem, containers } = useSearch();
   const { t } = useTranslation()
-  const [selectedContainer, setSelectedContainer] = useState<ContainerModel | null>()
+  const [container, setContainer] = useState<SearchItem | null>()
+  const [driver, setDriver] = useState<SearchItem | null>()
 
-  const handleContainer = (container:ContainerModel) => {
-    setSelectedContainer(container)
+  const handleContainer = (item:SearchItem) => {
+    setContainer(item)
+  }
+
+  const handleDriver = (item:SearchItem) => {
+    setDriver(item)
+  }
+
+  const deleteSelected = (type:string) => {
+    switch (type) {
+      case 'container':
+        setContainer(null)
+      break
+      case 'driver':
+        setDriver(null)
+      break
+    }
+  }
+
+  const handleJourney = () => {
+    
+    console.log("Send data to endpoint:",  { container, driver } )
+
   }
 
   return (
@@ -65,21 +90,87 @@ const Goal = () => {
                 >
                   {t('Portería')}
                 </Typography>
+                <Typography
+                  variant="h4"
+                  sx={{
+                    mb: 1
+                  }}
+                >
+                  {t('Nuevo recorrido')}
+                </Typography>
               </Box>
-              { selectedContainer && 
-                <Box pb={2}>
+              { container && 
+                <Box 
+                  px={4}
+                  py={1}
+                  mb={1}
+                  sx={{ 
+                    display: "flex", 
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    backgroundColor: "#f5f5f5",
+                    borderRadius: "5px"
+                  }}
+                >
                   <Typography
                     variant="h4"
                   >
-                    Contenedor: { selectedContainer.containerNumber }
+                    Contenedor: { container.containerNumber }
                   </Typography>
+                  <IconButton edge="end" onClick={() => deleteSelected("container")}>
+                    <DeleteIcon />
+                  </IconButton>
                 </Box>
               }
-              <SearchFrom 
-                searchType="containers"
-                sendSelected={(container) => handleContainer(container)} 
-              />
-              <GoalForm />
+
+              { driver && 
+                <Box 
+                  px={4}
+                  py={1}
+                  mb={1}
+                  sx={{ 
+                    display: "flex", 
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    backgroundColor: "#f5f5f5",
+                    borderRadius: "5px"
+                  }}
+                >
+                  <Typography
+                    variant="h4"
+                  >
+                    Conductor: { driver.name }
+                  </Typography>
+                  <IconButton edge="end" onClick={() => deleteSelected("driver")}>
+                    <DeleteIcon />
+                  </IconButton>
+                </Box>
+              }
+              
+              { container && driver && 
+                <Button color="primary" onClick={handleJourney}>
+                  Registrar entrada
+                </Button>
+              }
+
+              {/* forms */}
+              { !container && 
+                <SearchForm 
+                  searchType="containers"
+                  formTitle="Buscar contenedores"
+                  sendSelected={(container) => handleContainer(container)} 
+                />
+              }
+              { !driver && 
+                <SearchForm 
+                  searchType="drivers"
+                  formTitle="Buscar conductores"
+                  sendSelected={(driver) => handleDriver(driver)} 
+                />
+              }
+
+              {/* <GoalForm /> */}
+
             </Card>
           </Container>
         </TopWrapper>
