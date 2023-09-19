@@ -3,6 +3,7 @@ import { RouteObject } from 'react-router';
 import { Navigate } from "react-router-dom";
 import { Loader } from "@components";
 import { Authorization } from '@components';
+import { Yard } from '@pages/Yard/Yard';
 
 const Recovery = Loader(lazy(() => import('@components/LoginForm/RecoverPass')))
 const Layout = Loader(lazy(() => import('@layouts/Main/MainLayout')));
@@ -104,6 +105,11 @@ export const routes: RouteObject[] = [
         path: 'goal',
         id: 'Goal',
         element: <Goal />
+      },
+      {
+        path: 'yard',
+        id: 'Yard',
+        element: <Yard />
       },
       {
         path: 'admin-dashboard',

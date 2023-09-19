@@ -1,7 +1,8 @@
+
 export type JourneyLog = {
-  step: string,
-  value: string | number | boolean;
-  status: any;
-  date: Date;
-  containerNumber: string;
+  journey: string
+  step: string
+  stepValue: string | number | boolean | null
+  user: string
+  description?: string
 }
