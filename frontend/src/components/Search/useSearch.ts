@@ -1,5 +1,6 @@
 import { ContainerModel, Driver } from "@models"
 import { ChangeEvent, useState } from "react"
+import { useNavigate } from "react-router"
 
 const mockContainers:ContainerModel[] = [
   { id: "1", containerNumber: "123" },
@@ -22,6 +23,7 @@ const mockDrivers:Driver[] = [
 export type SearchItem = { [showData: string]: string }
 
 export const useSearch = (searchType:string) => {
+  const navigate = useNavigate()
   let searchField = ""
   // let showField = ""
   const [baseList, setBaseList] = useState<SearchItem[]>([])
@@ -56,11 +58,26 @@ export const useSearch = (searchType:string) => {
     }
   }
 
+  const handleNewItem = () => {
+    switch (searchType) {
+      case "containers":
+        navigate("/main/container-registry")
+      break;
+      case "drivers":
+        navigate("/main/driver-registry")
+      break;
+    }
+    // navigate("container-registration")
+    console.log(searchType)
+
+  }
+
   return {
     handleSearchItem,
     baseList,
     searchField,
     showField,
-    searchValue
+    searchValue,
+    handleNewItem
   }
 }

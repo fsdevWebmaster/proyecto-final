@@ -1,5 +1,7 @@
 import { useTranslation } from 'react-i18next';
-import { Box, Divider, List, ListItem, ListItemButton, ListItemText, TextField, Typography, IconButton, Alert, Button, Grid, TableCell, Card, TableContainer, Table, TableHead, TableRow, TableBody, useTheme } from '@mui/material';
+import { Box, Divider, List, ListItem, ListItemButton, ListItemText, TextField, Typography, IconButton, 
+  Alert, Button, Grid, TableCell, Card, TableContainer, Table, TableHead, TableRow, TableBody, useTheme 
+} from '@mui/material';
 
 import { ContainerModel, Driver } from "@models";
 import { SearchItem, useSearch } from './useSearch';
@@ -15,7 +17,7 @@ type Props = {
 
 export const SearchForm = ({ sendSelected, searchType, formTitle }: Props) => {
   const { t }: { t: any } = useTranslation()
-  const { handleSearchItem, baseList, showField, searchValue } = useSearch(searchType)
+  const { handleSearchItem, baseList, showField, searchValue, handleNewItem } = useSearch(searchType)
   const theme = useTheme();
 
   const handleSelected = (e:any, item:SearchItem) => {
@@ -80,50 +82,13 @@ export const SearchForm = ({ sendSelected, searchType, formTitle }: Props) => {
       { searchValue && baseList.length === 0 &&
         <Alert severity="info" sx={{ display: "flex", alignItems: "center" }}>
           <span>No se ha encontado ningún resultado</span>
-          <Button>Crear nuevo</Button>
+          <Button onClick={ handleNewItem }>
+            Crear nuevo
+          </Button>
         </Alert>
       }
     </Box>
     </>
   )
 }
-
-
-// const container = {
-//   id: string,
-//   }
-//   const driver = {
-//   idDoc: string;
-//   }
-//   jose manuel Zuñiga21:03
-//   function castItem (item, type) {
-//     const castObj = {};
-//     switch(type) {
-//       case 'driver':
-//         Object.assign(castObj, {
-//           id: item.idDoc
-//         })
-//       break;
-  
-//       case 'container':
-//         Object.assign(castObj, {
-//           id: item.idContainer
-//         })      
-//         break;
-  
-//         //user
-//       default:
-//         Object.assign(castObj, {
-//           id: item.ced
-//         })      
-//         break;
-//     }
-  
-//     return castObj;
-//   }
-//   jose manuel Zuñiga21:04
-//   type CastItem {
-//   id: string,
-//   name: string;
-//   }
 
