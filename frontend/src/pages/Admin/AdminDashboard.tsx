@@ -18,6 +18,7 @@ import {
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import { useTranslation } from 'react-i18next'
 import { TableAction } from '@components/Tables/TableAction';
+import { useNavigate } from 'react-router';
 // import { AdminDashboardForm } from '@components/AdminForm/AdminDashboardForm'
 
 const MainContent = styled(Box)(
@@ -53,12 +54,11 @@ const mockActiveJourneys: any[] = [
 const AdminDashboard = () => {
   const { t } = useTranslation()
   const theme = useTheme();
-  
+  const navigate = useNavigate();
   const handleDetails = (e:MouseEvent<HTMLElement>, journey:any) => {
-    
-    console.log("journey", journey)
-    console.log("e", e)
-
+    // TODO: Handle
+    // journeyStore.setCurrentJourney(journey)
+    // navigate(`/journey-detail/${journey.id}`)
   }
 
   const tableActions = [
@@ -116,8 +116,7 @@ const AdminDashboard = () => {
                                 <TableAction
                                   title={action.title}
                                   key={`action-${action.title}`}
-                                  journey={journey}
-                                  clickHandler={(e, journey) => action.clickHandler(e, journey)}
+                                  clickHandler={(e) => action.clickHandler(e, journey)}
                                   icon={action.icon}
                                   colors={action.colors}
                                   visible={action.visible} />
