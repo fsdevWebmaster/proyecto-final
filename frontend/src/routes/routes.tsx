@@ -3,6 +3,7 @@ import { RouteObject } from 'react-router';
 import { Navigate } from "react-router-dom";
 import { Loader } from "@components";
 import { Authorization } from '@components';
+import Gate from '@pages/Gate/Gate';
 
 const Recovery = Loader(lazy(() => import('@components/LoginForm/RecoverPass')))
 const Layout = Loader(lazy(() => import('@layouts/Main/MainLayout')));
@@ -18,9 +19,9 @@ const Dashboard = Loader(lazy(() => import('@pages/Dashboard/Dashboard')))
 const CreateUser = Loader(lazy(() => import('@pages/CreateUser/CreateUser')))
 const DriverRegistration = Loader(lazy(() => import('@pages/Driver/DriverRegistration')))
 const ContainerRegistration = Loader(lazy(() => import('@pages/Container/ContainerRegistration')))
-const GoalDashboard = Loader(lazy(() => import('@pages/Goal/GoalDashboard')))
+const GoalDashboard = Loader(lazy(() => import('@pages/Gate/GoalDashboard')))
 const AdminDashboard = Loader(lazy(() => import('@pages/Admin/AdminDashboard')))
-const Goal = Loader(lazy(() => import('@pages/Goal/Goal')))
+const Goal = Loader(lazy(() => import('@pages/Gate/Gate')))
 
 
 //docs
@@ -86,12 +87,12 @@ export const routes: RouteObject[] = [
         element: <CreateUser />
       },
       {
-        path: 'container-registration',
-        id: 'containerRegistration',
+        path: 'container-registry',
+        id: 'containerRegistry',
         element: <ContainerRegistration />
       },
       {
-        path: 'driver-registration',
+        path: 'driver-registry',
         id: 'driverRegistration',
         element: <DriverRegistration />
       },
@@ -101,9 +102,9 @@ export const routes: RouteObject[] = [
         element: <GoalDashboard />
       },
       {
-        path: 'goal',
-        id: 'Goal',
-        element: <Goal />
+        path: 'gate',
+        id: 'Gate',
+        element: <Gate />
       },
       {
         path: 'admin-dashboard',
