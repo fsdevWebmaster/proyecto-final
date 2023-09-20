@@ -18,6 +18,7 @@ const Containers = Loader(lazy(() => import('@pages/Container/Containers')));
 const Dashboard = Loader(lazy(() => import('@pages/Dashboard/Dashboard')))
 const CreateUser = Loader(lazy(() => import('@pages/CreateUser/CreateUser')))
 const DriverRegistration = Loader(lazy(() => import('@pages/Driver/DriverRegistration')))
+const DriverDashboard = Loader(lazy(() => import('@pages/Driver/DriverDashboard')))
 const ContainerRegistration = Loader(lazy(() => import('@pages/Container/ContainerRegistration')))
 const GoalDashboard = Loader(lazy(() => import('@pages/Gate/GoalDashboard')))
 const AdminDashboard = Loader(lazy(() => import('@pages/Admin/AdminDashboard')))
@@ -95,6 +96,11 @@ export const routes: RouteObject[] = [
         path: 'driver-registry',
         id: 'driverRegistration',
         element: <DriverRegistration />
+      },
+      {
+        path: 'driver-dashboard',
+        id: 'driverDashboard',
+        element: <DriverDashboard />
       },
       {
         path: 'goal-dashboard',

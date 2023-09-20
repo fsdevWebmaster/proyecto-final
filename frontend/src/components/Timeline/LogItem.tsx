@@ -35,7 +35,7 @@ export const LogItem = ({log, status}: ILogItemProps) => {
         }}
         color="text.secondary"
       >
-        {log.step}
+        {log.step.name}
       </TimelineOppositeContent>
       <TimelineSeparator
         sx={{
@@ -67,7 +67,8 @@ export const LogItem = ({log, status}: ILogItemProps) => {
             )}`
           }}
         >
-          {log.status}
+          Completed
+          {/* {log.status} */}
         </LabelWrapper>
         <Typography
           sx={{
@@ -76,7 +77,7 @@ export const LogItem = ({log, status}: ILogItemProps) => {
           variant="body2"
           color="text.primary"
         >
-          <b>{log.value}</b>
+          <b>{log.stepValue}</b>
         </Typography>
       </TimelineContent>
     </TimelineItem>    
