@@ -3,7 +3,8 @@ import { IconButton, Tooltip } from '@mui/material';
 
 interface ITableActionProps {
   title: string;
-  clickHandler: (event: MouseEvent<HTMLElement>) => void;
+  journey?: any
+  clickHandler: (e: MouseEvent<HTMLElement>, journey:any) => void;
   visible: boolean;
   icon: ReactNode;
   colors: {
@@ -12,9 +13,13 @@ interface ITableActionProps {
   }
 }
 
-export const TableAction = ({title, clickHandler, visible, icon, colors}: ITableActionProps) => {
+export const TableAction = ({title, journey, clickHandler, visible, icon, colors}: ITableActionProps) => {
+
+  console.log("journey", journey);
+
   return visible && (
-    <Tooltip title={title} arrow>
+    <Tooltip title={title} arrow 
+      onClick={(e: MouseEvent<HTMLElement>, journey:any) => clickHandler(e, "hard journey")}>
       <IconButton
         sx={{
           '&:hover': { background: colors.background },
@@ -22,7 +27,7 @@ export const TableAction = ({title, clickHandler, visible, icon, colors}: ITable
         }}
         color="inherit"
         size="small"
-        onClick={clickHandler}
+        // onClick={clickHandler}
       >
         {icon}
       </IconButton>
