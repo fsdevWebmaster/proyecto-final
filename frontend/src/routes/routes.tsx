@@ -21,6 +21,7 @@ const ContainerRegistration = Loader(lazy(() => import('@pages/Container/Contain
 const GoalDashboard = Loader(lazy(() => import('@pages/Goal/GoalDashboard')))
 const AdminDashboard = Loader(lazy(() => import('@pages/Admin/AdminDashboard')))
 const Goal = Loader(lazy(() => import('@pages/Goal/Goal')))
+const Steps = Loader(lazy(() => import('@pages/Steps/Steps')))
 
 
 //docs
@@ -109,6 +110,11 @@ export const routes: RouteObject[] = [
         path: 'admin-dashboard',
         id: 'adminDashboard',
         element: <AdminDashboard />
+      },
+      {
+        path: 'steps',
+        id: 'steps',
+        element: <Steps />
       }
     ]
   },
