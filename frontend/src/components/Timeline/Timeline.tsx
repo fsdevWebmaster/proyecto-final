@@ -4,6 +4,7 @@ import { Timeline } from '@mui/lab';
 import { Box, SxProps } from '@mui/material';
 import { JourneyLog } from '@models/Journey/Log';
 import { LogItem } from './LogItem';
+import { StepModel } from '@models/Step/Step';
 
 interface ITimelineLogProps {
   sx?: SxProps;

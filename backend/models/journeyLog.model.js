@@ -1,6 +1,7 @@
 // JourneyLog.js
 
-import mongoose from 'mongoose';
+import mongoose, { Schema } from 'mongoose';
+import Step from './step.model.js';
 
 const journeyLogSchema = new mongoose.Schema({
 

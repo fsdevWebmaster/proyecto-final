@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { format } from 'date-fns';
-import { Avatar, Box, Card, Grid, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography, useTheme } from '@mui/material';
+import { Avatar, Box, Card, Grid, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, 
+  Typography, useTheme 
+} from '@mui/material';
 import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
 import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
 import { observer } from 'mobx-react';
@@ -11,9 +13,11 @@ import { User } from '@models/User/User';
 import { Role } from '@models/Role/Role';
 import { CustomDialog } from '@components/Dialog/CustomDialog';
 import { ButtonConfig } from '@common/interfaces';
+import { CreateUser } from '@components/Dialog/CreateUser';
 
 const Users = () => {
   const [openDialog, setOpenDialog] = useState(false);
+  const [openCUDialog, setCUDialog] = useState(false);
   const theme = useTheme();
 
   const users: User[] = [
@@ -121,6 +125,12 @@ const getUserRoleLabel = (roles: Role[]) => {
 
 };
 
+const onCreateUserHandler = async () => {
+  alert('TO-DO call API')
+};
+
+const onCloseCUHandler = () => setCUDialog(false);
+
 const dialogButtons: ButtonConfig[] = [
   {
     title: 'Cancel',
@@ -153,7 +163,7 @@ const dialogButtons: ButtonConfig[] = [
       buttonConfig={{
         visible: true, 
         title: 'Create User', 
-        action: () => alert('To-do')}
+        action: () => setCUDialog(true)}
       }>
       <Grid item xs={12}>
         <Card>
@@ -233,6 +243,7 @@ const dialogButtons: ButtonConfig[] = [
         </Card>
       </Grid>
       <CustomDialog isOpen={openDialog} type="error" header="Disable User" configBtn={dialogButtons} onCloseHandler={() => setOpenDialog(false)}/>
+      <CreateUser isOpen={openCUDialog} onCloseHandler={onCloseCUHandler} onSuccessHandler={onCreateUserHandler}/>
     </PageLayout>
   );
 };

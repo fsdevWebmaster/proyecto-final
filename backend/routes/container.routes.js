@@ -1,9 +1,10 @@
 import express from "express";
-const containerRouter = express.Router();
 import { userAuth } from "../middlewares/users.middleware.js";
-import { getContainers } from "../controllers/container.controller.js";
-import { containerByNumber, updateContainer } from "../controllers/container.controller.js";
+import { newContainer, getContainers, containerByNumber, updateContainer } from "../controllers/container.controller.js";
 
+const containerRouter = express.Router();
+
+containerRouter.post('/container', userAuth, newContainer)
 containerRouter.get('/containers', userAuth, getContainers);
 containerRouter.get('/container/:containerNumber', userAuth, containerByNumber);
 

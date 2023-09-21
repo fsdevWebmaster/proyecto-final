@@ -1,7 +1,10 @@
+import { StepModel } from "@models/Step/Step"
+
 export type JourneyLog = {
-  step: string,
-  value: string | number | boolean;
-  status: any;
-  date: Date;
-  containerNumber: string;
+  id: string,
+  journey: string,
+  step: StepModel,
+  stepValue: string | number | null
+  user: string
+  description: string
 }
