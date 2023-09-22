@@ -3,6 +3,7 @@ import { RouteObject } from 'react-router';
 import { Navigate } from "react-router-dom";
 import { Loader } from "@components";
 import { Authorization } from '@components';
+import { Yard } from '@pages/Yard/Yard';
 import Gate from '@pages/Gate/Gate';
 
 const Recovery = Loader(lazy(() => import('@components/LoginForm/RecoverPass')))
@@ -112,6 +113,11 @@ export const routes: RouteObject[] = [
         path: 'gate',
         id: 'Gate',
         element: <Gate />
+      },
+      {
+        path: 'yard',
+        id: 'Yard',
+        element: <Yard />
       },
       {
         path: 'admin-dashboard',
