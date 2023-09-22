@@ -86,7 +86,7 @@ const mockLogs: JourneyLog[] = [
                 noWrap: true
               }}
           />
-          </Grid>
+        </Grid>
         </Grid>
         <Grid item container direction="row" spacing={4}>
           <Grid item sm={6} xs={12}>
