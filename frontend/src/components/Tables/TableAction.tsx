@@ -3,7 +3,7 @@ import { IconButton, Tooltip } from '@mui/material';
 
 interface ITableActionProps {
   title: string;
-  clickHandler: (event: MouseEvent<HTMLElement>) => void;
+  clickHandler: (e: MouseEvent<HTMLElement>) => void;
   visible: boolean;
   icon: ReactNode;
   colors: {
@@ -14,7 +14,8 @@ interface ITableActionProps {
 
 export const TableAction = ({title, clickHandler, visible, icon, colors}: ITableActionProps) => {
   return visible && (
-    <Tooltip title={title} arrow>
+    <Tooltip title={title} arrow 
+      onClick={(e: MouseEvent<HTMLElement>) => clickHandler(e)}>
       <IconButton
         sx={{
           '&:hover': { background: colors.background },
@@ -22,7 +23,6 @@ export const TableAction = ({title, clickHandler, visible, icon, colors}: ITable
         }}
         color="inherit"
         size="small"
-        onClick={clickHandler}
       >
         {icon}
       </IconButton>
