@@ -1,13 +1,24 @@
+import { PageLayout } from '@layouts/Page/PageLayout'
+import { MouseEvent } from "react";
 import {
     Box,
     Card,
     Container,
+    Grid,
+    Table,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableHead,
+    TableRow,
     Typography,
-    styled
+    styled,
+    useTheme
 } from '@mui/material'
-import { Helmet } from 'react-helmet-async'
+import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import { useTranslation } from 'react-i18next'
-import { AdminDashboardForm } from '@components/AdminForm/AdminDashboardForm'
+import { TableAction } from '@components/Tables/TableAction';
+import { useNavigate } from 'react-router';
 
 const MainContent = styled(Box)(
   () =>`
@@ -15,54 +26,112 @@ const MainContent = styled(Box)(
     display: flex;
     flex: 1;
     flex-direction: column;
+    justify-content: center;
   `
 )
 
-const TopWrapper = styled(Box)(
-  () =>`
-    display: flex;
-    width: 100%;
-    flex: 1;
-    padding: 20px
-  `
-)
+// Journey[] type setted to any[] while merge approval
+const mockActiveJourneys: any[] = [
+  {
+    id: "65007586b6efe051c2e1217d",
+    driver: "65007586b6efe051c2e12170",
+    container: "65007586b6efe051c2e12171",
+    step: {
+      name: "Patio",
+      order: 2,
+      previous: "64f7a092eb2116cb79ca7445",
+      next: "64f7a18ceb2116cb79ca7449",
+      isActive: true,
+      id: "64f7a10aeb2116cb79ca7447"      
+    },
+    createDate: new Date("2023-09-19 17:01:05"),
+    containerNumber: "001",
+    driverDoc: "1111"
+  }
+]
 
 const AdminDashboard = () => {
-  
   const { t } = useTranslation()
+  const theme = useTheme();
+  const navigate = useNavigate();
+  const handleDetails = (e:MouseEvent<HTMLElement>, journey:any) => {
+    // TODO: Handle
+    // journeyStore.setCurrentJourney(journey)
+    // navigate(`/journey-detail/${journey.id}`)
+  }
+
+  const tableActions = [
+    {
+      title: 'Journey details',
+      name: "details",
+      clickHandler: handleDetails,
+      visible: true,
+      icon: <NavigateNextIcon />,
+      colors: {
+        background: theme.colors.primary.lighter,
+        color: theme.palette.primary.main,
+      }
+    },
+  ];
+
 
   return(
-    <>
-      <Helmet>
-        <title>{t('Admin Dashboard')}</title>
-      </Helmet>
-      <MainContent>
-        <TopWrapper>
-          <Container maxWidth="sm">
-            <Card
-              sx={{
-                mt: 3,
-                px: 4,
-                pt: 5,
-                pb: 3
-              }}
-            >
-              <Box>
-                <Typography
-                  variant='h2'
-                  sx={{
-                    mb: 1
-                  }}
-                >
-                  {t('Administrator')}
-                </Typography>
-              </Box>
-              <AdminDashboardForm />
-            </Card>
-          </Container>
-        </TopWrapper>
-      </MainContent>
-    </>
+    <Grid item xs={12}>
+      <PageLayout seoTitle='Admin Dashboard'
+        title='Admin Dashboard'
+        buttonConfig={{
+          visible: false, 
+          title: 'Create User', 
+          action: () => alert('To-do')}
+      }>
+        <MainContent>
+          <Card>
+            <TableContainer>
+              <Table>
+                <TableHead>
+                  <TableRow>
+                    <TableCell align='center'>{t('Container number')}</TableCell>
+                    <TableCell align='center'>{t('Entrance date')}</TableCell>
+                    <TableCell align='center'>{t('Step')}</TableCell>
+                    <TableCell align='center'>{t('Details')}</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  { mockActiveJourneys.map((journey) => (
+                    <TableRow key={journey.id}>
+                      <TableCell align='center'>
+                        {journey.containerNumber}
+                      </TableCell>
+                      <TableCell align='center'>
+                        {journey.createDate.toDateString()}
+                      </TableCell>
+                      <TableCell align='center'>
+                        {journey.step.name}
+                      </TableCell>
+                      <TableCell align="center">
+                          <Typography noWrap>
+                            {
+                              tableActions.map(action => (
+                                <TableAction
+                                  title={action.title}
+                                  key={`action-${action.title}`}
+                                  clickHandler={(e) => action.clickHandler(e, journey)}
+                                  icon={action.icon}
+                                  colors={action.colors}
+                                  visible={action.visible} />
+                              ))
+                            }
+                          </Typography>
+                        </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </Card>
+        </MainContent>
+      </PageLayout>        
+    </Grid>
   )
 }
 

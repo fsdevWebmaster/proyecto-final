@@ -1,10 +1,10 @@
-import { Step } from "@models/Step/Step"
+import { StepModel } from "@models/Step/Step"
 
-export type Journey = {
+export type JourneyModel = {
   id: string
   driver: string
   container: string
-  step: Step
+  step: StepModel
   containerNumber: string
   driverDoc: string
 }

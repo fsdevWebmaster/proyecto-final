@@ -74,15 +74,6 @@ const createIniLogs = async (journey) => {
   journey.save()
 }
 
-export const getInTransit = (req, res) => {
-  Journey.find({ status: '64e51414dc9071b3342697fa' })
-    .then((result) => {
-      return res.json(result)
-    }).catch((err) => {
-      return res.status(500).json({ TODO: `Error handling ${err}` })
-    });
-}
-
 export const createJourneyLog = async (req, res, next) => {
   const createData = req.body
   const creatingLog = new JourneyLog(createData)
@@ -182,4 +173,20 @@ export const getStepJourneys = async (req, res, next) => {
   } catch (error) {
     next(error)
   }
+}
+
+export const getJourneyByDriver = (req, res, next) => {
+  const driverId = req.body.driver
+  if (!driverId) {
+    next(new Error("Missing data"))
+  }
+  Journey.findOne({ driver: driverId })
+  .then((result) => {
+    if (!result) {
+      next(new Error("Not found"))
+    }
+    return res.json(result)
+  }).catch((err) => {
+    next(err)
+  })    
 }

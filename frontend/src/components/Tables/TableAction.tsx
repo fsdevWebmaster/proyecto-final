@@ -27,7 +27,6 @@ export const TableAction = ({title, name, clickHandler, visible, icon, colors, i
         }}
         color="inherit"
         size="small"
-        // onClick={clickHandler}
       >
         <Typography pr={2}>
           {iconText}

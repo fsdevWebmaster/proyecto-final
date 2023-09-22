@@ -21,6 +21,23 @@ export const getContainers = (req, res, next) => {
     });
 }
 
+
+export const updateContainer = (req, res) => {
+  const { id } = req.params
+  const { containerNumber } = req.body
+  Container.findById(id)
+    .then((result) => {
+      result.containerNumber = containerNumber
+      result.save()
+        .then((saveResult) => {
+          return res.json(saveResult)
+        }).catch((error) => {
+          return res.status(500).json({ error })
+        });
+      }).catch((error) => {
+          });
+}
+
 export const containerByNumber = (req, res, next) => {
   const { containerNumber } = req.params
   if (!containerNumber) {

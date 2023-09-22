@@ -1,8 +1,10 @@
+import { StepModel } from "@models/Step/Step"
 
 export type JourneyLog = {
-  journey: string
-  step: string
-  stepValue: string | number | boolean | null
+  id: string,
+  journey: string,
+  step: StepModel,
+  stepValue: string | number | null
   user: string
-  description?: string
+  description: string
 }
