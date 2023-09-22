@@ -25,6 +25,11 @@ const journeySchema = new mongoose.Schema({
     ref: "Step",
     required: true
   },
+  status:{
+    type: String,
+    enum: ['ON_HOLD', 'IN_PROGRESS', 'DONE', 'DECLINED'],
+    default: "ON_HOLD"
+  }
 }, {
   timestamps: true,
   toJSON: {
