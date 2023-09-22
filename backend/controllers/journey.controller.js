@@ -171,10 +171,14 @@ export const getStepJourneys = (req, res, next) => {
   JourneyLog.find({ step , stepValue: null})
     .then((result) => {
       console.log(result)
+      if (!result) {
+        next(new Error("Not found"))
+      }
+      return res.json(result);
     }).catch((err) => {
       next(err)
     });
-  return res.json({ ok: true });
+  
 }
 
 export const getJourneyByDriver = (req, res, next) => {
