@@ -96,7 +96,7 @@ export const routes: RouteObject[] = [
       },
       {
         path: 'driver-registry',
-        id: 'driverRegistration',
+        id: 'driverRegistry',
         element: <DriverRegistration />
       },
       {

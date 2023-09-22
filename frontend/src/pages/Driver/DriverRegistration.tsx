@@ -34,7 +34,7 @@ const DriverRegistration = () => {
   return(
     <>
       <Helmet>
-        <title>{t('Driver Registration')}</title>
+        <title>{t('Driver Registry')}</title>
       </Helmet>
       <MainContent>
         <TopWrapper>
