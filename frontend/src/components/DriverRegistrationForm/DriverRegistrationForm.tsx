@@ -5,7 +5,8 @@ import { Formik } from "formik";
 import {
   Button,
   CircularProgress,
-  TextField
+  TextField,
+  useTheme
 } from "@mui/material";
 
 import { useNavigate } from "react-router";
@@ -17,6 +18,7 @@ export const DriverRegistrationForm: FC = () => {
   const isMountedRef = useRefMounted();
   const { t } : { t: any } = useTranslation();
   const navigate = useNavigate();
+  const theme = useTheme();
   
   const initValues = {
       name: '',
@@ -26,6 +28,9 @@ export const DriverRegistrationForm: FC = () => {
   const handleSubmit = async (values: any,
     { setErrors, setStatus, setSubmitting }: any): Promise<void> => {
       try {
+
+        console.log("TODO: Post to /driver", values);
+
         if (isMountedRef.current) {
           setStatus({ succes: true })
           setSubmitting(false)
@@ -97,7 +102,7 @@ export const DriverRegistrationForm: FC = () => {
               mt: 4,
               mb: 2
             }}
-            style={{ background: '#3E3E3E' }}
+            style={{ background: theme.colors.primary.dark }}
             startIcon={isSubmitting ? <CircularProgress size="1rem"/> : null}
             disabled={isSubmitting}
             type='submit'
