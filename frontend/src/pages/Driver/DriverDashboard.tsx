@@ -123,7 +123,7 @@ const DriverDashboard = () => {
       seoTitle='Drivers dashboard'
       title='Drivers dashboard'
       buttonConfig={{
-        visible: true, 
+        visible: false, 
         title: 'Create User', 
         action: () => alert('To-do')}
     }>
@@ -181,8 +181,7 @@ const DriverDashboard = () => {
             <TimelineLog sx={{ height: 350}} logs={mockLogs}/>
           </Grid>
         </Grid>
-      </Grid>
-  
+      </Grid>  
     </PageLayout>
   )
 }

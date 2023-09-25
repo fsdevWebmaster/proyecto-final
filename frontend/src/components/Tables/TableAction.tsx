@@ -6,7 +6,7 @@ interface ITableActionProps {
   title: string;
   name?: string
   journey?: JourneyModel;
-  clickHandler: (e: MouseEvent<HTMLElement>, name:string, journey:Journey) => void;
+  clickHandler: (e: MouseEvent<HTMLElement>, name:string, journey:JourneyModel) => void;
   visible: boolean;
   icon: ReactNode;
   iconText?: string;
