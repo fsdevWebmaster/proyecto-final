@@ -82,7 +82,6 @@ export const createJourneyLog = async (req, res, next) => {
       // update journey
       await result.populate("journey")
       let journey = result.journey
-      journey.status = result.status;
       journey.save()
         .then((journeyResult) => {
           return res.json({
@@ -166,19 +165,14 @@ export const getSteps = (req, res, next) => {
     });
 }
 
-export const getStepJourneys = (req, res, next) => {
-  const { step } = req.params
-  JourneyLog.find({ step , stepValue: null})
-    .then((result) => {
-      console.log(result)
-      if (!result) {
-        next(new Error("Not found"))
-      }
-      return res.json(result);
-    }).catch((err) => {
-      next(err)
-    });
-  
+export const getStepJourneys = async (req, res, next) => {
+  try {
+    const { step } = req.params
+    const journeys = await Journey.find({ step })
+    return res.json(journeys)    
+  } catch (error) {
+    next(error)
+  }
 }
 
 export const getJourneyByDriver = (req, res, next) => {

@@ -3,7 +3,9 @@ import { RouteObject } from 'react-router';
 import { Navigate } from "react-router-dom";
 import { Loader } from "@components";
 import { Authorization } from '@components';
+import { Yard } from '@pages/Yard/Yard';
 import Gate from '@pages/Gate/Gate';
+import { Scale } from '../pages/Scale/Scale';
 
 const Recovery = Loader(lazy(() => import('@components/LoginForm/RecoverPass')))
 const Layout = Loader(lazy(() => import('@layouts/Main/MainLayout')));
@@ -23,6 +25,7 @@ const ContainerRegistration = Loader(lazy(() => import('@pages/Container/Contain
 const GoalDashboard = Loader(lazy(() => import('@pages/Gate/GoalDashboard')))
 const AdminDashboard = Loader(lazy(() => import('@pages/Admin/AdminDashboard')))
 const Goal = Loader(lazy(() => import('@pages/Gate/Gate')))
+const AdminJourneysDashboard = Loader(lazy(() => import('@pages/Admin/AdminJourneysDashboard')))
 
 
 //docs
@@ -94,7 +97,7 @@ export const routes: RouteObject[] = [
       },
       {
         path: 'driver-registry',
-        id: 'driverRegistration',
+        id: 'driverRegistry',
         element: <DriverRegistration />
       },
       {
@@ -113,9 +116,24 @@ export const routes: RouteObject[] = [
         element: <Gate />
       },
       {
+        path: 'yard',
+        id: 'Yard',
+        element: <Yard />
+      },
+      {
+        path: 'scale',
+        id: 'Scale',
+        element: <Scale />
+      },
+      {
         path: 'admin-dashboard',
         id: 'adminDashboard',
         element: <AdminDashboard />
+      },
+      {
+        path: 'admin-journeys-dashboard',
+        id: 'adminJourneysDashboard',
+        element: <AdminJourneysDashboard />
       }
     ]
   },
