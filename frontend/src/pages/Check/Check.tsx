@@ -2,12 +2,13 @@ import { SearchForm } from "@components/Search/SearchForm"
 import { SearchItem } from "@components/Search/useSearch"
 import { PageLayout } from "@layouts/Page/PageLayout"
 import { ContainerModel } from "@models"
-import { Box, Button, Card, Grid, IconButton, Typography, styled, useTheme } from "@mui/material"
-import { useState } from "react"
+import { Box, Button, Card, Checkbox, FormControlLabel, Grid, IconButton, Typography, styled, useTheme } from "@mui/material"
+import { SyntheticEvent, useState, useEffect } from 'react';
 import { useTranslation } from "react-i18next"
 import DeleteIcon from '@mui/icons-material/Delete';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import FileUploadIcon from '@mui/icons-material/FileUpload';
+import { useNavigate } from "react-router"
 
 const SearchContainer = styled(Box)(
   () => `
@@ -49,10 +50,46 @@ const ButtonsContainer = styled(Box)(
   `
 )
 
+const RevisionContainer = styled(Box)(
+  () => `
+  `
+)
+
 export const Check = () => {
-  const t = useTranslation()
+  const {t} = useTranslation()
   const theme = useTheme()
+  const navigate = useNavigate()
   const [selectedContainer, setSelectedContainer] = useState<ContainerModel | null>()
+  const [selectedType, setSelectedType] = useState<string | null>()
+  const [ctPat, setCtPat] = useState(false)
+  const [previousOk, setPreviousOk] = useState(false)
+  const [stamps, setStamps] = useState(false)
+  const [title, setTitle] = useState<string | null>(null)
+  const [buttonVisible, setButtonVisible] = useState(false)
+
+  const mockRole:string = "check-one"
+  const mockJourney = {
+    id: "65007586b6efe051c2e12184",
+    journey: "65007586b6efe051c2e1217d",
+    step: {
+      name: "Portería",
+      order: 1,
+      previous: null,
+      next: "64f7a10aeb2116cb79ca7447",
+      isActive: true,
+      id: "64f7a092eb2116cb79ca7445"
+    },
+    stepValue: "4500 kg",
+    user: "64da7c0f484e531a6eeebbfc",
+    description: ""
+  }
+
+  useEffect(() => {
+    if (selectedType) {
+      
+    }
+  }, [])
+  
   
   const handleSelected = (selected:SearchItem) => {
     setSelectedContainer(selected as ContainerModel)
@@ -67,14 +104,87 @@ export const Check = () => {
   }
 
   const handleType = (type:string) => {
+    setSelectedType(type) 
+
+    // console.log("ctPat", ctPat)
+    // console.log("previousOk", previousOk)
+
+    // console.log('visible:', buttonVisible)
+    console.log('selectedType:', selectedType)
+
     switch (type) {
       case "load":
-        
+         setTitle(`${t("Load")}`)
       break;
       case "unload":
-        
+        setTitle(`${t("Unload")}`)
+        // setButtonVisible(true)
+
+        console.log("TODO: create exit step route and page")
+        // navigate("/exit")
       break;
     }
+  }
+
+  const handleChecks = (e: SyntheticEvent<Element, Event>) => {
+    const { checked, name } = e.target
+
+    switch (name) {
+      case "ct-pat":
+        setCtPat(checked)
+      break;
+      case "previous":
+        setPreviousOk(checked)
+      break;
+      case "stamps":
+        setStamps(checked)
+      break;
+    }
+
+    // console.log(buttonVisible)
+
+    // console.log(name, checked)
+
+
+    if (ctPat === true && previousOk === true) {
+
+      // console.log("ctPat", ctPat)
+      // console.log("previousOk", previousOk)
+
+      // setButtonVisible(true)
+
+
+    }
+
+    // selectedContainer && (stamps === true && previousOk === true)
+
+    // if (!checked) {
+    //   setButtonVisible(false)
+    // }
+    
+
+
+
+    // console.log("checked:", checked)
+    // console.log("stamps:", stamps)
+    // console.log("selectedContainer:", selectedContainer)
+    // console.log("--------------------------------------------------------")
+
+    
+  }
+
+  const handleSubmit = () => {
+    let patchData:any = {
+      journey: mockJourney.id,
+      step: mockJourney.step.next,
+    }
+    if (mockRole === "check-one") {
+      patchData = { ...patchData, value: { ctPat, previousOk } }
+    }
+    else {
+      patchData = { ...patchData, value: { stamps, previousOk } }
+    }
+    console.log("TODO: patch to /journey:", patchData)
   }
 
   return (
@@ -115,17 +225,60 @@ export const Check = () => {
         </InfoContainer>
       }
 
-      <ButtonsContainer>
-        <Button onClick={() => handleType("load")}>
-          <FileUploadIcon />
-          Carga
-        </Button>
-        <Button onClick={() => handleType("unload")}>
-          <FileDownloadIcon />
-          Descarga
-        </Button>
-      </ButtonsContainer>
+      { mockRole === "check-one" &&
+        <ButtonsContainer>
+          <Typography variant="h4">
+            { title }
+          </Typography>
+          <Button onClick={() => handleType("load")}>
+            <FileUploadIcon />
+            Carga
+          </Button>
+          <Button onClick={() => handleType("unload")}>
+            <FileDownloadIcon />
+            Descarga
+          </Button>
+        </ButtonsContainer>
+      }
 
+      { selectedType === "load" && 
+        <RevisionContainer>
+          <Typography variant="h3">
+            Revisión
+          </Typography>
+          { mockRole === "check-one" ?
+            <FormControlLabel 
+              control={<Checkbox />} 
+              label={t("CT-PAT norm OK")}
+              name="ct-pat"
+              onChange={e => handleChecks(e)}
+            />
+          :
+            <FormControlLabel 
+              control={<Checkbox />} 
+              label={t("Stamp information OK")}
+              name="stamps"
+              onChange={e => handleChecks(e)}
+            />
+          }
+          <FormControlLabel 
+            control={<Checkbox />} 
+            label={t("Previous information OK")} 
+            name="previous"
+            onChange={e => handleChecks(e)}
+          />
+          { selectedContainer &&  
+            <Button onClick={handleSubmit}>
+              {t("Continue")}
+            </Button>
+          }
+          { buttonVisible &&  
+            <Button onClick={handleSubmit}>
+              {t("Continue")}
+            </Button>
+          }
+        </RevisionContainer>
+      }
     </MainContent>
     </PageLayout>
   )
