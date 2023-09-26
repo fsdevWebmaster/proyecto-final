@@ -168,8 +168,13 @@ export const getSteps = (req, res, next) => {
 export const getStepJourneys = async (req, res, next) => {
   try {
     const { step } = req.params
-    const journeys = await Journey.find({ step })
-    return res.json(journeys)    
+    const journeys = await Journey.find({ step });
+    const result = {
+      stepCount: journeys.length, 
+      step: step,
+      journeys: journeys,
+    };
+    return res.json(result)    
   } catch (error) {
     next(error)
   }
