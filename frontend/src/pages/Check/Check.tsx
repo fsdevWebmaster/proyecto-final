@@ -60,14 +60,14 @@ export const Check = () => {
   const theme = useTheme()
   const navigate = useNavigate()
   const [selectedContainer, setSelectedContainer] = useState<ContainerModel | null>()
-  const [selectedType, setSelectedType] = useState<string | null>()
+  const [selectedType, setSelectedType] = useState<string>('load')
   const [ctPat, setCtPat] = useState(false)
   const [previousOk, setPreviousOk] = useState(false)
   const [stamps, setStamps] = useState(false)
   const [title, setTitle] = useState<string | null>(null)
   const [buttonVisible, setButtonVisible] = useState(false)
 
-  const mockRole:string = "check-one"
+  const mockRole:string = "check-two"
   const mockJourney = {
     id: "65007586b6efe051c2e12184",
     journey: "65007586b6efe051c2e1217d",
@@ -85,10 +85,13 @@ export const Check = () => {
   }
 
   useEffect(() => {
-    if (selectedType) {
-      
+    if (selectedContainer && ((ctPat && previousOk) || (stamps && previousOk))) {
+      setButtonVisible(true)
     }
-  }, [])
+    else {
+      setButtonVisible(false)
+    }
+  }, [ctPat, previousOk, stamps, selectedContainer])
   
   
   const handleSelected = (selected:SearchItem) => {
@@ -106,28 +109,19 @@ export const Check = () => {
   const handleType = (type:string) => {
     setSelectedType(type) 
 
-    // console.log("ctPat", ctPat)
-    // console.log("previousOk", previousOk)
-
-    // console.log('visible:', buttonVisible)
-    console.log('selectedType:', selectedType)
-
     switch (type) {
       case "load":
          setTitle(`${t("Load")}`)
       break;
       case "unload":
         setTitle(`${t("Unload")}`)
-        // setButtonVisible(true)
-
-        console.log("TODO: create exit step route and page")
-        // navigate("/exit")
+        navigate("/exit")
       break;
     }
   }
 
   const handleChecks = (e: SyntheticEvent<Element, Event>) => {
-    const { checked, name } = e.target
+    const { checked, name } = e.target as HTMLInputElement
 
     switch (name) {
       case "ct-pat":
@@ -140,37 +134,6 @@ export const Check = () => {
         setStamps(checked)
       break;
     }
-
-    // console.log(buttonVisible)
-
-    // console.log(name, checked)
-
-
-    if (ctPat === true && previousOk === true) {
-
-      // console.log("ctPat", ctPat)
-      // console.log("previousOk", previousOk)
-
-      // setButtonVisible(true)
-
-
-    }
-
-    // selectedContainer && (stamps === true && previousOk === true)
-
-    // if (!checked) {
-    //   setButtonVisible(false)
-    // }
-    
-
-
-
-    // console.log("checked:", checked)
-    // console.log("stamps:", stamps)
-    // console.log("selectedContainer:", selectedContainer)
-    // console.log("--------------------------------------------------------")
-
-    
   }
 
   const handleSubmit = () => {
@@ -267,11 +230,6 @@ export const Check = () => {
             name="previous"
             onChange={e => handleChecks(e)}
           />
-          { selectedContainer &&  
-            <Button onClick={handleSubmit}>
-              {t("Continue")}
-            </Button>
-          }
           { buttonVisible &&  
             <Button onClick={handleSubmit}>
               {t("Continue")}
