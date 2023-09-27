@@ -165,20 +165,36 @@ export const getSteps = (req, res, next) => {
     });
 }
 
-export const getStepJourneys = async (req, res, next) => {
-  try {
-    const { step } = req.params
-    const journeys = await Journey.find({ step });
-    const result = {
-      stepCount: journeys.length, 
-      step: step,
-      journeys: journeys,
-    };
-    return res.json(result)    
-  } catch (error) {
-    next(error)
-  }
-}
+const  getStepJourneys = async (step)=>({
+  
+      //  const steps = await Step.find();
+      //  const { step } = req.params;
+      //  const journeys = await Journey.find({ step });
+      
+      //  const result = {
+      //    stepCount: journeys.length, 
+      //    step: step,
+      //    journeys: journeys,
+      // };
+})
+
+// export const getStepJourneys = async (req, res, next) => {
+//   try {
+//     const steps = await Step.find()
+//     console.log(steps)
+//     const { step } = req.params
+//     const journeys = await Journey.find({ step });
+    
+//     const result = {
+//       stepCount: journeys.length, 
+//       step: step,
+//       journeys: journeys,
+//     };
+//     return res.json(result)    
+//   } catch (error) {
+//     next(error)
+//   }
+// }
 
 export const getJourneyByDriver = (req, res, next) => {
   const driverId = req.body.driver
