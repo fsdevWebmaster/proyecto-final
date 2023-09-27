@@ -5,7 +5,7 @@ import {
   createJourney, 
   createJourneyLog,
   getJourneyLog,
-  getStepJourneys,
+  // getStepJourneys,
   updateJourneyLog,
   getSteps,
   getJourneyByContainerNumber,
@@ -19,7 +19,7 @@ journeyRouter.post('/journey-log', userAuth, createJourneyLog);
 journeyRouter.patch('/journey-log', userAuth, updateJourneyLog);
 journeyRouter.post('/journey-by-driv', userAuth, getJourneyByDriver);
 journeyRouter.get('/journey-log/:journey', userAuth, getJourneyLog);
-journeyRouter.get('/step-journeys/:step', userAuth, getStepJourneys);
+// journeyRouter.get('/step-journeys/:step', userAuth, getStepJourneys);
 journeyRouter.get('/steps', userAuth, getSteps);
 journeyRouter.get('/journey/:containerNumber',userAuth, getJourneyByContainerNumber)
 
