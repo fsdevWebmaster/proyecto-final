@@ -5,6 +5,7 @@ import { Loader } from "@components";
 import { Authorization } from '@components';
 import { Yard } from '@pages/Yard/Yard';
 import Gate from '@pages/Gate/Gate';
+import { Check } from '@pages/Check/Check';
 import { Scale } from '../pages/Scale/Scale';
 
 const Recovery = Loader(lazy(() => import('@components/LoginForm/RecoverPass')))
@@ -119,6 +120,11 @@ export const routes: RouteObject[] = [
         path: 'yard',
         id: 'Yard',
         element: <Yard />
+      },
+      {
+        path: 'check-one',
+        id: 'CheckOne',
+        element: <Check />
       },
       {
         path: 'scale',
