@@ -45,38 +45,38 @@ export const SearchForm = ({ sendSelected, searchType, formTitle }: Props) => {
       />
       { searchValue && baseList.length > 0 &&
         <>
-        <Card>
-          <TableContainer>
-            <Table>
-              <TableHead>
-                <TableRow>
-                  <TableCell align="center">Container number</TableCell>
-                  <TableCell align="center">Actions</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-              { baseList.map(item =>(
-                <TableRow hover key={item[showField]}  onClick={(e) => handleSelected(e, item)}>
-                  <TableCell align="center">
-                    <Typography variant="h5">
-                      {item[showField]}
-                    </Typography>
-                  </TableCell>
-                  <TableCell align="center">
-                    <TableAction
-                      title={"Add"}
-                      icon={<AddCircleOutlineOutlined/>}
-                      colors={{background: theme.colors.primary.main, color: theme.colors.primary.light}}
-                      visible={true} 
-                      clickHandler={(e) => handleSelected(e, item)}
-                    />
-                  </TableCell>
-                </TableRow>
-              ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        </Card>
+          <Card>
+            <TableContainer>
+              <Table>
+                <TableHead>
+                  <TableRow>
+                    <TableCell align="center">Container number</TableCell>
+                    <TableCell align="center">Actions</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                { baseList.map(item =>(
+                  <TableRow hover key={item[showField]}  onClick={(e) => handleSelected(e, item)}>
+                    <TableCell align="center">
+                      <Typography variant="h5">
+                        {item[showField]}
+                      </Typography>
+                    </TableCell>
+                    <TableCell align="center">
+                      <TableAction
+                        title={"Add"}
+                        icon={<AddCircleOutlineOutlined/>}
+                        colors={{background: theme.colors.primary.main, color: theme.colors.primary.light}}
+                        visible={true} 
+                        clickHandler={(e) => handleSelected(e, item)}
+                      />
+                    </TableCell>
+                  </TableRow>
+                ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </Card>
         </>
       }
       { searchValue && baseList.length === 0 &&

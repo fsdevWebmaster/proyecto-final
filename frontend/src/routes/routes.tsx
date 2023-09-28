@@ -6,6 +6,7 @@ import { Authorization } from '@components';
 import { Yard } from '@pages/Yard/Yard';
 import Gate from '@pages/Gate/Gate';
 import { Check } from '@pages/Check/Check';
+import { Scale } from '../pages/Scale/Scale';
 
 const Recovery = Loader(lazy(() => import('@components/LoginForm/RecoverPass')))
 const Layout = Loader(lazy(() => import('@layouts/Main/MainLayout')));
@@ -97,7 +98,7 @@ export const routes: RouteObject[] = [
       },
       {
         path: 'driver-registry',
-        id: 'driverRegistration',
+        id: 'driverRegistry',
         element: <DriverRegistration />
       },
       {
@@ -124,6 +125,11 @@ export const routes: RouteObject[] = [
         path: 'check-one',
         id: 'CheckOne',
         element: <Check />
+      },
+      {
+        path: 'scale',
+        id: 'Scale',
+        element: <Scale />
       },
       {
         path: 'admin-dashboard',
