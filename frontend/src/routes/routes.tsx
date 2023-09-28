@@ -7,6 +7,7 @@ import { Yard } from '@pages/Yard/Yard';
 import Gate from '@pages/Gate/Gate';
 import { Check } from '@pages/Check/Check';
 import { Scale } from '../pages/Scale/Scale';
+import { Exit } from '@pages/Exit/Exit';
 
 const Recovery = Loader(lazy(() => import('@components/LoginForm/RecoverPass')))
 const Layout = Loader(lazy(() => import('@layouts/Main/MainLayout')));
@@ -25,7 +26,6 @@ const DriverDashboard = Loader(lazy(() => import('@pages/Driver/DriverDashboard'
 const ContainerRegistration = Loader(lazy(() => import('@pages/Container/ContainerRegistration')))
 const GoalDashboard = Loader(lazy(() => import('@pages/Gate/GoalDashboard')))
 const AdminDashboard = Loader(lazy(() => import('@pages/Admin/AdminDashboard')))
-const Goal = Loader(lazy(() => import('@pages/Gate/Gate')))
 const AdminJourneysDashboard = Loader(lazy(() => import('@pages/Admin/AdminJourneysDashboard')))
 
 
@@ -130,6 +130,11 @@ export const routes: RouteObject[] = [
         path: 'scale',
         id: 'Scale',
         element: <Scale />
+      },
+      {
+        path: 'exit',
+        id: 'ExitPage',
+        element: <Exit />
       },
       {
         path: 'admin-dashboard',

@@ -7,20 +7,23 @@ import FastForwardIcon from '@mui/icons-material/FastForward';
 import RedoIcon from '@mui/icons-material/Redo';
 import { PageLayout } from "@layouts/Page/PageLayout"
 import { TableAction } from "@components/Tables/TableAction";
-import { Journey } from "@models/Journey/Journey";
+import { JourneyModel } from "@models/Journey/Journey";
 import { JourneyLog } from '@models/Journey/Log';
+import { StepModel } from '@models/Step/Step';
 
 export const Yard = () => {
   const { t }: { t: any } = useTranslation();
   const theme = useTheme();
 
-  const handleActions = (e: MouseEvent<HTMLElement>, actionName: string, journey:Journey) => {
-    if (actionName === "next") {
+  const handleActions = (e: MouseEvent<HTMLElement>, actionName: string, journey:JourneyModel) => {
+    if (actionName === "next" && journey.step.next) {
       const newLog:JourneyLog = {
+        id: "x",
         journey: journey.id,
-        step: journey.step.next,
+        step: journey.step.next as StepModel,
         stepValue: null,
-        user: "TODO: set logged user."
+        user: "TODO: set logged user.",
+        description: ""
       }
 
       console.log("TODO: post journey", newLog)
@@ -97,7 +100,7 @@ export const Yard = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                { mockJourneys && mockJourneys.map((journey:Journey) => (
+                { mockJourneys && mockJourneys.map((journey:JourneyModel) => (
                   <TableRow key={journey.id}>
                     <TableCell align="center">
                       <Typography>
