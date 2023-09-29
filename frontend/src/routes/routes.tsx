@@ -30,7 +30,7 @@ const AdminJourneysDashboard = Loader(lazy(() => import('@pages/Admin/AdminJourn
 
 
 //docs
-const Documantation = Loader(lazy(() => import('@pages/Doc/Documentation')));
+const Documentation = Loader(lazy(() => import('@pages/Doc/Documentation')));
 
 // Status Pages
 const Status404 = Loader(lazy(() => import('@pages/Status/Status404')));
@@ -58,8 +58,7 @@ export const routes: RouteObject[] = [
   {
     path: 'main',
     id: 'main',
-    // element: <Authorization><Layout /></Authorization>,
-    element: <Layout />,
+    element: <Authorization><Layout /></Authorization>,
     children: [
       {
         path: '',
@@ -69,7 +68,7 @@ export const routes: RouteObject[] = [
       {
         path: 'doc',
         id: 'doc',
-        element: <Documantation />
+        element: <Documentation />
       },
       {
         path: 'profile',

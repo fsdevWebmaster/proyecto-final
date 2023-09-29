@@ -42,7 +42,7 @@ const HeaderWrapper = styled(Box)(
 export const Header = () => {
   // const { sidebarToggle, toggleSidebar } = useContext(SidebarContext);
   // TO-DO
-  const sidebarToggle = true;
+  const sidebarToggle = false;
   const theme = useTheme();
 
   return (
@@ -65,17 +65,7 @@ export const Header = () => {
               )}`
       }}
     >
-      <Stack
-        direction="row"
-        divider={<Divider orientation="vertical" flexItem />}
-        alignItems="center"
-        spacing={2}
-      >
-        <HeaderSearch />
-        <HeaderMenu />
-      </Stack>
-      <Box display="flex" alignItems="center">
-        <HeaderButtons />
+      <Box display="flex" alignItems="center" justifyContent="flex-end" width={1}>
         <HeaderUserBox />
         <Box
           component="span"

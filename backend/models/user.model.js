@@ -7,6 +7,10 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  lastName: {
+    type: String,
+    required: true,
+  },  
   idDoc: {
     type: String,
     required: true,
@@ -23,7 +27,10 @@ const userSchema = new mongoose.Schema({
   roles: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: "Role"
-  }]
+  }],
+  token: {
+    type: String,
+  }  
 },
 {
   toJSON: {
@@ -31,6 +38,7 @@ const userSchema = new mongoose.Schema({
     transform: (doc, ret) => {
       delete ret.__v
       delete ret.password
+      delete ret.token
       delete ret._id
       ret.id = doc.id
       return ret

@@ -33,17 +33,17 @@ export interface MenuItems {
 
 const menuItems: MenuItems[] = [
   {
-    heading: 'Foundation',
+    heading: 'Principal',
     items: [
       {
-        name: 'Overview',
-        link: '/overview',
+        name: 'Usuarios',
+        link: 'users',
         icon: DesignServicesTwoToneIcon
       },
       {
-        name: 'Documentation',
+        name: 'Containers',
         icon: SupportTwoToneIcon,
-        link: '/docs'
+        link: 'containers'
       }
     ]
   }
