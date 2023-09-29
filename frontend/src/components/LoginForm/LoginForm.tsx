@@ -8,7 +8,7 @@ import {
   TextField,
   CircularProgress
 } from '@mui/material';
-import {useRefMounted} from '@hooks';
+import {useRefMounted} from '@hooks/useRefMounted'
 import { useTranslation } from 'react-i18next';
 import { MxLoginStore } from '@stores/LoginStore';
 import { JWTHelper } from '@helpers/jwtHelper';
@@ -35,20 +35,23 @@ export const LoginForm: FC = observer(() => {
     }
   }
 
-  const login = async (user: string, pass: string, callback?: Function) => {
-    const response = await MxLoginStore.loginUser(user, pass);
+  const login = async (email: string, pass: string, callback?: Function) => {
 
-    if (response.data) {
-      const { token } = response.data;
+    try {
+      const response = await MxLoginStore.loginUser(email, pass);
+      const { logged, user } = response.data;
 
-      if (token) {
-        MxLoginStore.setSession(token);
-        await initProfile(token);
-        callback!();
+      if (logged && user) {
+        MxLoginStore.setSession(user, logged);
+        await initProfile(user);
+        callback!();        
+      } else {
+        MxLoginStore.resetAuth();
+        MxLoginStore.setSession(null, false);        
       }
-    } else {
-      MxLoginStore.resetAuth();
-      MxLoginStore.setSession(null);
+
+    } catch (error) {
+      console.error(error);
     }
   }
 
@@ -61,7 +64,7 @@ export const LoginForm: FC = observer(() => {
             setStatus({ success: true });
             setSubmitting(false);
           }
-          navigate('/dashboard');
+          navigate('/main');
         });
 
       } catch (err: any) {
@@ -72,25 +75,6 @@ export const LoginForm: FC = observer(() => {
         }
       }
   }
-
-  useEffect(() => {
-
-    const checkLogin = async() => {
-      const localToken = MxLoginStore.getAccessToken();
-      if (localToken) {
-        MxLoginStore.setSession(localToken);
-        await initProfile(localToken);
-
-        const user = MxUserStore.userInfo;
-        
-        if (user) {
-          navigate('/dashboard');
-        }
-      }
-    }
-
-     checkLogin();
-  },[]);
 
   return (
     <Formik
@@ -157,23 +141,6 @@ export const LoginForm: FC = observer(() => {
               variant="contained"
             >
               {t('Sign in')}
-            </Button>
-
-            <Button
-              sx={{
-                mt: 4,
-                mb:2
-              }}
-              component={RouterLink} to="/recover-password"
-              style={{ backgroundColor: '#3E3E3E' }}
-              startIcon={isSubmitting ? <CircularProgress size="1rem" /> : null}
-              disabled={isSubmitting}
-              type="submit"
-              fullWidth
-              size="large"
-              variant="contained"
-            >
-              {t('Reset password')}
             </Button>
         </form>
       )}

@@ -1,67 +1,16 @@
 import { useRef, useState } from 'react';
-// import useAuth from 'src/hooks/useAuth';
-import { NavLink, useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 import {
   Avatar,
   Box,
-  Button,
-  Divider,
-  alpha,
-  List,
-  ListItem,
-  ListItemText,
-  Popover,
-  IconButton,
   Typography,
-  styled,
   useTheme
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import InboxTwoToneIcon from '@mui/icons-material/InboxTwoTone';
-import UnfoldMoreTwoToneIcon from '@mui/icons-material/UnfoldMoreTwoTone';
-import AccountBoxTwoToneIcon from '@mui/icons-material/AccountBoxTwoTone';
-import LockOpenTwoToneIcon from '@mui/icons-material/LockOpenTwoTone';
-import AccountTreeTwoToneIcon from '@mui/icons-material/AccountTreeTwoTone';
 import { observer } from 'mobx-react';
 import { MxLoginStore } from '@stores/LoginStore';
 import { MxUserStore } from '@stores/UserStore';
-
-const MenuUserBox = styled(Box)(
-  ({ theme }) => `
-    background: ${theme.colors.alpha.black[5]};
-    padding: ${theme.spacing(2)};
-`
-);
-
-const UserBoxText = styled(Box)(
-  ({ theme }) => `
-    text-align: left;
-    padding-left: ${theme.spacing(1)};
-`
-);
-
-const UserBoxLabel = styled(Typography)(
-  ({ theme }) => `
-    font-weight: ${theme.typography.fontWeightBold};
-    color: ${theme.sidebar.menuItemColor};
-    display: block;
-
-    &.popoverTypo {
-      color: ${theme.palette.secondary.main};
-    }
-`
-);
-
-const UserBoxDescription = styled(Typography)(
-  ({ theme }) => `
-    color: ${alpha(theme.sidebar.menuItemColor as string, 0.6)};
-
-    &.popoverTypo {
-      color: ${theme.palette.secondary.light};
-    }
-`
-);
 
 export const SidebarTopSection = observer(() => {
   const { t }: { t: any } = useTranslation();
@@ -88,8 +37,7 @@ export const SidebarTopSection = observer(() => {
   const handleLogout = async (): Promise<void> => {
     try {
       handleClose();
-      // await logout();
-      MxLoginStore.logout();
+      await MxLoginStore.logOut(userInfo?.id!);
       navigate('/');
     } catch (err) {
       console.error(err);
@@ -112,9 +60,9 @@ export const SidebarTopSection = observer(() => {
           mb: 2,
           mx: 'auto'
         }}
-        alt={userInfo?.name}
-        src={userInfo?.avatar}
-      />
+      >
+        {userInfo?.avatar}
+      </Avatar>
 
       <Typography
         variant="h4"
@@ -132,116 +80,7 @@ export const SidebarTopSection = observer(() => {
       >
         {currentRole}
       </Typography>
-      <IconButton
-        size="small"
-        sx={{
-          position: 'absolute',
-          right: theme.spacing(0),
-          color: `${theme.colors.alpha.trueWhite[70]}`,
-          top: theme.spacing(0),
-          background: `${theme.colors.alpha.trueWhite[10]}`,
 
-          '&:hover': {
-            color: `${theme.colors.alpha.trueWhite[100]}`,
-            background: `${alpha(theme.colors.alpha.trueWhite[100], 0.2)}`
-          }
-        }}
-        ref={ref}
-        onClick={handleOpen}
-      >
-        <UnfoldMoreTwoToneIcon fontSize="small" />
-      </IconButton>
-      <Popover
-        disableScrollLock
-        anchorEl={ref.current}
-        onClose={handleClose}
-        open={isOpen}
-        anchorOrigin={{
-          vertical: 'center',
-          horizontal: 'center'
-        }}
-        transformOrigin={{
-          vertical: 'center',
-          horizontal: 'center'
-        }}
-      >
-        <MenuUserBox
-          sx={{
-            minWidth: 210
-          }}
-          display="flex"
-        >
-          <Avatar variant="rounded" alt={userInfo?.name} src={userInfo?.avatar} />
-          <UserBoxText>
-            <UserBoxLabel className="popoverTypo" variant="body1">
-              {userInfo?.name}
-            </UserBoxLabel>
-            <UserBoxDescription className="popoverTypo" variant="body2">
-              {currentRole}
-            </UserBoxDescription>
-          </UserBoxText>
-        </MenuUserBox>
-        <Divider
-          sx={{
-            mb: 0
-          }}
-        />
-        <List
-          sx={{
-            p: 1
-          }}
-          component="nav"
-        >
-          <ListItem
-            onClick={() => {
-              handleClose();
-            }}
-            // button
-            // to={`/${location.pathname.split('/')[1]}/management/users/single/1`}
-            // component={NavLink}
-          >
-            <AccountBoxTwoToneIcon fontSize="small" />
-            <ListItemText primary={t('Profile')} />
-          </ListItem>
-          <ListItem
-            onClick={() => {
-              handleClose();
-            }}
-            button
-            to={`/${
-              location.pathname.split('/')[1]
-            }/applications/mailbox/inbox`}
-            component={NavLink}
-          >
-            <InboxTwoToneIcon fontSize="small" />
-            <ListItemText primary={t('Inbox')} />
-          </ListItem>
-          <ListItem
-            onClick={() => {
-              handleClose();
-            }}
-            button
-            to={`/${
-              location.pathname.split('/')[1]
-            }/applications/projects-board`}
-            component={NavLink}
-          >
-            <AccountTreeTwoToneIcon fontSize="small" />
-            <ListItemText primary={t('Projects')} />
-          </ListItem>
-        </List>
-        <Divider />
-        <Box m={1}>
-          <Button color="primary" fullWidth onClick={handleLogout}>
-            <LockOpenTwoToneIcon
-              sx={{
-                mr: 1
-              }}
-            />
-            {t('Sign out')}
-          </Button>
-        </Box>
-      </Popover>
     </Box>
   );
 })

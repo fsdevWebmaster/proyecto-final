@@ -8,12 +8,19 @@ interface IAuthorization {
 }
 
 export const Authorization = ({children}: IAuthorization) => {
-    const { user } = MxUserStore;
-    const { auth } = MxLoginStore;
+    const localToken = MxLoginStore.getAccessToken();
 
-    if (!auth.isAuthenticated || !user) {
-        return <Navigate to={'/login'} />
+    if (!localToken) {
+        return <Navigate replace to={'/login'} />
     }
 
-    return children;
+    const userInfo = MxLoginStore.getUserInfoByToken(localToken!);
+
+    if (userInfo && userInfo.exp * 1000 < Date.now() ) {
+        MxLoginStore.logOut(userInfo.id);
+        return <Navigate replace to={'/login'} />
+    } else {
+        MxUserStore.initProfile(userInfo.id);
+        return children;
+    }
 }

@@ -28,8 +28,9 @@ class UserStore {
         if (rs.data) {
           const user: User = {
             email: rs.data.email,
-            avatar: '',
-            id: rs.data['_id'],
+            avatar: `${rs.data.name.charAt(0)}${rs.data.lastName.charAt(0)}`,
+            id: rs.data.id,
+            lastName: rs.data.lastName,
             name: rs.data.name,
             personalId: rs.data.idDoc,
             roles: [],
@@ -41,7 +42,7 @@ class UserStore {
           if (rs.data.roles) {
             const roles = rs.data.roles.map((role: any) => {
               return {
-                id: role["_id"],
+                id: role.id,
                 code: role.code,
                 role: role.name,
               } as Role;

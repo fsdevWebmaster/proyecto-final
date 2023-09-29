@@ -1,20 +1,21 @@
 import express from "express";
-import { register, login, getProfile, updateProfile } from "../controllers/users.controller.js";
+import { register, login, getProfile, updateProfile, logout } from "../controllers/users.controller.js";
 import {newDriver, getDriver, searchDriver, updateDriver,} from "../controllers/driver.controler.js"
-import { userAuth } from "../middlewares/users.middleware.js";
+import { userAuthWithCookie } from "../middlewares/users.middleware.js";
 const router = express.Router();
 
 //routes for user
 router.post('/register', register);
 router.post('/login', login);
-router.get('/profile', userAuth, getProfile);
-router.patch('/profile', userAuth, updateProfile);
+router.post('/logout', userAuthWithCookie, logout);
+router.get('/profile', userAuthWithCookie, getProfile);
+router.patch('/profile', userAuthWithCookie, updateProfile);
 
 //routes for driver
-router.post('/driver', userAuth, newDriver);
-router.get('/driver/:id', userAuth, getDriver);
-router.get('/search-driver/:idDoc', userAuth, searchDriver);
-router.patch('/driver/:id', userAuth, updateDriver);
+router.post('/driver', userAuthWithCookie, newDriver);
+router.get('/driver/:id', userAuthWithCookie, getDriver);
+router.get('/search-driver/:idDoc', userAuthWithCookie, searchDriver);
+router.patch('/driver/:id', userAuthWithCookie, updateDriver);
 
 
 export default router;

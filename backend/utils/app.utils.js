@@ -1,5 +1,6 @@
 import { populate } from "dotenv";
 import JourneyLog from "../models/journeyLog.model.js";
+import jwt from 'jsonwebtoken';
 import Step from "../models/step.model.js";
 
 export const getStep = async (data) => {
@@ -16,4 +17,9 @@ export const getStep = async (data) => {
   } catch (error) {
     console.log(`Error finding journey ${error}`)
   }
+}
+
+export const getToken = (payload, expirationTime) => {
+  const token = jwt.sign(payload, process.env.LOGIN_SECRET, { expiresIn: expirationTime });
+  return token;
 }

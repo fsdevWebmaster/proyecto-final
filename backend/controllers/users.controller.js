@@ -2,6 +2,7 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import User from '../models/user.model.js';
 import Role from '../models/role.model.js';
+import { getToken } from '../utils/app.utils.js';
 
 export const register = (req, res, next) => {
   let { body } = req;
@@ -18,21 +19,22 @@ export const register = (req, res, next) => {
   });
 }
 
-export const login = (req, res, next) => {
+export const login = async (req, res, next) => {
   let { body } = req;
   if (!body.username || !body.password) {
     next(new Error("Missing data"))  
   }
+  
   // find user by email
   User.find({ email: body.username })
     .then((result) => {
-      const found = result[0];
+      const userFound = result[0];
       // not found
-      if (!found) {
+      if (!userFound) {
         next(new Error("Not found"))
       }
       // check password
-      bcrypt.compare(body.password, found.password, function(err, result) {
+      bcrypt.compare(body.password, userFound.password, async function(err, result) {
         if (err) {
           next(new Error("Server error"))
         }
@@ -42,15 +44,47 @@ export const login = (req, res, next) => {
           }
           // generate jwt
           const payload = {
-            id: found._id.toString()
+            id: userFound._id.toString()
           }
-          const token = jwt.sign(payload, process.env.LOGIN_SECRET);
-          return res.json({ token });
+
+          const maxAge = 2 * 60 * 60; // 2 hours
+          const token = getToken(payload, maxAge);
+
+          userFound.token =  token;
+
+          res.cookie('jwt', token, {
+            httpOnly: true,
+            maxAge: maxAge * 1000
+          });
+
+          await userFound.save();
+
+          return res.json({logged: true, user: token});
         }
       });
     }).catch((err) => {
       next(err)
     });
+}
+
+export const logout = (req, res, next) => {
+  const { userId } = req.body;
+
+  if (!userId) {
+    return res.status(404).json({ error: 'Missing user id.' })
+  }
+  
+  User.findById(userId).then((result) => {
+    const token = result.token;
+    const cookieToken = req.cookies.jwt;
+
+    if (token === cookieToken) {
+      result.token = '';
+      result.save();
+      return res.clearCookie('jwt').status(200).json({ logged: false, user: null})
+    }
+
+  }).catch((error) => next(err));
 }
 
 export const getProfile = (req, res, next) => {
