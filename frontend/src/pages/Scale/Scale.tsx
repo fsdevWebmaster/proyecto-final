@@ -3,9 +3,10 @@ import { PageLayout } from "@layouts/Page/PageLayout"
 import { Box, Button, Card, Grid, IconButton, TextField, Typography, styled, useTheme } from "@mui/material"
 import { SearchItem } from '../../components/Search/useSearch';
 import { useTranslation } from "react-i18next";
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { ContainerModel } from "@models";
 import DeleteIcon from '@mui/icons-material/Delete';
+import { useLocation } from "react-router";
 
 const MainContent = styled(Box)(
   () =>`
@@ -43,6 +44,9 @@ const InfoContainer = styled(Box)(
 export const Scale = () => {
   const { t } = useTranslation();
   const theme = useTheme()
+  const location = useLocation()
+  const [scaleType, setScaleType] = useState<string | null>()
+  const [scaleTitle, setScaleTitle] = useState<string | null>()
   const [selectedContainer, setSelectedContainer] = useState<ContainerModel | null>()
   const [weight, setWeight] = useState(0)
   const [selectedWeight, setSelectedWeight] = useState<number | null>()
@@ -99,11 +103,30 @@ export const Scale = () => {
 
   }
 
+  useEffect(() => {
+    const scaleType = location.pathname.split("/").pop()
+    if (scaleType) {
+      setScaleType(scaleType)
+      switch (scaleType) {
+        case "scale-one":
+          setScaleTitle("Scale one")          
+        break;
+        case "scale-two":
+          setScaleTitle("Scale two")
+        break;
+      }      
+    }
+
+
+    console.log("location:", scaleType)
+
+  }, [])
+  
 
   return (
     <PageLayout
       seoTitle='Scale dashboard'
-      title='Scale dashboard'
+      title={scaleTitle as string}
       buttonConfig={{
         visible: false, 
         title: '', 
