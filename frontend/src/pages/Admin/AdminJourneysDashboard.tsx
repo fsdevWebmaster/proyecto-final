@@ -1,12 +1,8 @@
 import { Table, Box,Card,Container,Typography,styled,Grid,TableCell,ListItemText,useTheme, stepClasses, TableRow, TableContainer, TableHead , TableBody } from '@mui/material'
-import { BasicTable } from '@components/Tables/BasicTable';
-import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
-import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
+import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import { TableAction } from '@components/Tables/TableAction';
 import { Helmet } from 'react-helmet-async'
 import { useTranslation } from 'react-i18next'
-import { JourneyLog } from '@models';
-
 
 
 const mockJourneysContainers:any[] = [
@@ -48,26 +44,16 @@ const AdminJourneysDashboard = () => {
     const headers = ['Step', 'Containers', 'Actions'];
 
 const tableActions = [
-    {
-      title: 'Edit Item',
-      clickHandler: () => {},
-      visible: true,
-      icon: <EditTwoToneIcon fontSize="small" />,
-      colors: {
-        background: theme.colors.primary.lighter,
-        color: theme.palette.primary.main,
-      }
-    },
-    {
-      title: 'Delete Item',
-      clickHandler: () => {},
-      visible: true,
-      icon: <DeleteTwoToneIcon fontSize="small" />,
-      colors: {
-        background: theme.colors.error.lighter,
-        color: theme.palette.error.main,
-      }      
+  {
+    title: 'View',
+    clickHandler: () => {},
+    visible: true,
+    icon: <OpenInNewIcon fontSize="small" />,
+    colors: {
+      background: theme.colors.primary.lighter,
+      color: theme.palette.primary.main,
     }
+  }
 ];
   
 
@@ -94,13 +80,14 @@ const tableActions = [
                     mb: 1
                   }}
                 >
-                  {t('Containers in Stations Dashboard Administration')}
+                  {t('Containers in Stations')}
                 </Typography>
               </Box>
             </Card>
           </Container>
         </TopWrapper>
       </MainContent>
+
        {/* Table */}
        <Grid item lg={8} md={6} xs={12}>
        <Card>
