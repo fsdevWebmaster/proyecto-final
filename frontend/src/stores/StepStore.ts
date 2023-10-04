@@ -14,22 +14,11 @@ class StepStore {
   async handleSteps() {
     const steps = await stepApi.getSteps()
     this.stepsList = steps.data
-
-    console.log('setted steps:', steps.data)
   }
 
   setStepsList(items: []) {  
     this.stepsList = items
   }
-
-  getStepsList() {
-    
-    console.log("step store", this.stepsList)
-    
-    return "tal"
-  }
-
-
 }
 
 export const MxStepStore = new StepStore();

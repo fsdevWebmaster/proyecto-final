@@ -20,6 +20,7 @@ import { PageLayout } from "@layouts/Page/PageLayout";
 import { journeyApi } from "@services/api/journeyApi";
 import { MxJourneyStore, MxStepStore } from "@stores";
 import { observer } from 'mobx-react';
+import { toJS } from "mobx";
 
 
 
@@ -57,6 +58,7 @@ const SelectedCard = styled(Box)(
 const Gate = () => {
   const { t } = useTranslation()
   const theme = useTheme();
+  const {stepsList} = MxStepStore;
 
   const [container, setContainer] = useState<SearchItem | null>()
   const [driver, setDriver] = useState<SearchItem | null>()
@@ -84,7 +86,7 @@ const Gate = () => {
   const handleJourney = async () => {
     const { stepsList } = MxStepStore
 
-    console.log('handle journey', stepsList)
+    console.log('handle journey', toJS(stepsList))
 
 
     // const created = await journeyApi.createJourney({ container, driver })

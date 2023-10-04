@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 // import { BrowserRouter as Router, RouterProvider } from 'react-router-dom';
 
 // import reactLogo from '../assets/react.svg';
@@ -26,25 +26,33 @@ import { CssBaseline } from '@mui/material';
 import { SnackbarProvider } from 'notistack';
 import { routes } from '../routes/routes';
 import '@helpers/i18n';
-import { Provider } from 'mobx-react';
+import { MxStepStore } from '@stores';
 
 export const App = () => {
   const content = useRoutes(routes);
 
+  useEffect(() => {
+    const globalSteps = async() => {
+      const { stepsList } = MxStepStore;
+      MxStepStore.handleSteps();
+    }
+
+    globalSteps();
+
+  }, []);
+
   return (
-    <Provider>
-      <ThemeProvider>
-        <SnackbarProvider
-          maxSnack={6}
-          anchorOrigin={{
-            vertical: 'bottom',
-            horizontal: 'right'
-          }}
-        >
-          <CssBaseline />
-          {content}
-        </SnackbarProvider>
-      </ThemeProvider>
-    </Provider>
+    <ThemeProvider>
+      <SnackbarProvider
+        maxSnack={6}
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'right'
+        }}
+      >
+        <CssBaseline />
+        {content}
+      </SnackbarProvider>
+    </ThemeProvider>
   );
 };

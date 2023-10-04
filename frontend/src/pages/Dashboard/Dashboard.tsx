@@ -8,10 +8,11 @@ import { CardManager } from '@components/Cards/CardManager';
 import { useNavigate } from 'react-router';
 import { MxStepStore } from '@stores';
 
-const Dashboard = () => {
+const Dashboard = (props: any) => {
   const { t }: { t: any } = useTranslation();
   // const {userInfo} = MxUserStore;
-  MxStepStore.handleSteps()
+  // MxStepStore.handleSteps()
+  const {stepsList} = MxStepStore;
   const navigate = useNavigate();
 
   return (
