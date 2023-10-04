@@ -158,28 +158,21 @@ export const updateJourney = async (req, res, next) => {
   }
 }
 
-export const getSteps = (req, res, next) => {
-  Step.find()
-    .then((result) => {
-      return res.json(result)
-    }).catch((err) => {
-      next(err)
-    });
+export const getSteps = async (req, res, next) => {
+  const steps = await Step.find();
+  let stepsData = steps.map(async (step) => {
+    let stepRow = {}
+    const journeys = await getStepJourneys(step)
+    stepRow = {...stepRow, step: step, journeys: journeys }
+    return stepRow
+  })
+  stepsData = await Promise.all(stepsData);
+  return res.json({stepsData})
 }
 
-export const getStepJourneys = async (req, res, next) => {
-  try {
-    const { step } = req.params
-    const journeys = await Journey.find({ step });
-    const result = {
-      stepCount: journeys.length, 
-      step: step,
-      journeys: journeys,
-    };
-    return res.json(result)    
-  } catch (error) {
-    next(error)
-  }
+const getStepJourneys = async (step) => {
+  const journeys = await Journey.find({ step });
+  return journeys
 }
 
 export const getJourneyByDriver = (req, res, next) => {
