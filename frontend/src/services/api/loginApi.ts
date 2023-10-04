@@ -13,6 +13,10 @@ class LoginApi {
             password
         });
     }
+
+    logout(userId: string): Promise<any> {
+        return axiosClient.post(`${this.controller}/logout`, {userId});
+    }
 }
 
 export const loginApi = new LoginApi();

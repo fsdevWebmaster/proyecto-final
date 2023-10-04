@@ -9,6 +9,7 @@ export type Auth = {
 export type User = {
   id: string;
   name: string;
+  lastName: string;
   avatar?: string;
   email: string;
   personalId: number | string;

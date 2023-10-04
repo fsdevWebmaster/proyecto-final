@@ -137,8 +137,10 @@ export const updateJourney = async (req, res, next) => {
   
     // update journey step
     await journey.populate("step")
-    journey.step = journey.step.next
-    await journey.save()
+    if (journey.step.next) {
+      journey.step = journey.step.next
+      await journey.save()
+    }
   
     // create new journey log
     const newLog = new JourneyLog({

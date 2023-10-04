@@ -7,11 +7,13 @@ import routes from './routes/app.routes.js';
 import journeyRouter from './routes/journey.routes.js';
 import containerRouter from './routes/container.routes.js';
 import { socketApp } from './socket-server.js';
+import cookieParser from 'cookie-parser';
 export const app = express();
 
 // cors - json
 app.use(cors());
 app.use(express.json());
+app.use(cookieParser());
 
 // routes
 app.use('/api', routes);
