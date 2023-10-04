@@ -24,10 +24,13 @@ export const handleSearchContainer = (e:ChangeEvent<HTMLInputElement>) => {
   const { value, name } = e.target
 
   if (value) {
-    const found = mockContainers.filter(item => item.containerNumber.includes(value))
-    setContainers(found)
+
+    
+
+    // const found = mockContainers.filter(item => item.containerNumber.includes(value))
+    // setContainers(found)
   }
   else {
-    setContainers([])
+    // setContainers([])
   }
 }

@@ -1,7 +1,8 @@
 import Journey from "../models/journey.model.js";
 import JourneyLog from "../models/journeyLog.model.js";
 import Step from "../models/step.model.js";
-const mockUserId = "64da7c0f484e531a6eeebbfc"
+const hardGateId = "64f7a092eb2116cb79ca7445"
+const hardUserId = "64f8b2a5968ea93827b02a91"
 
 export const getJourneyByContainerNumber = (req, res, next) => {
   const { containerNumber } = req.params;
@@ -22,10 +23,14 @@ export const getJourneyByContainerNumber = (req, res, next) => {
     })
   }
     
-    
-
 export const createJourney = async (req, res, next) => {
-  let createData = req.body
+  const postData = req.body
+  const createData = {
+    driver: postData.driver.id,
+    container: postData.container.id,
+    step: hardGateId
+  }
+
   try {
     const journey = new Journey(createData)
     await journey.save()
@@ -38,8 +43,8 @@ export const createJourney = async (req, res, next) => {
     }
     journey.driverDoc = journey.driver.idDoc
     await journey.save()
-    createIniLogs(journey)
-    return res.json(createData)
+    const j = await createIniLogs(journey)
+    return res.json(j)
   } catch (error) {
     next(error) 
   }
@@ -51,7 +56,7 @@ const createIniLogs = async (journey) => {
     journey: journey._id,
     step: journey.step,
     stepValue: null,
-    user: mockUserId,
+    user: hardUserId,
     description: ""
   }
   const gateLog = new JourneyLog(gateLogData)
@@ -63,7 +68,7 @@ const createIniLogs = async (journey) => {
     journey: journey._id,
     step: journeyStep.next,
     stepValue: null,
-    user: mockUserId,
+    user: hardUserId,
     description: ""
   }
   const yardLog = new JourneyLog(yardLogData)
@@ -71,7 +76,9 @@ const createIniLogs = async (journey) => {
 
   // update journey step
   journey.step = journeyStep.next
+  await journey.populate("step")
   journey.save()
+  return journey
 }
 
 export const createJourneyLog = async (req, res, next) => {
@@ -147,7 +154,7 @@ export const updateJourney = async (req, res, next) => {
       journey: updBody.journey,
       step: journey.step,
       stepValue: null,
-      user: mockUserId,
+      user: hardUserId,
       description: ""
     })
     await newLog.save()

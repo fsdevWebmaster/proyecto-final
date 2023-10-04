@@ -31,7 +31,7 @@
         "@pages": ["src/pages"],
         "@pages/*": ["src/pages/*"],
         "@services/*": ["src/services/*"],
-        "@stores/*": ["src/stores/*"],
+        "@stores": ["src/stores"],
         "@styles/*": ["src/styles/*"],
       },      
     },

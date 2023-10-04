@@ -2,20 +2,30 @@ import React from 'react';
 import {  Grid, ListItemText } from '@mui/material';
 import { observer } from 'mobx-react';
 import { useTranslation } from 'react-i18next';
-import { MxUserStore } from '@stores/UserStore';
+// import { MxUserStore } from '@stores/UserStore';
 import { PageLayout } from '@layouts/Page/PageLayout';
 import { CardManager } from '@components/Cards/CardManager';
 import { useNavigate } from 'react-router';
+import { MxStepStore } from '@stores';
 
 const Dashboard = () => {
   const { t }: { t: any } = useTranslation();
-  const {userInfo} = MxUserStore;
-
+  // const {userInfo} = MxUserStore;
+  MxStepStore.handleSteps()
   const navigate = useNavigate();
 
   return (
     <PageLayout seoTitle='Panel' title='Panel' buttonConfig={{ visible: false}}>
       <Grid item container direction="row" spacing={4}>
+      <Grid item xs={12} md={6}>
+            <CardManager
+              title='Gate page'
+              subtitle='Go to gat page'
+              actionHeader='Gate page'
+              imgPath='/static/images/illustrations/handshake.svg'
+              clickHandler={() => navigate('gate')}
+            />
+          </Grid>
           <Grid item xs={12} md={6}>
             <CardManager
               title='List Users'
