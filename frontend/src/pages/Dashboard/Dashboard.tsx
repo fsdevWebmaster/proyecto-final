@@ -11,7 +11,6 @@ import { MxStepStore } from '@stores';
 const Dashboard = (props: any) => {
   const { t }: { t: any } = useTranslation();
   // const {userInfo} = MxUserStore;
-  // MxStepStore.handleSteps()
   const {stepsList} = MxStepStore;
   const navigate = useNavigate();
 
