@@ -125,13 +125,15 @@ export const Scale = () => {
     const { stepsList } = MxStepStore
     const scaleType = location.pathname.split("/").pop()
 
-    if (scaleType) {
+    if (scaleType && stepsList) {
       const list = toJS(stepsList);
       const actualStep = list.find(step => step.routeName === scaleType )
 
-      setScaleType(scaleType)
-      setActualStepsList(list)
-      setActualStep(actualStep)
+      if(list && actualStep){
+        setScaleType(scaleType)
+        setActualStepsList(list)
+        setActualStep(actualStep)
+      }
       
       switch (scaleType) {
         case "scale-one":

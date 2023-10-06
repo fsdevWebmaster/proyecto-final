@@ -105,8 +105,10 @@ const Gate = () => {
         return step
       }
     })
-    setActualStepsList(stepsList)
-    setActualStep(toJS(actualStep))
+    if(stepsList && actualStep){
+      setActualStepsList(stepsList)
+      setActualStep(toJS(actualStep))
+    }
   }, [])
   
 

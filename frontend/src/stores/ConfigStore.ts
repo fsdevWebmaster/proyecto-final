@@ -18,20 +18,6 @@ class ConfigStore {
     this.currentStep = step;
   }
 
-  async initCurrentStep(routeName:string) {
-    try {
-      const resp = await stepApi.getStepByRoute(routeName)
-
-      console.log(resp)
-      
-      // this.setCurrentStep(resp);
-
-    } catch (error) {
-      
-      console.error(error)
-    
-    }
-  }
 }
 
 export const MxConfigStore = new ConfigStore();
