@@ -5,5 +5,6 @@ export type StepModel = {
   order: number
   previous: StepModel | string | null
   next: StepModel | string | null
+  routeName: string
   isActive: boolean
 }

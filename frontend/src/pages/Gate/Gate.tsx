@@ -21,7 +21,8 @@ import { journeyApi } from "@services/api/journeyApi";
 import { MxJourneyStore, MxStepStore } from "@stores";
 import { observer } from 'mobx-react';
 import { toJS } from "mobx";
-
+import { useLocation } from "react-router";
+import { StepModel } from "@models/Step/Step";
 
 
 const MainContent = styled(Box)(
@@ -57,12 +58,15 @@ const SelectedCard = styled(Box)(
 
 const Gate = () => {
   const { t } = useTranslation()
+  const location = useLocation()
   const theme = useTheme();
   const {stepsList} = MxStepStore;
 
   const [container, setContainer] = useState<SearchItem | null>()
   const [driver, setDriver] = useState<SearchItem | null>()
   const [formMessage, setFormMessage] = useState<string | undefined>(undefined)
+  const [actualStep, setActualStep] = useState<StepModel | undefined>(undefined)
+  const [actualStepsList, setActualStepsList] = useState<StepModel[]>([])
 
   const handleContainer = (item:SearchItem) => {
     setContainer(item)
@@ -84,27 +88,26 @@ const Gate = () => {
   }
 
   const handleJourney = async () => {
-    const { stepsList } = MxStepStore
+    const created = await journeyApi.createJourney({ container, driver, step: actualStep })
+    setFormMessage(t('New journey created.'))
+    setContainer(null)
+    setDriver(null)
 
-    console.log('handle journey', toJS(stepsList))
-
-
-    // const created = await journeyApi.createJourney({ container, driver })
-    // setFormMessage(t('New journey created.'))
-    // setContainer(null)
-    // setDriver(null)
-
-    // console.log("TODO: update driver's UI", created)
+    console.log("TODO: update driver's UI", created)
   }
 
-  // useEffect(() => {
-  //   const { stepsList } = MxJourneyStore
-    
-  //   console.log('effect gate', stepsList)
-    
-
-
-  // }, [])
+  
+  useEffect(() => {
+    const { stepsList } = MxStepStore
+    const routeName = location.pathname
+    const actualStep = stepsList.find(step => {
+      if (routeName.includes(step.routeName)) {
+        return step
+      }
+    })
+    setActualStepsList(stepsList)
+    setActualStep(toJS(actualStep))
+  }, [])
   
 
   return (

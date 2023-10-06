@@ -9,7 +9,8 @@ export const getJourneyByContainerNumber = (req, res, next) => {
   if (!containerNumber || containerNumber.includes(":")) {
     next(new Error("Missing data"))
   }
-  const journey = Journey.findOne({containerNumber})    
+  const journey = Journey.findOne({containerNumber, status:'ON_HOLD'})
+    .populate('step')
     .then(result =>{
       if (!result) {
         return res.status(404).json({ message: 'Journey not found for the given container number.' });
@@ -116,10 +117,15 @@ export const updateJourneyLog = (req, res, next) => {
 }
 
 export const getJourneyLog = (req, res, next) => {
-  const { journey } = req.params
-  JourneyLog.find({journeyId: journey})
+  const { journey, step } = req.body
+
+  if(!journey || !step) {
+    next(Error('Missing data'))
+  }
+
+  JourneyLog.find({journey, step})
     .then((result) => {
-      return res.json(result)
+      return res.json(result[0])
     }).catch((err) => {
       next(err)
     });
