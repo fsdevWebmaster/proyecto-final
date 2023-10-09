@@ -19,10 +19,10 @@ journeyRouter.patch('/journey', userAuthWithCookie, updateJourney);
 journeyRouter.post('/journey-log', userAuthWithCookie, createJourneyLog);
 journeyRouter.patch('/journey-log', userAuthWithCookie, updateJourneyLog);
 journeyRouter.post('/journey-by-driver', userAuthWithCookie, getJourneyByDriver);
-journeyRouter.get('/journey-log/:journey', userAuthWithCookie, getJourneyLog);
+journeyRouter.post('/find-journey-log', /* userAuthWithCookie, */ getJourneyLog);
 journeyRouter.get('/step-journeys/:step', userAuthWithCookie, getStepJourneys);
 journeyRouter.get('/steps', userAuthWithCookie, getSteps);
-journeyRouter.get('/journey/:containerNumber',userAuthWithCookie, getJourneyByContainerNumber)
+journeyRouter.get('/journey/:containerNumber', /* userAuthWithCookie, */ getJourneyByContainerNumber)
 
 
 

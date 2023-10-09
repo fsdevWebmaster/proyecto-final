@@ -1,4 +1,4 @@
-import { MouseEvent } from 'react';
+import { MouseEvent, useEffect } from 'react';
 import { useTranslation } from "react-i18next";
 import { Card, Grid, Table, TableBody, TableCell, TableContainer, TableHead, 
   TableRow, Typography, useTheme
@@ -79,7 +79,7 @@ export const Yard = () => {
       id: "65007586b6efe051c2e1217d"
     }
   ]
-  
+
   return (
     <PageLayout
       seoTitle='Users List'

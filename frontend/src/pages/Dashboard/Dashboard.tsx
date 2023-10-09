@@ -2,20 +2,38 @@ import React from 'react';
 import {  Grid, ListItemText } from '@mui/material';
 import { observer } from 'mobx-react';
 import { useTranslation } from 'react-i18next';
-import { MxUserStore } from '@stores/UserStore';
 import { PageLayout } from '@layouts/Page/PageLayout';
 import { CardManager } from '@components/Cards/CardManager';
 import { useNavigate } from 'react-router';
+import { MxStepStore, MxUserStore } from '@stores';
 
-const Dashboard = () => {
+const Dashboard = (props: any) => {
   const { t }: { t: any } = useTranslation();
   const {userInfo} = MxUserStore;
-
+  const {stepsList} = MxStepStore;
   const navigate = useNavigate();
 
   return (
     <PageLayout seoTitle='Panel' title='Panel' buttonConfig={{ visible: false}}>
       <Grid item container direction="row" spacing={4}>
+          <Grid item xs={12} md={6}>
+            <CardManager
+              title={t('Gate page')}
+              subtitle={t('Go to gate page')}
+              actionHeader={t('Gate page')}
+              imgPath='/static/images/illustrations/handshake.svg'
+              clickHandler={() => navigate('gate')}
+            />
+          </Grid>
+          <Grid item xs={12} md={6}>
+            <CardManager
+              title={t('Scale One page')}
+              subtitle={t('Go to scale one page')}
+              actionHeader={t('Scale one page')}
+              imgPath='/static/images/illustrations/handshake.svg'
+              clickHandler={() => navigate('scale-one')}
+            />
+          </Grid>
           <Grid item xs={12} md={6}>
             <CardManager
               title='List Users'

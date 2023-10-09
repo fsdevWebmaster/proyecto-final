@@ -2,6 +2,7 @@ import express from "express";
 import { register, login, getProfile, updateProfile, logout } from "../controllers/users.controller.js";
 import {newDriver, getDriver, searchDriver, updateDriver,} from "../controllers/driver.controler.js"
 import { userAuthWithCookie } from "../middlewares/users.middleware.js";
+import { search } from "../controllers/search.controller.js";
 const router = express.Router();
 
 //routes for user
@@ -16,6 +17,9 @@ router.post('/driver', userAuthWithCookie, newDriver);
 router.get('/driver/:id', userAuthWithCookie, getDriver);
 router.get('/search-driver/:idDoc', userAuthWithCookie, searchDriver);
 router.patch('/driver/:id', userAuthWithCookie, updateDriver);
+
+// routes for seach
+router.post('/search', /* userAuthWithCookie, */ search);
 
 
 export default router;

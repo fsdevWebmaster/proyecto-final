@@ -22,6 +22,10 @@ const stepSchema = new mongoose.Schema({
   isActive: {
     type: Boolean,
     default: true
+  },
+  routeName: {
+    type: String,
+    required: true
   }
 }, {
   toJSON: {

@@ -16,9 +16,9 @@ const root = createRoot(appContainer);
 
 root.render(
   <HelmetProvider>
-    <BrowserRouter basename="/">
-      <ScrollTop />
-      <App />
-    </BrowserRouter>
+      <BrowserRouter basename="/">
+        <ScrollTop />
+        <App />
+      </BrowserRouter>
   </HelmetProvider>
 );

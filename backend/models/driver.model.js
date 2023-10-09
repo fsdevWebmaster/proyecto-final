@@ -19,6 +19,16 @@ const driverSchema = new mongoose.Schema({
         required: true,
         unique: true,
       },
+}, {
+  toJSON: {
+    virtuals: true,
+    transform: (doc, ret) => {
+      delete ret._id
+      delete ret.__v
+      ret.id = doc._id
+      return ret
+    }
+  }
 } );
 
 const Driver = mongoose.model('Driver', driverSchema);
