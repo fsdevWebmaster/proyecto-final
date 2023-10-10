@@ -135,12 +135,13 @@ function Chat() {
       <Tooltip arrow title={t('Messenger')}>
         <Badge
           variant="dot"
-          overlap="circular"
+          // overlap="circular"
           anchorOrigin={{
             vertical: 'bottom',
             horizontal: 'right'
           }}
           sx={{
+            mx: 0.5,
             '.MuiBadge-badge': {
               background: theme.colors.error.main
             }

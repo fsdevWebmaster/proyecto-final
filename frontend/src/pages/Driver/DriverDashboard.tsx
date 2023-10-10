@@ -120,11 +120,11 @@ const DriverDashboard = () => {
 
   return (
     <PageLayout
-      seoTitle='Drivers dashboard'
-      title='Drivers dashboard'
+      seoTitle={t('Drivers dashboard')}
+      title={t('Drivers dashboard')}
       buttonConfig={{
         visible: false, 
-        title: 'Create User', 
+        title: t('Create User'), 
         action: () => alert('To-do')}
     }>
       

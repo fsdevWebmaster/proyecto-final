@@ -1,5 +1,4 @@
-import React, { useState } from 'react';
-import { format } from 'date-fns';
+import { useState } from 'react';
 import { Avatar, Box, Card, Grid, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, 
   Typography, useTheme 
 } from '@mui/material';
@@ -8,74 +7,34 @@ import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
 import { observer } from 'mobx-react';
 import { PageLayout } from '@layouts/Page/PageLayout';
 import { TableAction } from '@components/Tables/TableAction';
-import Label from '@components/Label/Label';
-import { User } from '@models/User/User';
-import { Role } from '@models/Role/Role';
+import { StationModel } from '@models/Station/Station';
 import { CustomDialog } from '@components/Dialog/CustomDialog';
 import { ButtonConfig } from '@common/interfaces';
-import { CreateUser } from '@components/Dialog/CreateUser';
+import { CreateStation } from '@components/Dialog/CreateStation';
 import { useTranslation } from 'react-i18next';
 
-const Users = () => {
+const Stations = () => {
   const [openDialog, setOpenDialog] = useState(false);
   const [openCUDialog, setCUDialog] = useState(false);
   const { t }: { t: any } = useTranslation();
   const theme = useTheme();
 
-  const users: User[] = [
+  const station: StationModel[] = [
     {
       id: '11',
-      name: 'Jose',
-      lastName: 'Zuniga',
-      email: 'josemzr@hotmail.com',
-      personalId: '401900767',
-      roles: [{
-        id: '123456',
-        code: 1,
-        role: 'ADMIN',
-      }]
+      name: 'Romana I',
+      status: true,
     },
     {
       id: '12',
-      name: 'Francisco',
-      lastName: 'Jimenez',
-      email: 'fr@hotmail.com',
-      personalId: '401900111',
-      roles: [{
-        id: '654321',
-        code: 4,
-        role: 'INSPECTOR',
-      }]
-    },
-    {
-      id: '13',
-      name: 'Fidel',
-      lastName: 'Silva',
-      email: 'fidel@hotmail.com',
-      personalId: '101900111',
-      roles: [{
-        id: '33126',
-        code: 5,
-        role: 'ANALYST',
-      }]
-    },
-    {
-      id: '14',
-      name: 'David',
-      lastName: 'Calderon',
-      email: 'dcal@hotmail.com',
-      personalId: '101900122',
-      roles: [{
-        id: '33127',
-        code: 5,
-        role: 'DRIVER',
-      }]
-    }     
+      name: 'Romana II',
+      status: false,
+    }
   ];
 
   const tableActions = [
     {
-      title: t('Edit User'),
+      title: t('Edit Station'),
       clickHandler: () => {},
       visible: true,
       icon: <EditTwoToneIcon fontSize="small" />,
@@ -85,7 +44,7 @@ const Users = () => {
       }
     },
     {
-      title: t('Delete User'),
+      title: t('Delete Station'),
       clickHandler: () => { setOpenDialog(true)},
       visible: true,
       icon: <DeleteTwoToneIcon fontSize="small" />,
@@ -96,42 +55,7 @@ const Users = () => {
     }
 ];
 
-const getUserRoleLabel = (roles: Role[]) => {
-  const map = {
-    'ADMIN': {
-      text: t('Administrator'),
-      color: 'error'
-    },
-    'INSPECTOR': {
-      text: t('Inspector'),
-      color: 'info'
-    },
-    'ANALYST': {
-      text: t('Analyst'),
-      color: 'warning'
-    },
-    'DRIVER': {
-      text: t('Driver'),
-      color: 'success'
-    },
-    'GATE': {
-      text: t('Gate'),
-      color: 'black'
-    },
-  };
-
-  const roleLabels: React.ReactNode[] = [];
-
-  roles.map(role => {
-    const { text, color }: any = map[role.role];
-    roleLabels.push(<Label color={color} key={role.id}>{text}</Label>)
-  });
-
-  return roleLabels;
-
-};
-
-const onCreateUserHandler = async () => {
+const onCreateStationHandler = async () => {
   alert('TO-DO call API')
 };
 
@@ -148,7 +72,7 @@ const dialogButtons: ButtonConfig[] = [
     }
   },
   {
-    title: t('Disable User'),
+    title: t('Disable Station'),
     action: () => alert('To do'),
     sx: {
       mx: 1,
@@ -164,11 +88,11 @@ const dialogButtons: ButtonConfig[] = [
 
   return (
     <PageLayout
-      seoTitle={t('Users List')}
-      title={t('Users Management')}
+      seoTitle={t('Station List')}
+      title={t('Stations Management')}
       buttonConfig={{
         visible: true, 
-        title: t('Create User'),
+        title: t('Create Station'),
         action: () => setCUDialog(true)}
       }>
       <Grid item xs={12}>
@@ -179,20 +103,18 @@ const dialogButtons: ButtonConfig[] = [
                 <TableRow>
                   <TableCell align="center">{t('ID')}</TableCell>
                   <TableCell align="center">{t('Name')}</TableCell>
-                  <TableCell align="center">{t('Email')}</TableCell>
-                  <TableCell align="center">{t('Rol')}</TableCell>
-                  <TableCell align="center">{t('Date Created')}</TableCell>
+                  <TableCell align="center">{t('Status')}</TableCell>
                   <TableCell align="center">{t('Actions')}</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
-                {users.map((user) => {
+                {station.map((station) => {
 
                   return (
-                    <TableRow hover key={user.id}>
-                      <TableCell>
+                    <TableRow hover key={station.id}>
+                      <TableCell align='center'>
                         <Typography variant="h5">
-                          {user.personalId}
+                          {station.id}
                         </Typography>
                       </TableCell>
                       <TableCell>
@@ -212,18 +134,17 @@ const dialogButtons: ButtonConfig[] = [
                             GA
                           </Avatar>                          
                           <Box>
-                            <Typography noWrap variant="subtitle2">
-                              {user.name}
+                            <Typography noWrap variant="subtitle2" align="center">
+                              {station.name}
                             </Typography>
                           </Box>
                         </Box>
                       </TableCell>
                       <TableCell>
-                        <Typography>{user.email}</Typography>
-                      </TableCell>
-                      <TableCell>{getUserRoleLabel(user.roles)}</TableCell>
-                      <TableCell>
-                        <Typography>{format(new Date(), 'MMMM yyyy')}</Typography>
+                        <Typography noWrap variant="subtitle2" align="center">
+                          {/* {station.status} */}
+                          {station.status ? t('Active') : t('Inactive')}
+                        </Typography>
                       </TableCell>
                       <TableCell align="center">
                         <Typography noWrap>
@@ -248,10 +169,10 @@ const dialogButtons: ButtonConfig[] = [
           </TableContainer>          
         </Card>
       </Grid>
-      <CustomDialog isOpen={openDialog} type="error" header="Disable User" configBtn={dialogButtons} onCloseHandler={() => setOpenDialog(false)}/>
-      <CreateUser isOpen={openCUDialog} onCloseHandler={onCloseCUHandler} onSuccessHandler={onCreateUserHandler}/>
+      <CustomDialog isOpen={openDialog} type="error" header="Disable Station" configBtn={dialogButtons} onCloseHandler={() => setOpenDialog(false)}/>
+      <CreateStation isOpen={openCUDialog} onCloseHandler={onCloseCUHandler} onSuccessHandler={onCreateStationHandler}/>
     </PageLayout>
   );
 };
 
-export default observer(Users);
+export default observer(Stations);

@@ -54,7 +54,7 @@ function Status500() {
   return (
     <>
       <Helmet>
-        <title>Status - 500</title>
+        <title>{t('Status - 500')}</title>
       </Helmet>
       <MainContent>
         <Grid

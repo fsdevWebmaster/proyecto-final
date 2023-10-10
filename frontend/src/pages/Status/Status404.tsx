@@ -45,7 +45,7 @@ function Status404() {
   return (
     <>
       <Helmet>
-        <title>Status - 404</title>
+        <title>{t('Status - 404')}</title>
       </Helmet>
       <MainContent>
         <Container maxWidth="md">

@@ -273,9 +273,6 @@ export const HeaderMenu = () => {
             >
               {t('Mega Menus')}
             </Typography>
-            <Typography noWrap variant="subtitle2">
-              {t('This is an example for custom menus')}
-            </Typography>
           </Box>
           <Link
             href="#"
@@ -543,17 +540,6 @@ export const HeaderMenu = () => {
             </MenuItem>
           </MenuListWrapperError>
         </Stack>
-        <Divider />
-        <Box
-          sx={{
-            m: 2,
-            textAlign: 'center'
-          }}
-        >
-          <Button size="small" color="primary">
-            {t('View more examples')}
-          </Button>
-        </Box>
       </Popover>
       <Popover
         disableScrollLock
@@ -590,15 +576,6 @@ export const HeaderMenu = () => {
             }}
           >
             {t('Dashboards')}
-          </Typography>
-          <Typography
-            variant="subtitle2"
-            textAlign="center"
-            sx={{
-              color: theme.colors.alpha.trueWhite[70]
-            }}
-          >
-            {t("This is just a menu example we've created")}
           </Typography>
           <Grid container mt={1} spacing={2}>
             <Grid item xs={12} sm={6}>

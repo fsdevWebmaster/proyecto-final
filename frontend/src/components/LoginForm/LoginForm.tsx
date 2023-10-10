@@ -107,7 +107,7 @@ export const LoginForm: FC = observer(() => {
             margin="normal"
             autoFocus
             helperText={touched.email && errors.email}
-            label={t('Email address')}
+            label={t('Email')}
             name="email"
             onBlur={handleBlur}
             onChange={handleChange}

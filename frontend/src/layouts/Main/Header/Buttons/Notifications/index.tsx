@@ -262,14 +262,15 @@ function HeaderNotifications() {
         <Badge
           variant="dot"
           anchorOrigin={{
-            vertical: 'top',
+            vertical: 'bottom',
             horizontal: 'right'
           }}
           sx={{
+            mx: 0.5,
             '.MuiBadge-badge': {
               background: theme.colors.success.main,
-              animation: 'pulse 1s infinite',
-              transition: `${theme.transitions.create(['all'])}`
+              // animation: 'pulse 1s infinite',
+              // transition: `${theme.transitions.create(['all'])}`
             }
           }}
         >

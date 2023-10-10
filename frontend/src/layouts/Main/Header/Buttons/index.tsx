@@ -7,8 +7,8 @@ export const HeaderButtons = () => {
   return (
     <Box>
       <HeaderNotifications />
-      <LanguageSwitcher />
       <Chat />
+      <LanguageSwitcher />
     </Box>
   );
 }
