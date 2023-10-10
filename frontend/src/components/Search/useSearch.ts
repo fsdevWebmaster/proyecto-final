@@ -1,4 +1,5 @@
 import { ContainerModel, Driver } from "@models"
+import { searchApi } from "@services/api/searchApi"
 import { ChangeEvent, useState } from "react"
 import { useNavigate } from "react-router"
 
@@ -25,37 +26,27 @@ export type SearchItem = { [showData: string]: string }
 export const useSearch = (searchType:string) => {
   const navigate = useNavigate()
   let searchField = ""
-  // let showField = ""
   const [baseList, setBaseList] = useState<SearchItem[]>([])
   const [showField, setShowField] = useState<string>("")
   const [searchValue, setSearchValue] = useState<string>("")
-  // const [selected, setSelected] = useState<ContainerModel | null>()
   
-  const handleSearchItem = (e:ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleSearchItem = async (e:ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { value } = e.target
     setSearchValue(value)
-    let searchList:SearchItem[] = []
-
-    switch (searchType) {
-      case 'containers':
-        searchField = "containerNumber"
-        searchList = mockContainers
+    const searchData = {
+      searchType,
+      searchString: value
+    }
+    const found = await searchApi.search(searchData)
+    switch(searchType) {
+      case "containers":
         setShowField("containerNumber")
-      break
-      case 'drivers':
-        searchField = "idDoc"
+      break;
+      case "drivers":
         setShowField("name")
-        searchList = mockDrivers
-      break
+      break;
     }
-
-    if (value) {
-      const found = searchList.filter(item => item[searchField].includes(value))
-      setBaseList(found)
-    }
-    else {
-      setBaseList([])
-    }
+    setBaseList(found.data)
   }
 
   const handleNewItem = () => {

@@ -12,12 +12,17 @@ import DeleteIcon from '@mui/icons-material/Delete';
 
 import { Helmet } from "react-helmet-async";
 import { useTranslation } from "react-i18next";
-import { GoalForm } from "@components/GoalForm/GoalForm";
 import { SearchForm } from "@components/Search/SearchForm";
 import { ContainerModel } from "@models/Container/Container";
 import { useEffect, useState } from "react";
 import { SearchItem, useSearch } from "@components/Search/useSearch";
 import { PageLayout } from "@layouts/Page/PageLayout";
+import { journeyApi } from "@services/api/journeyApi";
+import { MxJourneyStore, MxStepStore } from "@stores";
+import { observer } from 'mobx-react';
+import { toJS } from "mobx";
+import { useLocation } from "react-router";
+import { StepModel } from "@models/Step/Step";
 
 
 const MainContent = styled(Box)(
@@ -32,17 +37,36 @@ const MainContent = styled(Box)(
 const TopWrapper = styled(Box)(
   () =>`
     dispaly: flex;
-    width: 100%
+    width: 100%;
     flex: 1;
     padding: 20px;
   `
 )
 
-const Goal = () => {
+const SelectedCard = styled(Box)(
+  () => `
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 5px;
+    box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+    padding: 0.5em 1.5em;
+    margin: 1em 0;
+  `
+)
+
+
+const Gate = () => {
   const { t } = useTranslation()
+  const location = useLocation()
   const theme = useTheme();
+  const {stepsList} = MxStepStore;
+
   const [container, setContainer] = useState<SearchItem | null>()
   const [driver, setDriver] = useState<SearchItem | null>()
+  const [formMessage, setFormMessage] = useState<string | undefined>(undefined)
+  const [actualStep, setActualStep] = useState<StepModel | undefined>(undefined)
+  const [actualStepsList, setActualStepsList] = useState<StepModel[]>([])
 
   const handleContainer = (item:SearchItem) => {
     setContainer(item)
@@ -63,18 +87,37 @@ const Goal = () => {
     }
   }
 
-  const handleJourney = () => {
-    
-    console.log("TODO: Send data to endpoint:",  { container, driver } )
+  const handleJourney = async () => {
+    const created = await journeyApi.createJourney({ container, driver, step: actualStep })
+    setFormMessage(t('New journey created.'))
+    setContainer(null)
+    setDriver(null)
 
+    console.log("TODO: update driver's UI", created)
   }
+
+  
+  useEffect(() => {
+    const { stepsList } = MxStepStore
+    const routeName = location.pathname
+    const actualStep = stepsList.find(step => {
+      if (routeName.includes(step.routeName)) {
+        return step
+      }
+    })
+    if(stepsList && actualStep){
+      setActualStepsList(stepsList)
+      setActualStep(toJS(actualStep))
+    }
+  }, [])
+  
 
   return (
     <PageLayout
       seoTitle='Gate'
       title='Gate'
       buttonConfig={{
-        visible: true, 
+        visible: false, 
         title: 'Create User', 
         action: () => alert('To-do')}
       }>
@@ -100,53 +143,29 @@ const Goal = () => {
                 </Typography>
               </Box>
               { container && 
-                <Box 
-                  px={4}
-                  py={1}
-                  mb={1}
-                  sx={{ 
-                    display: "flex", 
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    color: "#FFFFFF",
-                    bgcolor: theme.colors.secondary.light,
-                    borderRadius: "5px"
-                  }}
-                >
+                <SelectedCard>
                   <Typography
                     variant="h4"
                   >
-                    Contenedor: { container.containerNumber }
+                    {t('Container')}: { container.containerNumber }
                   </Typography>
                   <IconButton edge="end" onClick={() => deleteSelected("container")}>
                     <DeleteIcon sx={{ color: "#FFFFFF" }} />
                   </IconButton>
-                </Box>
+                </SelectedCard>
               }
 
               { driver && 
-                <Box 
-                  px={4}
-                  py={1}
-                  mb={2}
-                  sx={{ 
-                    display: "flex", 
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    color: "#FFFFFF",
-                    bgcolor: theme.colors.secondary.light,
-                    borderRadius: "5px"
-                  }}
-                >
+                <SelectedCard>
                   <Typography
                     variant="h4"
                   >
-                    Conductor: { driver.name }
+                    {t('Driver')}: { driver.name }
                   </Typography>
                   <IconButton edge="end" onClick={() => deleteSelected("driver")}>
                     <DeleteIcon sx={{ color: "#FFFFFF" }} />
                   </IconButton>
-                </Box>
+                </SelectedCard>
               }
               
               { container && driver && 
@@ -155,7 +174,7 @@ const Goal = () => {
                   variant="contained" 
                   onClick={handleJourney}
                 >
-                  Registrar entrada
+                  { t('Save journey') }
                 </Button>
               }
 
@@ -182,4 +201,4 @@ const Goal = () => {
   )
 }
 
-export default Goal;
+export default observer(Gate)

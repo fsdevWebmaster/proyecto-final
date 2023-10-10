@@ -1,14 +1,18 @@
+import React from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import {
   Box,
   Card,
   Typography,
   Container,
-  styled
+  styled,
+  Avatar
 } from '@mui/material';
 import { Helmet } from 'react-helmet-async';
 import { LoginForm } from '@components'
 import { useTranslation } from 'react-i18next';
+import CardItem from '@components/Cards/CardItem';
+import EmojiTransportationIcon from '@mui/icons-material/EmojiTransportation';
 
 const CardImg = styled(Card)(
   ({ theme }) => `
@@ -56,6 +60,16 @@ const TopWrapper = styled(Box)(
 `
 );
 
+const AvatarLogin = styled(Avatar)(
+  ({ theme }) => `
+      background-color: ${theme.colors.success.main};
+      color: ${theme.palette.primary.contrastText};
+      width: ${theme.spacing(8)};
+      height: ${theme.spacing(8)};
+      box-shadow: ${theme.colors.shadows.success};
+`
+);
+
 const Login = () => {
   
   const { t } = useTranslation();
@@ -76,7 +90,7 @@ const Login = () => {
                 pb: 3
               }}
             >
-              <Box>
+              <Box display="flex" alignItems="center" flexDirection="row" justifyContent="space-between">
                 <Typography
                   variant="h2"
                   sx={{
@@ -85,6 +99,9 @@ const Login = () => {
                 >
                   {t('pages.login.header')}
                 </Typography>
+                  <AvatarLogin variant='rounded'>
+                    <EmojiTransportationIcon fontSize="large"/>
+                  </AvatarLogin>
               </Box>
               <LoginForm />
             </Card>

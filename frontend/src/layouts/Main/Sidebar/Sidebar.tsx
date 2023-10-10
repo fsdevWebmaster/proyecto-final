@@ -1,6 +1,4 @@
-import { useContext } from 'react';
 import {Scrollbar, Logo} from '@components';
-// import { SidebarContext } from 'src/contexts/SidebarContext';
 
 import {
   Box,
@@ -16,6 +14,8 @@ import {
 import { SidebarTopSection } from './SidebarTopSection';
 import { SidebarMenu } from './SidebarMenu';
 import { SidebarFooter } from './SidebarFooter';
+import { MxConfigStore } from '@stores';
+import { observer } from 'mobx-react';
 
 const SidebarWrapper = styled(Box)(
   ({ theme }) => `
@@ -29,10 +29,13 @@ const SidebarWrapper = styled(Box)(
 `
 );
 
-export const Sidebar = () => {
-  // const { sidebarToggle, toggleSidebar } = useContext(SidebarContext);
-  // const closeSidebar = () => toggleSidebar();
-  const sidebarToggle = false;
+export const Sidebar = observer(() => {
+  const { sidebar } = MxConfigStore
+
+  const toggleSidebarHandler = () => {
+    MxConfigStore.setSideBar(!sidebar)
+  }
+
   // TO-DO
   const theme = useTheme();
 
@@ -96,9 +99,8 @@ export const Sidebar = () => {
           boxShadow: `${theme.sidebar.boxShadow}`
         }}
         anchor={theme.direction === 'rtl' ? 'right' : 'left'}
-        open={sidebarToggle}
-        // onClose={closeSidebar}
-        onClose={() =>{}}
+        open={sidebar}
+        onClose={toggleSidebarHandler}
         variant="temporary"
         elevation={9}
       >
@@ -143,4 +145,4 @@ export const Sidebar = () => {
       </Drawer>
     </>
   );
-}
+})

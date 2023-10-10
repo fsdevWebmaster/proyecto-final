@@ -2,6 +2,8 @@ import { Auth } from "@models/User/User";
 import { makeAutoObservable } from "mobx";
 import { axiosClient } from "@services/axiosClient";
 import { loginApi } from "@services/api/loginApi";
+import jwtDecode from "jwt-decode";
+import { JWTHelper } from "@helpers/jwtHelper";
 
 class LoginStore {
     auth: Auth = {
@@ -14,9 +16,9 @@ class LoginStore {
         makeAutoObservable(this);
     }
 
-    initAuth(token: string) {
+    initAuth(token: string, status: boolean) {
         this.auth = {
-            isAuthenticated: true,
+            isAuthenticated: status,
             token,
             logDate: new Date()
         };
@@ -30,15 +32,13 @@ class LoginStore {
         };
     }
 
-    setSession = (token: string | null): void => {
+    setSession = (token: string | null, status: boolean): void => {
         if (token) {
             localStorage.setItem('accTkn', token);
-            // axiosInstance.headers.common.Authorization = `Bearer ${token}`;
-            axiosClient.defaults.headers.common.Authorization = `Bearer ${token}`;
-            this.initAuth(token);
+            // axiosClient.defaults.headers.common.Authorization = `Bearer ${token}`; keep it for later
+            this.initAuth(token, status);
         } else {
             localStorage.removeItem('accTkn');
-            // delete axiosInstance.headers.common.Authorization;
             delete axiosClient.defaults.headers.common.Authorization;
             this.resetAuth();
         }
@@ -52,9 +52,20 @@ class LoginStore {
         return await loginApi.login(username, password);
     }
 
-    logout () {
-        this.resetAuth();
-        this.setSession(null);
+    getUserInfoByToken(token:string) {
+        return JWTHelper.decodeToken(token);
+    }
+
+    async logOut (userId: string) {
+        try {
+            const response = await loginApi.logout(userId);
+            const {logged, user} = response.data;
+            this.resetAuth();
+            this.setSession(user, logged);
+        } catch (error) {
+            console.error(error);
+        }
+
     }
 }
 

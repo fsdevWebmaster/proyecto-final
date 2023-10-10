@@ -3,9 +3,15 @@ import { PageLayout } from "@layouts/Page/PageLayout"
 import { Box, Button, Card, Grid, IconButton, TextField, Typography, styled, useTheme } from "@mui/material"
 import { SearchItem } from '../../components/Search/useSearch';
 import { useTranslation } from "react-i18next";
-import { ChangeEvent, useState } from "react";
-import { ContainerModel } from "@models";
+import { ChangeEvent, useEffect, useState } from "react";
+import { ContainerModel, JourneyLog } from "@models";
 import DeleteIcon from '@mui/icons-material/Delete';
+import { useLocation } from "react-router";
+import { journeyApi } from "@services/api/journeyApi";
+import { JourneyModel } from "@models/Journey/Journey";
+import { StepModel } from "@models/Step/Step";
+import { MxStepStore } from "@stores";
+import { toJS } from "mobx";
 
 const MainContent = styled(Box)(
   () =>`
@@ -43,24 +49,38 @@ const InfoContainer = styled(Box)(
 export const Scale = () => {
   const { t } = useTranslation();
   const theme = useTheme()
+  const location = useLocation()
+  const [scaleType, setScaleType] = useState<string | null>()
+  const [scaleTitle, setScaleTitle] = useState<string | null>()
   const [selectedContainer, setSelectedContainer] = useState<ContainerModel | null>()
-  const [weight, setWeight] = useState(0)
   const [selectedWeight, setSelectedWeight] = useState<number | null>()
+  const [weight, setWeight] = useState(0)
   const [validWeight, setValidWeight] = useState(false)
+  const [journey, setJourney] = useState<JourneyModel | undefined>(undefined)
+  const [actualStep, setActualStep] = useState<StepModel | undefined>(undefined)
+  const [actualStepsList, setActualStepsList] = useState<StepModel[]>([])
+  const [journeyLog, setJourneyLog] = useState<JourneyLog | undefined>()
 
 
-  const mockJourneyLog = {
-    "journey": "65007586b6efe051c2e1217d",
-    "step": "64f7a18ceb2116cb79ca7449",
-    "stepValue": null,
-    "user": "64da7c0f484e531a6eeebbfc",
-    "id": "6500782aa4a2b886e672e26f",
-  }    
-      
-  const handleSelected = (selected:SearchItem) => {
+  const handleSelected = async (selected:SearchItem) => {
     setSelectedContainer(selected as ContainerModel)
-  }
+    // get journey
+    try {
+      const journeyResp = await journeyApi.getJourneyByContainerNumber(selected.containerNumber)
+      const journey = journeyResp.data
 
+      setJourney(journey)
+      if(journey && actualStep) {
+        const journeyLog = await journeyApi.getJourneyLog(journey, actualStep)
+        setJourneyLog(journeyLog.data)
+      }
+      else {
+        console.log('Error: there is no container with that number in this step')
+      }
+    } catch (error) {
+      console.log("TODO: Error handling:", error)
+    }
+  }
   const deleteSelected = (type:string) => {
     switch (type) {
       case "container":
@@ -88,22 +108,49 @@ export const Scale = () => {
     }
   }
 
-  const continueJourney = () => {
-    const patchData = {
-      journey: mockJourneyLog.id,
-      step: mockJourneyLog.step,
-      value: selectedWeight
+  const continueJourney = async () => {
+    if(journey && journeyLog) {
+      const patchData = {
+        journey: journey.id,
+        step: journeyLog.step,
+        value: selectedWeight
+      }
+      const updated = await journeyApi.updateJourney(patchData)
+      setSelectedContainer(null)
+      setSelectedWeight(null)
     }
-
-    console.log("TODO: Patch to /journey", patchData)
-
   }
 
+  useEffect(() => {
+    const { stepsList } = MxStepStore
+    const scaleType = location.pathname.split("/").pop()
+
+    if (scaleType && stepsList) {
+      const list = toJS(stepsList);
+      const actualStep = list.find(step => step.routeName === scaleType )
+
+      if(list && actualStep){
+        setScaleType(scaleType)
+        setActualStepsList(list)
+        setActualStep(actualStep)
+      }
+      
+      switch (scaleType) {
+        case "scale-one":
+          setScaleTitle("Scale one")          
+        break;
+        case "scale-two":
+          setScaleTitle("Scale two")
+        break;
+      }      
+    }
+  }, [])
+  
 
   return (
     <PageLayout
       seoTitle='Scale dashboard'
-      title='Scale dashboard'
+      title={scaleTitle as string}
       buttonConfig={{
         visible: false, 
         title: '', 

@@ -1,7 +1,8 @@
 import express from "express";
+
 const journeyRouter = express.Router();
-import { userAuth } from "../middlewares/users.middleware.js";
-import {  
+import { userAuthWithCookie } from "../middlewares/users.middleware.js";
+import { 
   createJourney, 
   createJourneyLog,
   getJourneyLog,
@@ -13,15 +14,19 @@ import {
   getJourneyByDriver
 } from "../controllers/journey.controller.js";
 
-journeyRouter.post('/journey', userAuth, createJourney);
-journeyRouter.patch('/journey', updateJourney);
-journeyRouter.post('/journey-log', userAuth, createJourneyLog);
-journeyRouter.patch('/journey-log', userAuth, updateJourneyLog);
-journeyRouter.post('/journey-by-driv', userAuth, getJourneyByDriver);
-journeyRouter.get('/journey-log/:journey', userAuth, getJourneyLog);
+
+//journeyRouter.get('/journey-log/:journey', userAuth, getJourneyLog);
 // journeyRouter.get('/step-journeys/:step', userAuth, getStepJourneys);
-journeyRouter.get('/steps', userAuth, getSteps);
-journeyRouter.get('/journey/:containerNumber',userAuth, getJourneyByContainerNumber)
+journeyRouter.post('/journey', userAuthWithCookie, createJourney);
+journeyRouter.patch('/journey', userAuthWithCookie, updateJourney);
+journeyRouter.post('/journey-log', userAuthWithCookie, createJourneyLog);
+journeyRouter.patch('/journey-log', userAuthWithCookie, updateJourneyLog);
+journeyRouter.post('/journey-by-driver', userAuthWithCookie, getJourneyByDriver);
+journeyRouter.post('/find-journey-log', /* userAuthWithCookie, */ getJourneyLog);
+journeyRouter.get('/step-journeys/:step', userAuthWithCookie, getStepJourneys);
+journeyRouter.get('/steps', userAuthWithCookie, getSteps);
+journeyRouter.get('/journey/:containerNumber', /* userAuthWithCookie, */ getJourneyByContainerNumber)
+
 
 
 export default journeyRouter;

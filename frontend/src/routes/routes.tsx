@@ -5,7 +5,9 @@ import { Loader } from "@components";
 import { Authorization } from '@components';
 import { Yard } from '@pages/Yard/Yard';
 import Gate from '@pages/Gate/Gate';
+import { Check } from '@pages/Check/Check';
 import { Scale } from '../pages/Scale/Scale';
+import { Exit } from '@pages/Exit/Exit';
 
 const Recovery = Loader(lazy(() => import('@components/LoginForm/RecoverPass')))
 const Layout = Loader(lazy(() => import('@layouts/Main/MainLayout')));
@@ -24,12 +26,11 @@ const DriverDashboard = Loader(lazy(() => import('@pages/Driver/DriverDashboard'
 const ContainerRegistration = Loader(lazy(() => import('@pages/Container/ContainerRegistration')))
 const GoalDashboard = Loader(lazy(() => import('@pages/Gate/GoalDashboard')))
 const AdminDashboard = Loader(lazy(() => import('@pages/Admin/AdminDashboard')))
-const Goal = Loader(lazy(() => import('@pages/Gate/Gate')))
 const AdminJourneysDashboard = Loader(lazy(() => import('@pages/Admin/AdminJourneysDashboard')))
 
 
 //docs
-const Documantation = Loader(lazy(() => import('@pages/Doc/Documentation')));
+const Documentation = Loader(lazy(() => import('@pages/Doc/Documentation')));
 
 // Status Pages
 const Status404 = Loader(lazy(() => import('@pages/Status/Status404')));
@@ -57,8 +58,7 @@ export const routes: RouteObject[] = [
   {
     path: 'main',
     id: 'main',
-    // element: <Authorization><Layout /></Authorization>,
-    element: <Layout />,
+    element: <Authorization><Layout /></Authorization>,
     children: [
       {
         path: '',
@@ -68,7 +68,7 @@ export const routes: RouteObject[] = [
       {
         path: 'doc',
         id: 'doc',
-        element: <Documantation />
+        element: <Documentation />
       },
       {
         path: 'profile',
@@ -121,9 +121,24 @@ export const routes: RouteObject[] = [
         element: <Yard />
       },
       {
-        path: 'scale',
+        path: 'check-one',
+        id: 'CheckOne',
+        element: <Check />
+      },
+      {
+        path: 'scale-one',
         id: 'Scale',
         element: <Scale />
+      },
+      {
+        path: 'scale-two',
+        id: 'Scale',
+        element: <Scale />
+      },
+      {
+        path: 'exit',
+        id: 'ExitPage',
+        element: <Exit />
       },
       {
         path: 'admin-dashboard',

@@ -1,14 +1,16 @@
 import Journey from "../models/journey.model.js";
 import JourneyLog from "../models/journeyLog.model.js";
 import Step from "../models/step.model.js";
-const mockUserId = "64da7c0f484e531a6eeebbfc"
+const hardGateId = "64f7a092eb2116cb79ca7445"
+const hardUserId = "64f8b2a5968ea93827b02a91"
 
 export const getJourneyByContainerNumber = (req, res, next) => {
   const { containerNumber } = req.params;
   if (!containerNumber || containerNumber.includes(":")) {
     next(new Error("Missing data"))
   }
-  const journey = Journey.findOne({containerNumber})    
+  const journey = Journey.findOne({containerNumber, status:'ON_HOLD'})
+    .populate('step')
     .then(result =>{
       if (!result) {
         return res.status(404).json({ message: 'Journey not found for the given container number.' });
@@ -22,10 +24,14 @@ export const getJourneyByContainerNumber = (req, res, next) => {
     })
   }
     
-    
-
 export const createJourney = async (req, res, next) => {
-  let createData = req.body
+  const postData = req.body
+  const createData = {
+    driver: postData.driver.id,
+    container: postData.container.id,
+    step: hardGateId
+  }
+
   try {
     const journey = new Journey(createData)
     await journey.save()
@@ -38,8 +44,8 @@ export const createJourney = async (req, res, next) => {
     }
     journey.driverDoc = journey.driver.idDoc
     await journey.save()
-    createIniLogs(journey)
-    return res.json(createData)
+    const j = await createIniLogs(journey)
+    return res.json(j)
   } catch (error) {
     next(error) 
   }
@@ -51,7 +57,7 @@ const createIniLogs = async (journey) => {
     journey: journey._id,
     step: journey.step,
     stepValue: null,
-    user: mockUserId,
+    user: hardUserId,
     description: ""
   }
   const gateLog = new JourneyLog(gateLogData)
@@ -63,7 +69,7 @@ const createIniLogs = async (journey) => {
     journey: journey._id,
     step: journeyStep.next,
     stepValue: null,
-    user: mockUserId,
+    user: hardUserId,
     description: ""
   }
   const yardLog = new JourneyLog(yardLogData)
@@ -71,7 +77,9 @@ const createIniLogs = async (journey) => {
 
   // update journey step
   journey.step = journeyStep.next
+  await journey.populate("step")
   journey.save()
+  return journey
 }
 
 export const createJourneyLog = async (req, res, next) => {
@@ -109,10 +117,15 @@ export const updateJourneyLog = (req, res, next) => {
 }
 
 export const getJourneyLog = (req, res, next) => {
-  const { journey } = req.params
-  JourneyLog.find({journeyId: journey})
+  const { journey, step } = req.body
+
+  if(!journey || !step) {
+    next(Error('Missing data'))
+  }
+
+  JourneyLog.find({journey, step})
     .then((result) => {
-      return res.json(result)
+      return res.json(result[0])
     }).catch((err) => {
       next(err)
     });
@@ -137,15 +150,17 @@ export const updateJourney = async (req, res, next) => {
   
     // update journey step
     await journey.populate("step")
-    journey.step = journey.step.next
-    await journey.save()
+    if (journey.step.next) {
+      journey.step = journey.step.next
+      await journey.save()
+    }
   
     // create new journey log
     const newLog = new JourneyLog({
       journey: updBody.journey,
       step: journey.step,
       stepValue: null,
-      user: mockUserId,
+      user: hardUserId,
       description: ""
     })
     await newLog.save()
