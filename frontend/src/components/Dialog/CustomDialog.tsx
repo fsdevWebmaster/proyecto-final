@@ -1,4 +1,4 @@
-import React, { ReactElement, forwardRef, Ref } from 'react';
+import { ReactElement, forwardRef, Ref } from 'react';
 import { styled, Dialog, Box, Typography, Slide, Button, Avatar, useTheme } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import InfoIcon from '@mui/icons-material/Info';

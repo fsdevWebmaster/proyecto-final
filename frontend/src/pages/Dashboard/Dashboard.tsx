@@ -1,5 +1,4 @@
-import React from 'react';
-import {  Grid, ListItemText } from '@mui/material';
+import {  CardActionArea, Grid } from '@mui/material';
 import { observer } from 'mobx-react';
 import { useTranslation } from 'react-i18next';
 import { PageLayout } from '@layouts/Page/PageLayout';
@@ -14,7 +13,7 @@ const Dashboard = (props: any) => {
   const navigate = useNavigate();
 
   return (
-    <PageLayout seoTitle='Panel' title='Panel' buttonConfig={{ visible: false}}>
+    <PageLayout seoTitle={t('Panel')} title={t('Panel')} buttonConfig={{ visible: false}}>
       <Grid item container direction="row" spacing={4}>
           <Grid item xs={12} md={6}>
             <CardManager
@@ -45,27 +44,29 @@ const Dashboard = (props: any) => {
           </Grid>
           <Grid item xs={12} md={6}>
             <CardManager
-              title='List Containers'
-              subtitle='Manage containers flow'
-              actionHeader='Manage'
+              title={t('List Containers')}
+              subtitle={t('Manage containers flow')}
+              actionHeader={t('Go to')}
               imgPath='/static/images/illustrations/moving.svg'
               clickHandler={() => navigate('containers')}
             />
           </Grid>
           <Grid item xs={12} md={6}>
-            <CardManager
-              title='List Stations'
-              subtitle='Manage stations in the flow'
-              actionHeader='Manage'
-              imgPath='/static/images/illustrations/analysis.svg'
-              clickHandler={() => navigate('stations')}
-            />
+            {/* <CardActionArea onClick={() => navigate('stations')}> */}
+              <CardManager
+                title={t('List Stations')}
+                subtitle={t('Manage stations flow')}
+                actionHeader={t('Go to')}
+                imgPath='/static/images/illustrations/analysis.svg'
+                clickHandler={() => navigate('stations')}
+              />
+            {/* </CardActionArea> */}
           </Grid>
           <Grid item xs={12} md={6}>
             <CardManager
-              title='Title 4'
-              subtitle='Here a subtitle to add info'
-              actionHeader='Go to'
+              title={t('Title 4')}
+              subtitle={t('Here a subtitle to add info')}
+              actionHeader={t('Go to')}
               imgPath='/static/images/illustrations/businessman.svg'
               clickHandler={() => {}}
             />

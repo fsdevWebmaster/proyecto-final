@@ -37,24 +37,24 @@ export const Yard = () => {
 
   const tableActions = [
     {
-      title: 'Enviar a siguiente paso',
+      title: t('Enviar a siguiente paso'),//Send to next step
       name: 'next',
       clickHandler: handleActions,
       visible: true,
       icon: <FastForwardIcon />,
-      iconText: "Siguiente paso",
+      iconText: t('Siguiente paso'), //Next step
       colors: {
         background: theme.colors.primary.lighter,
         color: theme.palette.primary.main,
       }
     },
     {
-      title: 'Enviar a otro paso',
+      title: 'Enviar a otro paso', //'Send to another step'
       name: 'other',
       clickHandler: handleActions,
       visible: true,
       icon: <RedoIcon />,
-      iconText: "Otro paso",
+      iconText: t('Another step'),
       colors: {
         background: theme.colors.primary.lighter,
         color: theme.palette.primary.main,
@@ -82,11 +82,11 @@ export const Yard = () => {
 
   return (
     <PageLayout
-      seoTitle='Users List'
-      title='Patio'
+      seoTitle={t('Users List')}
+      title={t('Yard')}
       buttonConfig={{
-        visible: true, 
-        title: 'Create User', 
+        visible: true,
+        title: t('Create User'),
         action: () => alert('To-do')}
     }>
       <Grid item xs={12}>
@@ -96,7 +96,7 @@ export const Yard = () => {
               <TableHead>
                 <TableRow>
                   <TableCell align="center">{t('Container number')}</TableCell>
-                  <TableCell align="center">Actions</TableCell>
+                  <TableCell align="center">{t('Actions')}</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>

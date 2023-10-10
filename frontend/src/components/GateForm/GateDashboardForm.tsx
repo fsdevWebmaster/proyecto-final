@@ -22,7 +22,7 @@ import {
   Paper
 } from '@mui/material'
 import SearchIcon from '@mui/icons-material/Search';
-import { useRefMounted } from "@hooks"
+// import { useRefMounted } from "@hooks"
 import { useTranslation } from "react-i18next"
 import { Link as RouterLink } from 'react-router-dom'
 
@@ -83,9 +83,9 @@ const rows = [
   createData('Gingerbread', 356, 16.0, 49, 3.9),
 ];
 
-export const GoalDashboardForm: FC =() => {
+export const GateDashboardForm: FC =() => {
 
-  const isMountedRef = useRefMounted();
+  // const isMountedRef = useRefMounted();
   const { t }: { t: any } = useTranslation();
   const navigate = useNavigate();
 
@@ -95,19 +95,19 @@ export const GoalDashboardForm: FC =() => {
 
   const handleSubmit = async (values: any,
     { setErrors, setStatus, setSubmitting }: any): Promise<void> => {
-      try {
-        if (isMountedRef.current) {
-          setStatus({ success: true })
-          setSubmitting(false)
-        }
-      } catch (error: any) {
-        console.error(error)
-        if (isMountedRef.current) {
-          setStatus({ success: false })
-          setErrors({ submit: error.message })
-          setSubmitting(false)
-        }
-      }
+      // try {
+      //   if (isMountedRef.current) {
+      //     setStatus({ success: true })
+      //     setSubmitting(false)
+      //   }
+      // } catch (error: any) {
+      //   console.error(error)
+      //   if (isMountedRef.current) {
+      //     setStatus({ success: false })
+      //     setErrors({ submit: error.message })
+      //     setSubmitting(false)
+      //   }
+      // }
     }
   return (
     <Formik
@@ -192,7 +192,7 @@ export const GoalDashboardForm: FC =() => {
                 <SearchIcon />
               </SearchIconWrapper>
               <StyledInputBase
-                placeholder="Search…"
+                placeholder= {t("Search…")}
                 inputProps={{ 'aria-label': 'search' }}
               />
             </Search>
@@ -233,7 +233,7 @@ export const GoalDashboardForm: FC =() => {
                 <SearchIcon />
               </SearchIconWrapper>
               <StyledInputBase
-                placeholder="Search…"
+                placeholder= {t("Search…")}
                 inputProps={{ 'aria-label': 'search' }}
               />
             </Search>

@@ -17,15 +17,15 @@ const Documentation = () => {
   const theme = useTheme();
 
   const tableHeaderOptions = {
-    btnTitle: 'Add Item',
-    onClickHandler: () => alert('custom implementation')
+    btnTitle: t('Add Item'),
+    onClickHandler: () => alert(t('custom implementation'))
   };
 
   const headers = ['Header 1', 'Header 2', 'Header 3', 'Header 4', 'Actions'];
 
   const tableActions = [
     {
-      title: 'Edit Item',
+      title: t('Edit Item'),
       clickHandler: () => {},
       visible: true,
       icon: <EditTwoToneIcon fontSize="small" />,
@@ -35,7 +35,7 @@ const Documentation = () => {
       }
     },
     {
-      title: 'Delete Item',
+      title: t('Delete Item'),
       clickHandler: () => {},
       visible: true,
       icon: <DeleteTwoToneIcon fontSize="small" />,
@@ -71,7 +71,7 @@ const mockLogs: JourneyLog[] = [
 ];
 
   return (
-    <PageLayout seoTitle='Documentation' title='Documentation' buttonConfig={{visible: false}}>
+    <PageLayout seoTitle={t('Documentation')} title={t('Documentation')} buttonConfig={{visible: false}}>
       {/* Cards */}
       <Grid item lg={8} md={6} xs={12}>
         <Grid item container direction="row">
@@ -124,8 +124,8 @@ const mockLogs: JourneyLog[] = [
         <Grid item container direction="row" spacing={4}>
           <Grid item xs={12} md={6}>
             <CardManager
-              title='Title 1'
-              subtitle='Here a subtitle to add info'
+              title={t('Title 1')}
+              subtitle={t('Here a subtitle to add info')}
               actionHeader='Go to'
               imgPath='/static/images/illustrations/handshake.svg'
               clickHandler={() => {}}
@@ -133,8 +133,8 @@ const mockLogs: JourneyLog[] = [
           </Grid>
           <Grid item xs={12} md={6}>
             <CardManager
-              title='Title 2'
-              subtitle='Here a subtitle to add info'
+              title= {t('Title 2')}
+              subtitle={t('Here a subtitle to add info')}
               actionHeader='Go to'
               imgPath='/static/images/illustrations/moving.svg'
               clickHandler={() => {}}
@@ -142,8 +142,8 @@ const mockLogs: JourneyLog[] = [
           </Grid>
           <Grid item xs={12} md={6}>
             <CardManager
-              title='Title 3'
-              subtitle='Here a subtitle to add info'
+              title={t('Title 3')}
+              subtitle={t('Here a subtitle to add info')}
               actionHeader='Go to'
               imgPath='/static/images/illustrations/analysis.svg'
               clickHandler={() => {}}
@@ -151,8 +151,8 @@ const mockLogs: JourneyLog[] = [
           </Grid>
           <Grid item xs={12} md={6}>
             <CardManager
-              title='Title 4'
-              subtitle='Here a subtitle to add info'
+              title={t('Title 4')}
+              subtitle={t('Here a subtitle to add info')}
               actionHeader='Go to'
               imgPath='/static/images/illustrations/businessman.svg'
               clickHandler={() => {}}
@@ -179,16 +179,16 @@ const mockLogs: JourneyLog[] = [
         </Grid>
         <Grid item container direction="row" spacing={4}>
           <Grid item xs={12} md={6}>
-              <ProgressBar type='success' percentage={60} status='In progress' currentLocation='Station 2'/>
+              <ProgressBar type='success' percentage={60} status='In progress' currentLocation={t('Station 2')}/>
           </Grid>
           <Grid item xs={12} md={6}>
-              <ProgressBar type='error' percentage={10} status='Overdue' currentLocation='Station 4'/>
+              <ProgressBar type='error' percentage={10} status='Overdue' currentLocation={t('Station 4')}/>
           </Grid>
           <Grid item xs={12} md={6}>
-              <ProgressBar type='warning' percentage={40} status='Delayed' currentLocation='Yard'/>
+              <ProgressBar type='warning' percentage={40} status='Delayed' currentLocation={t('Yard')}/>
           </Grid>
           <Grid item xs={12} md={6}>
-              <ProgressBar type='secondary' percentage={90} status='Arrived' currentLocation='Gate'/>
+              <ProgressBar type='secondary' percentage={90} status='Arrived' currentLocation={t('Gate')}/>
           </Grid>
         </Grid>
       </Grid>        

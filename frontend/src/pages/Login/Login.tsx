@@ -71,7 +71,6 @@ const AvatarLogin = styled(Avatar)(
 );
 
 const Login = () => {
-  
   const { t } = useTranslation();
 
   return (
@@ -97,7 +96,7 @@ const Login = () => {
                     mb: 1
                   }}
                 >
-                  {t('pages.login.header')}
+                  {t('hello')}
                 </Typography>
                   <AvatarLogin variant='rounded'>
                     <EmojiTransportationIcon fontSize="large"/>

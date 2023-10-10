@@ -18,13 +18,14 @@ const Layout = Loader(lazy(() => import('@layouts/Main/MainLayout')));
 const Login = Loader(lazy(() => import('@pages/Login/Login')))
 const Profile = Loader(lazy(() => import('@pages/Profile/Profile')))
 const Users = Loader(lazy(() => import('@pages/Users/Users')))
+const Station = Loader(lazy(() => import('@pages/Station/Stations')))
 const Containers = Loader(lazy(() => import('@pages/Container/Containers')));
 const Dashboard = Loader(lazy(() => import('@pages/Dashboard/Dashboard')))
 const CreateUser = Loader(lazy(() => import('@pages/CreateUser/CreateUser')))
 const DriverRegistration = Loader(lazy(() => import('@pages/Driver/DriverRegistration')))
 const DriverDashboard = Loader(lazy(() => import('@pages/Driver/DriverDashboard')))
 const ContainerRegistration = Loader(lazy(() => import('@pages/Container/ContainerRegistration')))
-const GoalDashboard = Loader(lazy(() => import('@pages/Gate/GoalDashboard')))
+const GoalDashboard = Loader(lazy(() => import('@pages/Gate/GateDashboard')))
 const AdminDashboard = Loader(lazy(() => import('@pages/Admin/AdminDashboard')))
 const AdminJourneysDashboard = Loader(lazy(() => import('@pages/Admin/AdminJourneysDashboard')))
 
@@ -139,6 +140,11 @@ export const routes: RouteObject[] = [
         path: 'exit',
         id: 'ExitPage',
         element: <Exit />
+      },
+      {
+        path: 'stations',
+        id: 'Stations',
+        element: <Station />
       },
       {
         path: 'admin-dashboard',

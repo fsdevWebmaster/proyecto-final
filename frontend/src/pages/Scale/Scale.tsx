@@ -149,8 +149,8 @@ export const Scale = () => {
 
   return (
     <PageLayout
-      seoTitle='Scale dashboard'
-      title={scaleTitle as string}
+      seoTitle= {t('Scale dashboard')}
+      title= {t('Scale dashboard')}
       buttonConfig={{
         visible: false, 
         title: '', 
@@ -180,7 +180,7 @@ export const Scale = () => {
             <SearchForm
               sendSelected={(selected) =>handleSelected(selected)}
               searchType="containers"
-              formTitle={t("Seach containers")}
+              formTitle={t("Search containers")}
             />
           </SearchContainer>
         }

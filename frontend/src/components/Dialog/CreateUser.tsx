@@ -1,4 +1,3 @@
-import React from 'react';
 import { observer } from 'mobx-react';
 import { useTranslation } from 'react-i18next';
 import { TextField, Autocomplete, Button, CircularProgress, Dialog, DialogActions, DialogContent, DialogTitle, Grid, Typography } from '@mui/material';
@@ -17,9 +16,9 @@ export const CreateUser = observer(({isOpen, onCloseHandler, onSuccessHandler}: 
 
   // mock data
   const roles = [
-    { label: 'Administrator', value: 'admin' },
-    { label: 'Subscriber', value: 'subscriber' },
-    { label: 'Customer', value: 'customer' }
+    { label: t('Administrator'), value: 'admin' },
+    { label: t('Subscriber'), value: 'subscriber' },
+    { label: t('Customer'), value: 'customer' }
   ];
 
   return (
@@ -34,7 +33,7 @@ export const CreateUser = observer(({isOpen, onCloseHandler, onSuccessHandler}: 
             p: 3
           }}
         >
-          <Typography variant="h4" gutterBottom>
+          <Typography variant="h3" gutterBottom>
             {t('Add new user')}
           </Typography>
           <Typography variant="subtitle2">
@@ -136,7 +135,7 @@ export const CreateUser = observer(({isOpen, onCloseHandler, onSuccessHandler}: 
                           error={Boolean(touched.email && errors.email)}
                           fullWidth
                           helperText={touched.email && errors.email}
-                          label={t('Email address')}
+                          label={t('Email')}
                           name="email"
                           onBlur={handleBlur}
                           onChange={handleChange}
@@ -162,7 +161,7 @@ export const CreateUser = observer(({isOpen, onCloseHandler, onSuccessHandler}: 
                       </Grid>
                       <Grid item xs={12} md={6}>
                         <Autocomplete
-                          disablePortal
+                          // disablePortal
                           options={roles}
                           renderInput={(params: any) => (
                             <TextField

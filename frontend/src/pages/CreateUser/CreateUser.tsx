@@ -1,4 +1,3 @@
-import { Link as RouterLink } from 'react-router-dom';
 import {
   Box,
   Card,
@@ -56,31 +55,8 @@ const CreateUser = () => {
                 >
                   {t('Register User')}
                 </Typography>
-                {/* <Typography
-                  variant="h4"
-                  color="text.secondary"
-                  fontWeight="normal"
-                  sx={{
-                    mb: 3
-                  }}
-                >
-                  {t('Fill in the fields below to sign into your account.')}
-                </Typography> */}
               </Box>
               <CreateUserForm />
-              {/* <Box my={4}>
-                <Typography
-                  component="span"
-                  variant="subtitle2"
-                  color="text.primary"
-                  fontWeight="bold"
-                >
-                  {t('Don’t have an account, yet?')}
-                </Typography>{' '}
-                <Link component={RouterLink} to="/account/register-basic">
-                  <b>Sign up here</b>
-                </Link>
-              </Box> */}
             </Card>
           </Container>
         </TopWrapper>

@@ -12,6 +12,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 
 import { Helmet } from "react-helmet-async";
 import { useTranslation } from "react-i18next";
+import { GateForm } from "@components/GateForm/GateForm";
 import { SearchForm } from "@components/Search/SearchForm";
 import { ContainerModel } from "@models/Container/Container";
 import { useEffect, useState } from "react";
@@ -114,18 +115,18 @@ const Gate = () => {
 
   return (
     <PageLayout
-      seoTitle='Gate'
-      title='Gate'
-      buttonConfig={{
-        visible: false, 
-        title: 'Create User', 
+      seoTitle= {t('Gate')}
+      title= {t('Gate')}
+      buttonConfig= {{
+        visible: true, 
+        title: t('Create User'), 
         action: () => alert('To-do')}
       }>
       <MainContent>
         <TopWrapper>
           <Container maxWidth='sm'>
             <Card
-              sx={{
+              sx= {{
                 px: 5,
                 pt: 4,
                 pb: 5

@@ -1,0 +1,39 @@
+{
+    "app": {
+        "title": "Bienvenido"
+    },
+    "loader": {
+        "text": "Cargando..."
+    },
+    "meta": {
+        "description": "Aplicación Web - Controlador de Flujo de Contenedores",
+        "title": "Master Project - Fullstack"
+    },
+    "pages": {
+        "dashboard": {
+            "main": "Bienvenido {{name}}",
+            "title": "Panel de Control"
+        },
+        "login": {
+            "btnLogin": "Enviar",
+            "btnReset": "Resetear",
+            "header": "Iniciar Sesión",
+            "label": "Dirección de Email",
+            "title": "Iniciar Sesión | Master Project - Fullstack"
+        },
+        "recover": {
+            "btnRecover": "Enviar contraseña nueva",
+            "emailInstructions": "Revise su correo electrónico para obtener más instrucciones",
+            "emailRegistered": "Ingrese el correo electrónico utilizado en el registro para restablecer su contraseña.",
+            "emailRequired": "El campo email es requerido",
+            "emailValidate": "El correo electrónico proporcionado debe ser una dirección de correo electrónico válida",
+            "labelEmail": "Dirección de correo electrónico",
+            "link": "Clic aquí",
+            "loginAgain": "¿Quieres intentar iniciar sesión de nuevo?",
+            "loginContinue": "Continuar iniciando sesión",
+            "Recover Password": "Recuperar contraseña",
+            "sentInstructions": "Las instrucciones de restablecimiento de contraseña han sido enviadas a su correo electrónico",
+            "title": "Recuperar Contraseña"
+        }
+    }
+}
