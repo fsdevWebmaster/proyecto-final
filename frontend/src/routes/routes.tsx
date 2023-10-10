@@ -126,6 +126,11 @@ export const routes: RouteObject[] = [
         element: <Check />
       },
       {
+        path: 'check-two',
+        id: 'CheckTwo',
+        element: <Check />
+      },
+      {
         path: 'scale-one',
         id: 'Scale',
         element: <Scale />

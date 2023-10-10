@@ -81,6 +81,7 @@ export const Scale = () => {
       console.log("TODO: Error handling:", error)
     }
   }
+  
   const deleteSelected = (type:string) => {
     switch (type) {
       case "container":
@@ -123,26 +124,29 @@ export const Scale = () => {
 
   useEffect(() => {
     const { stepsList } = MxStepStore
-    const scaleType = location.pathname.split("/").pop()
-
-    if (scaleType && stepsList) {
-      const list = toJS(stepsList);
-      const actualStep = list.find(step => step.routeName === scaleType )
-
-      if(list && actualStep){
-        setScaleType(scaleType)
-        setActualStepsList(list)
-        setActualStep(actualStep)
+    const sList = toJS(stepsList)
+    let stpList:StepModel[] = []
+    const routeName = location.pathname
+    const actualStep = sList.find(item => {
+      stpList = [...stpList, item.step]
+      if (routeName.includes(item.step.routeName)) {
+        return item.step
       }
-      
+    })
+    if(sList && actualStep){
+      setActualStepsList(stpList)
+      setActualStep(actualStep.step)
+    }
+    const scaleType = actualStep?.step.routeName
+    if (scaleType) {
       switch (scaleType) {
         case "scale-one":
-          setScaleTitle("Scale one")          
+          setScaleTitle(t("Scale one"))          
         break;
         case "scale-two":
-          setScaleTitle("Scale two")
+          setScaleTitle(t("Scale two"))
         break;
-      }      
+      }
     }
   }, [])
   

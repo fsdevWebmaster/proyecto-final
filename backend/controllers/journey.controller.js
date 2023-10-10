@@ -175,17 +175,30 @@ export const getSteps = async (req, res, next) => {
   const steps = await Step.find();
   let stepsData = steps.map(async (step) => {
     let stepRow = {}
-    const journeys = await getStepJourneys(step)
+    const journeys = await stepJourneys(step)
     stepRow = {...stepRow, step: step, journeys: journeys }
     return stepRow
   })
   stepsData = await Promise.all(stepsData);
-  return res.json({stepsData})
+  return res.json(stepsData)
 }
 
-const getStepJourneys = async (step) => {
+const stepJourneys = async (step) => {
   const journeys = await Journey.find({ step });
   return journeys
+}
+
+export const getStepJourneys = async (req, res, next) => {
+  const { step } = req.params
+  if (!step) {
+    next(new Error('Missing data'))
+  }
+  try {
+    const journeys = await Journey.find({ step });
+    return res.json(journeys)
+  } catch (error) {
+    next()
+  }
 }
 
 export const getJourneyByDriver = (req, res, next) => {

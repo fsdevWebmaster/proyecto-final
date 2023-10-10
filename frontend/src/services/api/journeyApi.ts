@@ -1,5 +1,5 @@
-import { JourneyModel } from "@models/Journey/Journey";
 import { axiosClient } from "../axiosClient";
+import { JourneyModel } from "@models/Journey/Journey";
 import { StepModel } from "@models/Step/Step";
 
 class JourneyApi {
