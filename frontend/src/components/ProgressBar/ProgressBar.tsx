@@ -2,10 +2,11 @@ import React from 'react';
 import { Box, ListItemText, Typography, useTheme } from '@mui/material';
 import { Text } from '@components/Text/Text';
 import { ProgressFactory } from './ProgressFactory';
+import { Status } from 'src/types/common';
 
 interface IProgressBarProps {
   header?: string;
-  type: 'error' | 'warning' | 'success' | 'secondary';
+  type: Status;
   percentage: number;
   status: string;
   currentLocation: string;
