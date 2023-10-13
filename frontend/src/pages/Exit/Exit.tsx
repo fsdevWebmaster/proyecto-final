@@ -85,7 +85,15 @@ export const Exit = () => {
       step: mockStep.id,
       value: null
     }
-
+    
+    console.log("TODO: Patch to /journey", patchData)
+  }
+  const handleBackToYard = () => { 
+    const patchData = {
+      journeyId: mockJourney.id,
+      step: mockStep.id,
+      value: null
+    }
     console.log("TODO: Patch to /journey", patchData)
   }
 
@@ -129,6 +137,11 @@ export const Exit = () => {
         { selectedContainer &&
           <Button onClick={handleFinished}>
             {t('Finished')}
+          </Button>
+        }
+        { selectedContainer &&
+          <Button onClick={handleBackToYard}>
+            {t('Back to yard')}
           </Button>
         }
       </MainContent>
