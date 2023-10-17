@@ -2,6 +2,7 @@ import Journey from "../models/journey.model.js";
 import JourneyLog from "../models/journeyLog.model.js";
 import Step from "../models/step.model.js";
 const exitId = "652d7e154bf411f7d939495b"
+const hardGateId = "64f7a092eb2116cb79ca7445"
 
 export const getJourneyByContainerNumber = (req, res, next) => {
   const { containerNumber } = req.params;
