@@ -6,7 +6,7 @@ import {
   createJourney, 
   createJourneyLog,
   getJourneyLog,
-  getStepJourneys,
+  // getStepJourneys,
   updateJourneyLog,
   getSteps,
   getJourneyByContainerNumber,

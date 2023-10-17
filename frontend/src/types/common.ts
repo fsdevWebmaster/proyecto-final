@@ -1,0 +1,1 @@
+export type Status = 'error' | 'warning' | 'success' | 'secondary';

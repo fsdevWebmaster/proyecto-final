@@ -1,23 +1,12 @@
-import React, { useCallback, useState } from 'react';
+import React, { ReactNode, useCallback, useState } from 'react';
 import { ThemeProvider, StyledEngineProvider } from '@mui/material';
 import { themeCreator } from './base';
-// import { StylesProvider } from '@mui/styles';
-// import { CacheProvider } from '@emotion/react';
-// import createCache from '@emotion/cache';
-// import stylisRTLPlugin from 'stylis-plugin-rtl';
-
-// const cacheRtl = createCache({
-//   key: 'bloom-ui',
-// prepend: true,
-//   // @ts-ignore
-//   stylisPlugins: [stylisRTLPlugin]
-// });
 
 export const ThemeContext = React.createContext(
   (themeName: string): void => {}
 );
 
-const ThemeProviderWrapper: React.FC = (props: any) => {
+const ThemeProviderWrapper = (props: any) => {
   const curThemeName = localStorage.getItem('appTheme') || 'PureLightTheme';
   const [themeName, _setThemeName] = useState(curThemeName);
   const theme = themeCreator(themeName);

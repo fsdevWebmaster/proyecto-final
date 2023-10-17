@@ -1,9 +1,4 @@
-/*import React from 'react';
-import ReactDOM from 'react-dom/client';
-import { App } from './components/App';
-import './styles/index.css';*/
-
-import React, { StrictMode } from 'react';
+import React from 'react';
 import { createRoot } from 'react-dom/client';
 import { HelmetProvider } from 'react-helmet-async';
 import ScrollTop from './hooks/useScrollTop';
