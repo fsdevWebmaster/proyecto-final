@@ -60,8 +60,15 @@ const createIniLogs = async (journey) => {
     user: hardUserId,
     description: ""
   }
-  const gateLog = new JourneyLog(gateLogData)
-  gateLog.save()
+  try {
+    const gateLog = new JourneyLog(gateLogData)
+    gateLog.save()
+    
+  } catch (error) {
+
+    console.log(error)
+    
+  }
 
   // yard
   const journeyStep = gateLog.step;

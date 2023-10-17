@@ -14,6 +14,7 @@ import { MxStepStore, MxUserStore } from "@stores"
 import { StepModel } from "@models/Step/Step"
 import { toJS } from "mobx"
 import { JourneyModel } from "@models/Journey/Journey"
+const { stepsList } = MxStepStore
 
 const SearchContainer = styled(Box)(
   () => `
@@ -99,7 +100,6 @@ export const Check = () => {
   }, [ctPat, previousOk, stamps, selectedContainer])
 
   useEffect(() => {
-    const { stepsList } = MxStepStore
     const sList = toJS(stepsList)
     let stpList:StepModel[] = []
     const routeName = location.pathname
@@ -200,7 +200,7 @@ export const Check = () => {
           patchData = { ...patchData, value: { stamps } }
         break;      
       }
-      const resp = await journeyApi.updateJourney(patchData)
+      await journeyApi.updateJourney(patchData)
       resetValues()
     }
   }

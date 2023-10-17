@@ -23,7 +23,7 @@ import { observer } from 'mobx-react';
 import { toJS } from "mobx";
 import { useLocation } from "react-router";
 import { StepModel } from "@models/Step/Step";
-
+const { stepsList } = MxStepStore
 
 const MainContent = styled(Box)(
   () =>`
@@ -97,7 +97,6 @@ const Gate = () => {
 
   
   useEffect(() => {
-    const { stepsList } = MxStepStore
     const sList = toJS(stepsList)
     let stpList:StepModel[] = []
     const routeName = location.pathname
