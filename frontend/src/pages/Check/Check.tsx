@@ -10,7 +10,7 @@ import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import FileUploadIcon from '@mui/icons-material/FileUpload';
 import { useNavigate } from "react-router"
 import { journeyApi } from "@services/api/journeyApi"
-import { MxStepStore } from "@stores"
+import { MxStepStore, MxUserStore } from "@stores"
 import { StepModel } from "@models/Step/Step"
 import { toJS } from "mobx"
 import { JourneyModel } from "@models/Journey/Journey"
@@ -74,8 +74,9 @@ export const Check = () => {
   const theme = useTheme()
   const navigate = useNavigate()
   const [selectedContainer, setSelectedContainer] = useState<ContainerModel | null>()
-  const [selectedType, setSelectedType] = useState<string>('load')
+  const [selectedType, setSelectedType] = useState<string | null>(null)
   const [ctPat, setCtPat] = useState(false)
+  const [ctPatChecked, setCtPatChecked] = useState(false)
   const [previousOk, setPreviousOk] = useState(false)
   const [stamps, setStamps] = useState(false)
   const [title, setTitle] = useState<string | null>(null)
@@ -84,6 +85,8 @@ export const Check = () => {
   const [actualStepsList, setActualStepsList] = useState<StepModel[]>([])
   const [journey, setJourney] = useState<JourneyModel | undefined>(undefined)
   const [journeyLog, setJourneyLog] = useState<JourneyLog | undefined>()
+  const [errorMsg, setErrorMsg] = useState<string | null>(null)
+  const { user } = MxUserStore
 
 
   useEffect(() => {
@@ -114,6 +117,7 @@ export const Check = () => {
   
   const handleSelected = async (selected:SearchItem) => {
     setSelectedContainer(selected as ContainerModel)
+    setErrorMsg(null)
     try {
       const journeyResp = await journeyApi.getJourneyByContainerNumber(selected.containerNumber)
       const journey = journeyResp.data
@@ -124,7 +128,8 @@ export const Check = () => {
         setJourneyLog(journeyLog.data)
       }
     } catch (error) {
-      console.log('Error: Container not found on this step')
+      setErrorMsg(t('Container number not found at this step'))
+      setSelectedContainer(null)
     }
   }
 
@@ -136,7 +141,7 @@ export const Check = () => {
     }
   }
 
-  const handleType = (type:string) => {
+  const handleType = async (type:string) => {
     setSelectedType(type) 
 
     switch (type) {
@@ -145,7 +150,19 @@ export const Check = () => {
       break;
       case "unload":
         setTitle(`${t("Unload")}`)
-        navigate("/exit")
+
+        if (journey && user) {
+          const postData = {
+            journeyId: journey.id,
+            userId: user.id
+          }
+          try {
+            const resp = await journeyApi.journeyToUnload(postData)
+            resetValues()
+          } catch (error) {
+            console.log("TODO: Error handling ", error)
+          }
+        }
       break;
     }
   }
@@ -184,7 +201,17 @@ export const Check = () => {
         break;      
       }
       const resp = await journeyApi.updateJourney(patchData)
+      resetValues()
     }
+  }
+
+  const resetValues = () => {
+    setSelectedContainer(null)
+    setCtPat(false)
+    setPreviousOk(false)
+    setStamps(false)
+    setSelectedType(null)
+    setTitle(null)  
   }
 
   return (
@@ -197,6 +224,9 @@ export const Check = () => {
         action: () => alert('To-do')}
     }>
     <MainContent className="main-content" sx={{ marginTop: 2 }}>
+      { errorMsg && 
+        <p>{errorMsg}</p>
+      }
       { !selectedContainer &&
         <SearchContainer>
           <SearchForm
@@ -232,11 +262,11 @@ export const Check = () => {
           </Typography>
           <Button onClick={() => handleType("load")}>
             <FileUploadIcon />
-            Carga
+            {t('Load')}
           </Button>
           <Button onClick={() => handleType("unload")}>
             <FileDownloadIcon />
-            Descarga
+            {t('Unload')}
           </Button>
         </ButtonsContainer>
       }

@@ -33,6 +33,11 @@ class JourneyApi {
     updateJourney(updateData: any) {
       return axiosClient.patch(`${this.controller}/journey`, updateData)
     }
+
+    journeyToUnload(updateData: any) {
+      return axiosClient.post(`${this.controller}/journey-to-unload`, updateData)
+
+    }
 }
 
 export const journeyApi = new JourneyApi();

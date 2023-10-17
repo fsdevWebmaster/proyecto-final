@@ -16,8 +16,6 @@ class StepApi {
     getSteps() {
       return axiosClient.get(`${this.controller}/steps`)
     }
-
-
 }
 
 export const stepApi = new StepApi();

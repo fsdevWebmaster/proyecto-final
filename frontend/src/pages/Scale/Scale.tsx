@@ -114,7 +114,8 @@ export const Scale = () => {
       const patchData = {
         journey: journey.id,
         step: journeyLog.step,
-        value: selectedWeight
+        value: selectedWeight,
+        status: 'IN_PROGRESS'
       }
       const updated = await journeyApi.updateJourney(patchData)
       setSelectedContainer(null)
