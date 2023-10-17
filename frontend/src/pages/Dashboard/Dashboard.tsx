@@ -9,13 +9,20 @@ import { MxStepStore, MxUserStore } from '@stores';
 
 const Dashboard = (props: any) => {
   const { t }: { t: any } = useTranslation();
-  const {userInfo} = MxUserStore;
-  const {stepsList} = MxStepStore;
   const navigate = useNavigate();
 
   return (
     <PageLayout seoTitle='Panel' title='Panel' buttonConfig={{ visible: false}}>
       <Grid item container direction="row" spacing={4}>
+          <Grid item xs={12} md={6}>
+            <CardManager
+              title={t('Check One page')}
+              subtitle={t('Go to check one page')}
+              actionHeader={t('Check page')}
+              imgPath='/static/images/illustrations/handshake.svg'
+              clickHandler={() => navigate('check-one')}
+            />
+          </Grid>
           <Grid item xs={12} md={6}>
             <CardManager
               title={t('Gate page')}

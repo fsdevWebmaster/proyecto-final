@@ -1,15 +1,15 @@
 import Journey from "../models/journey.model.js";
 import JourneyLog from "../models/journeyLog.model.js";
 import Step from "../models/step.model.js";
+const exitId = "652d7e154bf411f7d939495b"
 const hardGateId = "64f7a092eb2116cb79ca7445"
-const hardUserId = "64f8b2a5968ea93827b02a91"
 
 export const getJourneyByContainerNumber = (req, res, next) => {
   const { containerNumber } = req.params;
   if (!containerNumber || containerNumber.includes(":")) {
     next(new Error("Missing data"))
   }
-  const journey = Journey.findOne({containerNumber, status:'ON_HOLD'})
+  const journey = Journey.findOne({containerNumber, status:{ $ne: 'DONE' }})
     .populate('step')
     .then(result =>{
       if (!result) {
@@ -60,8 +60,15 @@ const createIniLogs = async (journey) => {
     user: hardUserId,
     description: ""
   }
-  const gateLog = new JourneyLog(gateLogData)
-  gateLog.save()
+  try {
+    const gateLog = new JourneyLog(gateLogData)
+    gateLog.save()
+    
+  } catch (error) {
+
+    console.log(error)
+    
+  }
 
   // yard
   const journeyStep = gateLog.step;
@@ -148,10 +155,11 @@ export const updateJourney = async (req, res, next) => {
       await actualLog.save()
     }
   
-    // update journey step
+    // update journey
     await journey.populate("step")
     if (journey.step.next) {
       journey.step = journey.step.next
+      journey.status = updBody.status
       await journey.save()
     }
   
@@ -171,21 +179,62 @@ export const updateJourney = async (req, res, next) => {
   }
 }
 
+export const journeyToUnload = async (req, res, next) => {
+  const { journeyId, userId } = req.body
+  if (!journeyId) {
+    next(new Error('Missing data'))
+  }
+
+  try {
+    // update journey
+    const journey = await Journey.findOneAndUpdate(
+      { _id: journeyId, status: { $ne: 'DONE' }},
+      { step: exitId}
+    )
+    // create log
+    let logData = {
+      journey: journey._id,
+      step: exitId,
+      stepValue: null,
+      user: userId,
+      description: ""
+    }
+    const log = new JourneyLog(logData)
+    const created = await log.save()
+    return res.json(created)
+  } catch (error) {
+    next(error)
+  }
+}
+
 export const getSteps = async (req, res, next) => {
   const steps = await Step.find();
   let stepsData = steps.map(async (step) => {
     let stepRow = {}
-    const journeys = await getStepJourneys(step)
+    const journeys = await stepJourneys(step)
     stepRow = {...stepRow, step: step, journeys: journeys }
     return stepRow
   })
   stepsData = await Promise.all(stepsData);
-  return res.json({stepsData})
+  return res.json(stepsData)
 }
 
-const getStepJourneys = async (step) => {
+const stepJourneys = async (step) => {
   const journeys = await Journey.find({ step });
   return journeys
+}
+
+export const getStepJourneys = async (req, res, next) => {
+  const { step } = req.params
+  if (!step) {
+    next(new Error('Missing data'))
+  }
+  try {
+    const journeys = await Journey.find({ step });
+    return res.json(journeys)
+  } catch (error) {
+    next()
+  }
 }
 
 export const getJourneyByDriver = (req, res, next) => {

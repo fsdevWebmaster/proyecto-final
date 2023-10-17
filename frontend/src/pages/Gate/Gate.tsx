@@ -23,7 +23,7 @@ import { observer } from 'mobx-react';
 import { toJS } from "mobx";
 import { useLocation } from "react-router";
 import { StepModel } from "@models/Step/Step";
-
+const { stepsList } = MxStepStore
 
 const MainContent = styled(Box)(
   () =>`
@@ -60,7 +60,6 @@ const Gate = () => {
   const { t } = useTranslation()
   const location = useLocation()
   const theme = useTheme();
-  const {stepsList} = MxStepStore;
 
   const [container, setContainer] = useState<SearchItem | null>()
   const [driver, setDriver] = useState<SearchItem | null>()
@@ -98,16 +97,18 @@ const Gate = () => {
 
   
   useEffect(() => {
-    const { stepsList } = MxStepStore
+    const sList = toJS(stepsList)
+    let stpList:StepModel[] = []
     const routeName = location.pathname
-    const actualStep = stepsList.find(step => {
-      if (routeName.includes(step.routeName)) {
-        return step
+    const actualStep = sList.find(item => {
+      stpList = [...stpList, item.step]
+      if (routeName.includes(item.step.routeName)) {
+        return item.step
       }
     })
-    if(stepsList && actualStep){
-      setActualStepsList(stepsList)
-      setActualStep(toJS(actualStep))
+    if(sList && actualStep){
+      setActualStepsList(stpList)
+      setActualStep(actualStep.step)
     }
   }, [])
   

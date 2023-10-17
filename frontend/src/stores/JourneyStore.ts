@@ -1,5 +1,4 @@
 import { makeAutoObservable } from "mobx";
-import { StepModel } from "@models/Step/Step";
 import { JourneyModel } from "@models/Journey/Journey";
 
 class JourneyStore {

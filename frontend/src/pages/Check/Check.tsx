@@ -1,7 +1,7 @@
 import { SearchForm } from "@components/Search/SearchForm"
 import { SearchItem } from "@components/Search/useSearch"
 import { PageLayout } from "@layouts/Page/PageLayout"
-import { ContainerModel } from "@models"
+import { ContainerModel, JourneyLog } from "@models"
 import { Box, Button, Card, Checkbox, FormControlLabel, Grid, IconButton, Typography, styled, useTheme } from "@mui/material"
 import { SyntheticEvent, useState, useEffect } from 'react';
 import { useTranslation } from "react-i18next"
@@ -9,6 +9,12 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import FileUploadIcon from '@mui/icons-material/FileUpload';
 import { useNavigate } from "react-router"
+import { journeyApi } from "@services/api/journeyApi"
+import { MxStepStore, MxUserStore } from "@stores"
+import { StepModel } from "@models/Step/Step"
+import { toJS } from "mobx"
+import { JourneyModel } from "@models/Journey/Journey"
+const { stepsList } = MxStepStore
 
 const SearchContainer = styled(Box)(
   () => `
@@ -55,34 +61,34 @@ const RevisionContainer = styled(Box)(
   `
 )
 
+interface CheckData {
+  journey: string
+  step: string
+  previousOk: boolean
+  stamps?: boolean
+  ctPat?: boolean
+  value: string | number | null | {}
+}
+
 export const Check = () => {
   const {t} = useTranslation()
   const theme = useTheme()
   const navigate = useNavigate()
   const [selectedContainer, setSelectedContainer] = useState<ContainerModel | null>()
-  const [selectedType, setSelectedType] = useState<string>('load')
+  const [selectedType, setSelectedType] = useState<string | null>(null)
   const [ctPat, setCtPat] = useState(false)
+  const [ctPatChecked, setCtPatChecked] = useState(false)
   const [previousOk, setPreviousOk] = useState(false)
   const [stamps, setStamps] = useState(false)
   const [title, setTitle] = useState<string | null>(null)
   const [buttonVisible, setButtonVisible] = useState(false)
+  const [actualStep, setActualStep] = useState<StepModel | undefined>(undefined)
+  const [actualStepsList, setActualStepsList] = useState<StepModel[]>([])
+  const [journey, setJourney] = useState<JourneyModel | undefined>(undefined)
+  const [journeyLog, setJourneyLog] = useState<JourneyLog | undefined>()
+  const [errorMsg, setErrorMsg] = useState<string | null>(null)
+  const { user } = MxUserStore
 
-  const mockRole:string = "check-two"
-  const mockJourney = {
-    id: "65007586b6efe051c2e12184",
-    journey: "65007586b6efe051c2e1217d",
-    step: {
-      name: "Portería",
-      order: 1,
-      previous: null,
-      next: "64f7a10aeb2116cb79ca7447",
-      isActive: true,
-      id: "64f7a092eb2116cb79ca7445"
-    },
-    stepValue: "4500 kg",
-    user: "64da7c0f484e531a6eeebbfc",
-    description: ""
-  }
 
   useEffect(() => {
     if (selectedContainer && ((ctPat && previousOk) || (stamps && previousOk))) {
@@ -92,10 +98,39 @@ export const Check = () => {
       setButtonVisible(false)
     }
   }, [ctPat, previousOk, stamps, selectedContainer])
+
+  useEffect(() => {
+    const sList = toJS(stepsList)
+    let stpList:StepModel[] = []
+    const routeName = location.pathname
+    const actualStep = sList.find(item => {
+      stpList = [...stpList, item.step]
+      if (routeName.includes(item.step.routeName)) {
+        return item.step
+      }
+    })
+    if(sList && actualStep){
+      setActualStepsList(stpList)
+      setActualStep(actualStep.step)
+    }    
+  }, [])
   
-  
-  const handleSelected = (selected:SearchItem) => {
+  const handleSelected = async (selected:SearchItem) => {
     setSelectedContainer(selected as ContainerModel)
+    setErrorMsg(null)
+    try {
+      const journeyResp = await journeyApi.getJourneyByContainerNumber(selected.containerNumber)
+      const journey = journeyResp.data
+
+      setJourney(journey)
+      if(journey && actualStep) {
+        const journeyLog = await journeyApi.getJourneyLog(journey, actualStep)
+        setJourneyLog(journeyLog.data)
+      }
+    } catch (error) {
+      setErrorMsg(t('Container number not found at this step'))
+      setSelectedContainer(null)
+    }
   }
 
   const deleteSelected = (type:string) => {
@@ -106,7 +141,7 @@ export const Check = () => {
     }
   }
 
-  const handleType = (type:string) => {
+  const handleType = async (type:string) => {
     setSelectedType(type) 
 
     switch (type) {
@@ -115,7 +150,19 @@ export const Check = () => {
       break;
       case "unload":
         setTitle(`${t("Unload")}`)
-        navigate("/exit")
+
+        if (journey && user) {
+          const postData = {
+            journeyId: journey.id,
+            userId: user.id
+          }
+          try {
+            const resp = await journeyApi.journeyToUnload(postData)
+            resetValues()
+          } catch (error) {
+            console.log("TODO: Error handling ", error)
+          }
+        }
       break;
     }
   }
@@ -136,18 +183,35 @@ export const Check = () => {
     }
   }
 
-  const handleSubmit = () => {
-    let patchData:any = {
-      journey: mockJourney.id,
-      step: mockJourney.step.next,
+  const handleSubmit = async () => {
+    if (journey && actualStep) {
+      let patchData:CheckData = {
+        journey: journey.id,
+        step: actualStep.id,
+        value: null,
+        previousOk,
+      }
+
+      switch (actualStep?.routeName) {
+        case 'check-one':
+          patchData = { ...patchData, value: { ctPat } }
+        break;
+        case 'check-two':
+          patchData = { ...patchData, value: { stamps } }
+        break;      
+      }
+      await journeyApi.updateJourney(patchData)
+      resetValues()
     }
-    if (mockRole === "check-one") {
-      patchData = { ...patchData, value: { ctPat, previousOk } }
-    }
-    else {
-      patchData = { ...patchData, value: { stamps, previousOk } }
-    }
-    console.log("TODO: patch to /journey:", patchData)
+  }
+
+  const resetValues = () => {
+    setSelectedContainer(null)
+    setCtPat(false)
+    setPreviousOk(false)
+    setStamps(false)
+    setSelectedType(null)
+    setTitle(null)  
   }
 
   return (
@@ -160,6 +224,9 @@ export const Check = () => {
         action: () => alert('To-do')}
     }>
     <MainContent className="main-content" sx={{ marginTop: 2 }}>
+      { errorMsg && 
+        <p>{errorMsg}</p>
+      }
       { !selectedContainer &&
         <SearchContainer>
           <SearchForm
@@ -188,18 +255,18 @@ export const Check = () => {
         </InfoContainer>
       }
 
-      { mockRole === "check-one" &&
+      { actualStep?.routeName === "check-one" &&
         <ButtonsContainer>
           <Typography variant="h4">
             { title }
           </Typography>
           <Button onClick={() => handleType("load")}>
             <FileUploadIcon />
-            Carga
+            {t('Load')}
           </Button>
           <Button onClick={() => handleType("unload")}>
             <FileDownloadIcon />
-            Descarga
+            {t('Unload')}
           </Button>
         </ButtonsContainer>
       }
@@ -209,7 +276,7 @@ export const Check = () => {
           <Typography variant="h3">
             Revisión
           </Typography>
-          { mockRole === "check-one" ?
+          { actualStep?.routeName === "check-one" ?
             <FormControlLabel 
               control={<Checkbox />} 
               label={t("CT-PAT norm OK")}
