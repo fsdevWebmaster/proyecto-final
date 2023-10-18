@@ -10,7 +10,7 @@ import { useLocation } from "react-router";
 import { journeyApi } from "@services/api/journeyApi";
 import { JourneyModel } from "@models/Journey/Journey";
 import { StepModel } from "@models/Step/Step";
-import { MxStepStore } from "@stores";
+import { MxStepStore, MxUserStore } from "@stores";
 import { toJS } from "mobx";
 
 const MainContent = styled(Box)(
@@ -50,6 +50,8 @@ export const Scale = () => {
   const { t } = useTranslation();
   const theme = useTheme()
   const location = useLocation()
+  const { stepsList } = MxStepStore
+
   const [scaleType, setScaleType] = useState<string | null>()
   const [scaleTitle, setScaleTitle] = useState<string | null>()
   const [selectedContainer, setSelectedContainer] = useState<ContainerModel | null>()
@@ -110,21 +112,24 @@ export const Scale = () => {
   }
 
   const continueJourney = async () => {
-    if(journey && journeyLog) {
-      const patchData = {
-        journey: journey.id,
-        step: journeyLog.step,
-        value: selectedWeight,
-        status: 'IN_PROGRESS'
+    if (journey && actualStep && MxUserStore.user) {
+      const journeyLog = await journeyApi.getJourneyLog(journey, actualStep)
+      if(journeyLog) {
+        const patchData = {
+          journey: journey.id,
+          step: journeyLog.data.step,
+          value: selectedWeight,
+          status: 'IN_PROGRESS',
+          userId: MxUserStore.user.id
+        }
+        await journeyApi.updateJourney(patchData)
+        setSelectedContainer(null)
+        setSelectedWeight(null)
       }
-      const updated = await journeyApi.updateJourney(patchData)
-      setSelectedContainer(null)
-      setSelectedWeight(null)
     }
   }
 
   useEffect(() => {
-    const { stepsList } = MxStepStore
     const sList = toJS(stepsList)
     let stpList:StepModel[] = []
     const routeName = location.pathname

@@ -14,7 +14,6 @@ import { MxStepStore, MxUserStore } from "@stores"
 import { StepModel } from "@models/Step/Step"
 import { toJS } from "mobx"
 import { JourneyModel } from "@models/Journey/Journey"
-const { stepsList } = MxStepStore
 
 const SearchContainer = styled(Box)(
   () => `
@@ -65,6 +64,8 @@ interface CheckData {
   journey: string
   step: string
   previousOk: boolean
+  userId: string
+  status: string
   stamps?: boolean
   ctPat?: boolean
   value: string | number | null | {}
@@ -74,6 +75,8 @@ export const Check = () => {
   const {t} = useTranslation()
   const theme = useTheme()
   const navigate = useNavigate()
+  const { stepsList } = MxStepStore
+
   const [selectedContainer, setSelectedContainer] = useState<ContainerModel | null>()
   const [selectedType, setSelectedType] = useState<string | null>(null)
   const [ctPat, setCtPat] = useState(false)
@@ -103,6 +106,9 @@ export const Check = () => {
     const sList = toJS(stepsList)
     let stpList:StepModel[] = []
     const routeName = location.pathname
+    if (routeName.includes('check-two')) {
+      setSelectedType('load')
+    }
     const actualStep = sList.find(item => {
       stpList = [...stpList, item.step]
       if (routeName.includes(item.step.routeName)) {
@@ -121,11 +127,17 @@ export const Check = () => {
     try {
       const journeyResp = await journeyApi.getJourneyByContainerNumber(selected.containerNumber)
       const journey = journeyResp.data
-
       setJourney(journey)
       if(journey && actualStep) {
-        const journeyLog = await journeyApi.getJourneyLog(journey, actualStep)
-        setJourneyLog(journeyLog.data)
+        if (actualStep.id === journey.step.id) {
+          const journeyLog = await journeyApi.getJourneyLog(journey, actualStep)
+          setJourneyLog(journeyLog.data)
+        }
+        else {
+          setErrorMsg(t(`Container ${selected.containerNumber} was not found in this step`))
+          setSelectedContainer(null)
+        }
+
       }
     } catch (error) {
       setErrorMsg(t('Container number not found at this step'))
@@ -150,7 +162,6 @@ export const Check = () => {
       break;
       case "unload":
         setTitle(`${t("Unload")}`)
-
         if (journey && user) {
           const postData = {
             journeyId: journey.id,
@@ -184,11 +195,13 @@ export const Check = () => {
   }
 
   const handleSubmit = async () => {
-    if (journey && actualStep) {
+    if (journey && actualStep && MxUserStore.user) {
       let patchData:CheckData = {
         journey: journey.id,
         step: actualStep.id,
+        status: "IN_PROGRESS",
         value: null,
+        userId: MxUserStore.user.id,
         previousOk,
       }
 

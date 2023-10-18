@@ -15,7 +15,9 @@ class StepStore {
 
   async handleSteps() {
     const steps = await stepApi.getSteps()
-    this.stepsList = steps.data
+    if(this) {
+      this.stepsList = steps.data
+    }
   }
 
   setStepsList(items: []) {  
