@@ -8,14 +8,13 @@ import { MxStepStore, MxUserStore } from '@stores';
 
 const Dashboard = (props: any) => {
   const { t }: { t: any } = useTranslation();
-  const {userInfo} = MxUserStore;
-  const {stepsList} = MxStepStore;
   const navigate = useNavigate();
 
   return (
     <PageLayout seoTitle={t('Panel')} title={t('Panel')} buttonConfig={{ visible: false}}>
       <Grid item container direction="row" spacing={4}>
           <Grid item xs={12} md={6}>
+            {/* <Grid item container direction="row" spacing={4}> */}
             <CardManager
               title={t('Gate page')}
               subtitle={t('Go to gate page')}
@@ -31,6 +30,34 @@ const Dashboard = (props: any) => {
               actionHeader={t('Scale one page')}
               imgPath='/static/images/illustrations/handshake.svg'
               clickHandler={() => navigate('scale-one')}
+            />
+          </Grid>          
+        <Grid item container direction="row" spacing={4}>
+          <Grid item xs={12} md={6}>
+            <CardManager
+              title={t('Check One page')}
+              subtitle={t('Go to check one page')}
+              actionHeader={t('Check page')}
+              imgPath='/static/images/illustrations/handshake.svg'
+              clickHandler={() => navigate('check-one')}
+            />
+          </Grid>
+          <Grid item xs={12} md={6}>
+            <CardManager
+              title={t('Check Two page')}
+              subtitle={t('Go to check two page')}
+              actionHeader={t('Check page')}
+              imgPath='/static/images/illustrations/handshake.svg'
+              clickHandler={() => navigate('check-two')}
+            />
+          </Grid>
+          <Grid item xs={12} md={6}>
+            <CardManager
+              title={t('Scale Two page')}
+              subtitle={t('Go to scale two page')}
+              actionHeader={t('Scale two page')}
+              imgPath='/static/images/illustrations/handshake.svg'
+              clickHandler={() => navigate('scale-two')}
             />
           </Grid>
           <Grid item xs={12} md={6}>

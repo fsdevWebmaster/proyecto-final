@@ -1,5 +1,5 @@
-import { JourneyModel } from "@models/Journey/Journey";
 import { axiosClient } from "../axiosClient";
+import { JourneyModel } from "@models/Journey/Journey";
 import { StepModel } from "@models/Step/Step";
 
 class JourneyApi {
@@ -32,6 +32,10 @@ class JourneyApi {
   
     updateJourney(updateData: any) {
       return axiosClient.patch(`${this.controller}/journey`, updateData)
+    }
+
+    journeyToUnload(updateData: any) {
+      return axiosClient.post(`${this.controller}/journey-to-unload`, updateData)
     }
 }
 

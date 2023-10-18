@@ -25,8 +25,8 @@ const Users = () => {
   const users: User[] = [
     {
       id: '11',
-      name: 'Jose Zuniga',
-      lastName: "Zuniga",
+      name: 'Jose',
+      lastName: 'Zuniga',
       email: 'josemzr@hotmail.com',
       personalId: '401900767',
       roles: [{
@@ -37,8 +37,8 @@ const Users = () => {
     },
     {
       id: '12',
-      name: 'Francisco Jimenez',
-      lastName: "Jimenez",
+      name: 'Francisco',
+      lastName: 'Jimenez',
       email: 'fr@hotmail.com',
       personalId: '401900111',
       roles: [{
@@ -49,8 +49,8 @@ const Users = () => {
     },
     {
       id: '13',
-      name: 'Fidel Silva',
-      lastName: "Silva",
+      name: 'Fidel',
+      lastName: 'Silva',
       email: 'fidel@hotmail.com',
       personalId: '101900111',
       roles: [{
@@ -61,8 +61,8 @@ const Users = () => {
     },
     {
       id: '14',
-      name: 'David Calderon',
-      lastName: "Calderon",
+      name: 'David',
+      lastName: 'Calderon',
       email: 'dcal@hotmail.com',
       personalId: '101900122',
       roles: [{
