@@ -2,7 +2,6 @@ import Journey from "../models/journey.model.js";
 import JourneyLog from "../models/journeyLog.model.js";
 import Step from "../models/step.model.js";
 const exitId = "652d7e154bf411f7d939495b"
-const hardGateId = "64f7a092eb2116cb79ca7445"
 
 export const getJourneyByContainerNumber = (req, res, next) => {
   const { containerNumber } = req.params;
@@ -29,7 +28,7 @@ export const createJourney = async (req, res, next) => {
   const createData = {
     driver: postData.driver.id,
     container: postData.container.id,
-    step: hardGateId
+    step: postData.step.id
   }
 
   try {
@@ -44,31 +43,24 @@ export const createJourney = async (req, res, next) => {
     }
     journey.driverDoc = journey.driver.idDoc
     await journey.save()
-    const j = await createIniLogs(journey)
+    const j = await createIniLogs(journey, postData)
     return res.json(j)
   } catch (error) {
     next(error) 
   }
 }
 
-const createIniLogs = async (journey) => {
+const createIniLogs = async (journey, postData) => {
   // gate
   let gateLogData = {
     journey: journey._id,
     step: journey.step,
     stepValue: null,
-    user: hardUserId,
+    user: postData.userId,
     description: ""
   }
-  try {
-    const gateLog = new JourneyLog(gateLogData)
-    gateLog.save()
-    
-  } catch (error) {
-
-    console.log(error)
-    
-  }
+  const gateLog = new JourneyLog(gateLogData)
+  gateLog.save()
 
   // yard
   const journeyStep = gateLog.step;
@@ -76,7 +68,7 @@ const createIniLogs = async (journey) => {
     journey: journey._id,
     step: journeyStep.next,
     stepValue: null,
-    user: hardUserId,
+    user: postData.userId,
     description: ""
   }
   const yardLog = new JourneyLog(yardLogData)
@@ -168,13 +160,14 @@ export const updateJourney = async (req, res, next) => {
       journey: updBody.journey,
       step: journey.step,
       stepValue: null,
-      user: hardUserId,
+      user: updBody.userId,
       description: ""
     })
     await newLog.save()
 
     return res.json(actualLog);      
   } catch (error) {
+    console.log(error)
     next(error)
   }
 }

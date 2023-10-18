@@ -36,7 +36,6 @@ class JourneyApi {
 
     journeyToUnload(updateData: any) {
       return axiosClient.post(`${this.controller}/journey-to-unload`, updateData)
-
     }
 }
 
