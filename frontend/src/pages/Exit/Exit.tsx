@@ -3,10 +3,19 @@ import { PageLayout } from "@layouts/Page/PageLayout"
 import { ContainerModel } from "@models"
 import { Box, Button, Card, IconButton, Typography, styled, useTheme } from "@mui/material"
 import { useState } from "react"
+import { useEffect } from "react";
 import DeleteIcon from '@mui/icons-material/Delete';
 import { SearchItem } from "@components/Search/useSearch"
 import { useTranslation } from "react-i18next"
 import { JourneyModel } from "@models/Journey/Journey"
+import { journeyApi } from './../../services/api/journeyApi'; 
+import { MxJourneyStore } from './../../stores/JourneyStore';
+import { stepApi } from "@services/api/stepApi"
+import { StepModel } from "@models/Step/Step"
+import { MxStepStore } from "@stores"
+
+
+
 
 const MainContent = styled(Box)(
   () =>`
@@ -66,36 +75,98 @@ const mockStep = {
   id: "64f7a092eb2116cb79ca7445"
 }
 
-export const Exit = () => {
+export const Exit = async () => {
+  const hardYardId = "64f7a10aeb2116cb79ca7447";
+  const hardStatus = "ON_Hold";
+
+  const [firstJourneyId, setJourneyIdActual] = useState<string>("");
   const [selectedContainer, setSelectedContainer] = useState<ContainerModel | null>()
   const theme = useTheme()
   const {t} = useTranslation()
 
+
   const handleSelected = (selected:SearchItem) => {
     setSelectedContainer(selected as ContainerModel)
+    let selectedContainerNumber = selected.containerNumber
+    console.log(selectedContainerNumber);
+    console.log(selectedContainer);
+    
+
+      journeyApi.getJourneyByContainerNumber(selectedContainerNumber)
+       .then((response) => {
+        const data = response.data;
+        if (Array.isArray(data) && data.length > 0) {
+          const firstJourney = data[0];
+          console.log('Journey', firstJourney);   
+          const journeyIdActual = firstJourney.id;
+          console.log('JourneyID', journeyIdActual);   
+          setJourneyIdActual(journeyIdActual);
+        }else{
+          console.error("No se encontraron datos válidos en la respuesta de la solicitud.");
+
+        }
+         console.log(setJourneyIdActual);
+         
+       })
+       .catch((error) => {
+        console.error("Error getting the Journey:", error);
+      }); 
+    
   }
 
   const deleteSelected = () => {
     setSelectedContainer(null)
   }
 
-  const handleFinished = () => { 
-    const patchData = {
-      journeyId: mockJourney.id,
-      step: mockStep.id,
-      value: null
-    }
+  // const handleFinished = () => { 
+  //   const patchData = {
+  //     journeyId: mockJourney.id,
+  //     step: mockStep.id,
+  //     value: null
+  //   }
     
-    console.log("TODO: Patch to /journey", patchData)
+  //   console.log("TODO: Patch to /journey", patchData)
+  // }
+  
+  
+  const handleBackToYard = async () => { 
+      if (firstJourneyId) {        
+
+        try{
+          const existingStep = MxStepStore.stepsList.find((step) => step.name === 'Patio');
+          const currentJourney = MxJourneyStore.journey;
+          console.log(currentJourney);
+          
+          if (!existingStep) {
+            console.error("The step is not available.");
+            return;
+          }
+            const patchData = {
+              journeyId: firstJourneyId,
+              step: existingStep,
+              status: hardStatus
+            };
+            const response = await journeyApi.updateJourney(patchData);
+
+            const updatedJourney = response.data;
+            
+            const journeyData = {
+              ...updatedJourney,
+              step: existingStep,
+              status: patchData.status,
+            };
+             MxJourneyStore.journey = journeyData;
+            console.log("Journey updated:", updatedJourney);
+
+          }catch(error){  
+          console.error("Error al obtener el Step o actualizar el Journey:", error);
+
+        }
+     
+  }else {
+    console.error("El ID del Journey no está disponible. Asegúrate de seleccionar un contenedor primero.");
   }
-  const handleBackToYard = () => { 
-    const patchData = {
-      journeyId: mockJourney.id,
-      step: mockStep.id,
-      value: null
-    }
-    console.log("TODO: Patch to /journey", patchData)
-  }
+};
 
   return (
     <PageLayout
@@ -135,7 +206,7 @@ export const Exit = () => {
           </SearchContainer>
         }
         { selectedContainer &&
-          <Button onClick={handleFinished}>
+          <Button onClick={handleBackToYard}>
             {t('Finished')}
           </Button>
         }
@@ -147,4 +218,8 @@ export const Exit = () => {
       </MainContent>
     </PageLayout>
   )
+}
+
+function getJourneyByContainerNumber(selectedContainerNumber: string) {
+  throw new Error("Function not implemented.")
 }

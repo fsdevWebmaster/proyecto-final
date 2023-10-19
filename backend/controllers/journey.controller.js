@@ -9,7 +9,7 @@ export const getJourneyByContainerNumber = (req, res, next) => {
   if (!containerNumber || containerNumber.includes(":")) {
     next(new Error("Missing data"))
   }
-  const journey = Journey.findOne({containerNumber, status:'ON_HOLD'})
+  const journey = Journey.find({containerNumber, status: {$ne:'DONE'}})
     .populate('step')
     .then(result =>{
       if (!result) {
