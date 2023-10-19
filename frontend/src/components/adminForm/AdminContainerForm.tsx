@@ -104,7 +104,7 @@ export const AdminDashboardForm: FC = () => {
                 <SearchIcon />
               </SearchIconWrapper>
               <StyledInputBase
-                placeholder="Search…"
+                placeholder={t("Search…")}
                 inputProps={{ 'aria-label': 'search' }}
               />
             </Search>

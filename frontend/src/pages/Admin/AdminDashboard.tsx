@@ -62,8 +62,8 @@ const AdminDashboard = () => {
 
   const tableActions = [
     {
-      title: 'Journey details',
-      name: "details",
+      title: t('Journey details'),
+      name: t("details"),
       clickHandler: handleDetails,
       visible: true,
       icon: <NavigateNextIcon />,
@@ -77,11 +77,11 @@ const AdminDashboard = () => {
 
   return(
     <Grid item xs={12}>
-      <PageLayout seoTitle='Admin Dashboard'
-        title='Admin Dashboard'
+      <PageLayout seoTitle={t('Admin Dashboard')}
+        title={t('Admin Dashboard')}
         buttonConfig={{
           visible: false, 
-          title: 'Create User', 
+          title: t('Create User'), 
           action: () => alert('To-do')}
       }>
         <MainContent>

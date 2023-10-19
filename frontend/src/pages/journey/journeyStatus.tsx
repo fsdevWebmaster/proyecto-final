@@ -7,7 +7,7 @@ import {
 } from '@mui/material'
 import { Helmet } from 'react-helmet-async'
 import { useTranslation } from 'react-i18next'
-import { GoalDashboardForm } from '@components/GoalForm/GoalDashboardForm'
+import { AdminContainerForm } from '@components/AdminForm/AdminContainerForm'
 
 const MainContent = styled(Box)(
   () =>`
@@ -27,14 +27,14 @@ const TopWrapper = styled(Box)(
   `
 )
 
-const GoalDashboard = () => {
-  
+const journeyStatus = () => {
+
   const { t } = useTranslation()
 
   return(
     <>
       <Helmet>
-        <title>{t('Goal Dashboard')}</title>
+        <title>{t('Admin Container')}</title>
       </Helmet>
       <MainContent>
         <TopWrapper>
@@ -52,13 +52,12 @@ const GoalDashboard = () => {
                   variant='h2'
                   sx={{
                     mb: 1
-                    // borderBotom: 'solid 1px grey'
                   }}
                 >
-                  {t('Goal')}
+                  {t('Administrator')}
                 </Typography>
               </Box>
-              <GoalDashboardForm />
+              {/* <journeyStatusForm /> */}
             </Card>
           </Container>
         </TopWrapper>
@@ -67,4 +66,4 @@ const GoalDashboard = () => {
   )
 }
 
-export default GoalDashboard;
+export default journeyStatus;

@@ -118,7 +118,7 @@ const RecoverPass = () => {
   return (
     <>
       <Helmet>
-        <title>Recover Password</title>
+        <title>{t('Recover Password')}</title>
       </Helmet>
       <MainContent>
         <Container maxWidth="sm">
@@ -207,7 +207,7 @@ const RecoverPass = () => {
               {t('Want to try to sign in again?')}
             </Typography>{' '}
             <Link component={RouterLink} to="/login">
-              <b>Click here</b>
+              <b>{t('Click here')}</b>
             </Link>
           </Box>
         </Container>

@@ -18,7 +18,21 @@ interface ITableActionProps {
 
 export const TableAction = ({title, name, clickHandler, visible, icon, colors, iconText, journey}: ITableActionProps) => {
   return visible && (
-    <Tooltip title={title} arrow 
+    //
+    <Tooltip title={title} arrow
+  onClick={() => (e: MouseEvent<HTMLElement>, name: string, journey: JourneyModel) => clickHandler(e, name, journey)}>
+  <IconButton
+    sx={{
+      '&:hover': { background: colors.background },
+      color: colors.color
+    }}
+    color="inherit"
+    size="small"
+  >
+  {/* */}
+
+
+    {/* <Tooltip title={title} arrow 
       onClick={(e: MouseEvent<HTMLElement>, name: string, journey: JourneyModel) => clickHandler(e, name, journey)}>
       <IconButton
         sx={{
@@ -27,7 +41,7 @@ export const TableAction = ({title, name, clickHandler, visible, icon, colors, i
         }}
         color="inherit"
         size="small"
-      >
+      > */}
         <Typography pr={2}>
           {iconText}
         </Typography>

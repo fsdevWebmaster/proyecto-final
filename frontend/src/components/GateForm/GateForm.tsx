@@ -1,13 +1,13 @@
-import { useRefMounted } from "@hooks";
+// import { useRefMounted } from "@hooks";
 import { Box, Typography } from "@mui/material";
 import { Formik } from "formik";
 import { FC } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router";
 
-export const GoalForm: FC = () => {
+export const GateForm: FC = () => {
 
-  const isMountedRef = useRefMounted()
+  // const isMountedRef = useRefMounted()
   const navigate = useNavigate()
 
   const initSValues = {
@@ -20,20 +20,20 @@ export const GoalForm: FC = () => {
 
   const handleSubmit = async (values: any,
     { setErrors, setStatus, setSubmitting }: any): Promise<void> => {
-      try {
-        navigate('/dashboard')
-        if (isMountedRef.current) {
-          setStatus({ success: true })
-          setSubmitting(false)
-        }
-      } catch (error: any) {
-        console.error(error)
-        if (isMountedRef.current) {
-          setStatus({ success: false })
-          setErrors({ submit: error.message })
-          setSubmitting(false)
-        }
-      }
+      // try {
+      //   navigate('/dashboard')
+      //   if (isMountedRef.current) {
+      //     setStatus({ success: true })
+      //     setSubmitting(false)
+      //   }
+      // } catch (error: any) {
+      //   console.error(error)
+      //   if (isMountedRef.current) {
+      //     setStatus({ success: false })
+      //     setErrors({ submit: error.message })
+      //     setSubmitting(false)
+      //   }
+      // }
     }
 
   return (

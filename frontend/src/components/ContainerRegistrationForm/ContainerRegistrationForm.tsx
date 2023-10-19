@@ -11,7 +11,6 @@ import {
 import { useRefMounted } from "@hooks";
 import { useTranslation } from "react-i18next";
 
-
 export const ContainerRegistryForm: FC = () => {
 
   const isMountedRef = useRefMounted();
@@ -47,7 +46,7 @@ export const ContainerRegistryForm: FC = () => {
       validationSchema={Yup.object().shape({
         containerNumber: Yup.string()
           .max(255)
-          .required(t('El número de contenedor es obligatorio.'))
+          .required(t('Container number is required'))
       })}
       onSubmit={handleSubmit}
     >
@@ -68,7 +67,7 @@ export const ContainerRegistryForm: FC = () => {
             margin="normal"
             autoFocus
             helperText={touched.containerNumber && errors.containerNumber}
-            label={t('Número del contenedor')}
+            label={t('Container number')}
             name="containerNumber"
             onBlur={handleBlur}
             onChange={handleChange}
@@ -76,7 +75,7 @@ export const ContainerRegistryForm: FC = () => {
             value={values.containerNumber}
             variant="outlined"
           />
-        <Button type='submit'>Guardar</Button>
+        <Button type='submit'>{t('Save')}</Button>
         </form>
       )}
     </Formik>
