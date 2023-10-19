@@ -10,7 +10,7 @@ import { useLocation } from "react-router";
 import { journeyApi } from "@services/api/journeyApi";
 import { JourneyModel } from "@models/Journey/Journey";
 import { StepModel } from "@models/Step/Step";
-import { MxStepStore } from "@stores";
+import { MxStepStore, MxUserStore } from "@stores";
 import { toJS } from "mobx";
 
 const MainContent = styled(Box)(
@@ -50,6 +50,8 @@ export const Scale = () => {
   const { t } = useTranslation();
   const theme = useTheme()
   const location = useLocation()
+  const { stepsList } = MxStepStore
+
   const [scaleType, setScaleType] = useState<string | null>()
   const [scaleTitle, setScaleTitle] = useState<string | null>()
   const [selectedContainer, setSelectedContainer] = useState<ContainerModel | null>()
@@ -81,6 +83,7 @@ export const Scale = () => {
       console.log("TODO: Error handling:", error)
     }
   }
+  
   const deleteSelected = (type:string) => {
     switch (type) {
       case "container":
@@ -109,40 +112,47 @@ export const Scale = () => {
   }
 
   const continueJourney = async () => {
-    if(journey && journeyLog) {
-      const patchData = {
-        journey: journey.id,
-        step: journeyLog.step,
-        value: selectedWeight
+    if (journey && actualStep && MxUserStore.user) {
+      const journeyLog = await journeyApi.getJourneyLog(journey, actualStep)
+      if(journeyLog) {
+        const patchData = {
+          journey: journey.id,
+          step: journeyLog.data.step,
+          value: selectedWeight,
+          status: 'IN_PROGRESS',
+          userId: MxUserStore.user.id
+        }
+        await journeyApi.updateJourney(patchData)
+        setSelectedContainer(null)
+        setSelectedWeight(null)
       }
-      const updated = await journeyApi.updateJourney(patchData)
-      setSelectedContainer(null)
-      setSelectedWeight(null)
     }
   }
 
   useEffect(() => {
-    const { stepsList } = MxStepStore
-    const scaleType = location.pathname.split("/").pop()
-
-    if (scaleType && stepsList) {
-      const list = toJS(stepsList);
-      const actualStep = list.find(step => step.routeName === scaleType )
-
-      if(list && actualStep){
-        setScaleType(scaleType)
-        setActualStepsList(list)
-        setActualStep(actualStep)
+    const sList = toJS(stepsList)
+    let stpList:StepModel[] = []
+    const routeName = location.pathname
+    const actualStep = sList.find(item => {
+      stpList = [...stpList, item.step]
+      if (routeName.includes(item.step.routeName)) {
+        return item.step
       }
-      
+    })
+    if(sList && actualStep){
+      setActualStepsList(stpList)
+      setActualStep(actualStep.step)
+    }
+    const scaleType = actualStep?.step.routeName
+    if (scaleType) {
       switch (scaleType) {
         case "scale-one":
-          setScaleTitle("Scale one")          
+          setScaleTitle(t("Scale one"))          
         break;
         case "scale-two":
-          setScaleTitle("Scale two")
+          setScaleTitle(t("Scale two"))
         break;
-      }      
+      }
     }
   }, [])
   

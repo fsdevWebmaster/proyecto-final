@@ -1,15 +1,14 @@
 import Journey from "../models/journey.model.js";
 import JourneyLog from "../models/journeyLog.model.js";
 import Step from "../models/step.model.js";
-const hardGateId = "64f7a092eb2116cb79ca7445"
-const hardUserId = "64f8b2a5968ea93827b02a91"
+const exitId = "652d7e154bf411f7d939495b"
 
 export const getJourneyByContainerNumber = (req, res, next) => {
   const { containerNumber } = req.params;
   if (!containerNumber || containerNumber.includes(":")) {
     next(new Error("Missing data"))
   }
-  const journey = Journey.find({containerNumber, status: {$ne:'DONE'}})
+  const journey = Journey.findOne({containerNumber, status:{ $ne: 'DONE' }})
     .populate('step')
     .then(result =>{
       if (!result) {
@@ -29,7 +28,7 @@ export const createJourney = async (req, res, next) => {
   const createData = {
     driver: postData.driver.id,
     container: postData.container.id,
-    step: hardGateId
+    step: postData.step.id
   }
 
   try {
@@ -44,20 +43,20 @@ export const createJourney = async (req, res, next) => {
     }
     journey.driverDoc = journey.driver.idDoc
     await journey.save()
-    const j = await createIniLogs(journey)
+    const j = await createIniLogs(journey, postData)
     return res.json(j)
   } catch (error) {
     next(error) 
   }
 }
 
-const createIniLogs = async (journey) => {
+const createIniLogs = async (journey, postData) => {
   // gate
   let gateLogData = {
     journey: journey._id,
     step: journey.step,
     stepValue: null,
-    user: hardUserId,
+    user: postData.userId,
     description: ""
   }
   const gateLog = new JourneyLog(gateLogData)
@@ -69,7 +68,7 @@ const createIniLogs = async (journey) => {
     journey: journey._id,
     step: journeyStep.next,
     stepValue: null,
-    user: hardUserId,
+    user: postData.userId,
     description: ""
   }
   const yardLog = new JourneyLog(yardLogData)
@@ -148,10 +147,11 @@ export const updateJourney = async (req, res, next) => {
       await actualLog.save()
     }
   
-    // update journey step
+    // update journey
     await journey.populate("step")
     if (journey.step.next) {
       journey.step = journey.step.next
+      journey.status = updBody.status
       await journey.save()
     }
   
@@ -160,12 +160,41 @@ export const updateJourney = async (req, res, next) => {
       journey: updBody.journey,
       step: journey.step,
       stepValue: null,
-      user: hardUserId,
+      user: updBody.userId,
       description: ""
     })
     await newLog.save()
 
     return res.json(actualLog);      
+  } catch (error) {
+    console.log(error)
+    next(error)
+  }
+}
+
+export const journeyToUnload = async (req, res, next) => {
+  const { journeyId, userId } = req.body
+  if (!journeyId) {
+    next(new Error('Missing data'))
+  }
+
+  try {
+    // update journey
+    const journey = await Journey.findOneAndUpdate(
+      { _id: journeyId, status: { $ne: 'DONE' }},
+      { step: exitId}
+    )
+    // create log
+    let logData = {
+      journey: journey._id,
+      step: exitId,
+      stepValue: null,
+      user: userId,
+      description: ""
+    }
+    const log = new JourneyLog(logData)
+    const created = await log.save()
+    return res.json(created)
   } catch (error) {
     next(error)
   }
@@ -175,17 +204,30 @@ export const getSteps = async (req, res, next) => {
   const steps = await Step.find();
   let stepsData = steps.map(async (step) => {
     let stepRow = {}
-    const journeys = await getStepJourneys(step)
+    const journeys = await stepJourneys(step)
     stepRow = {...stepRow, step: step, journeys: journeys }
     return stepRow
   })
   stepsData = await Promise.all(stepsData);
-  return res.json({stepsData})
+  return res.json(stepsData)
 }
 
-const getStepJourneys = async (step) => {
+const stepJourneys = async (step) => {
   const journeys = await Journey.find({ step });
   return journeys
+}
+
+export const getStepJourneys = async (req, res, next) => {
+  const { step } = req.params
+  if (!step) {
+    next(new Error('Missing data'))
+  }
+  try {
+    const journeys = await Journey.find({ step });
+    return res.json(journeys)
+  } catch (error) {
+    next()
+  }
 }
 
 export const getJourneyByDriver = (req, res, next) => {

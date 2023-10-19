@@ -18,12 +18,11 @@ import { useEffect, useState } from "react";
 import { SearchItem, useSearch } from "@components/Search/useSearch";
 import { PageLayout } from "@layouts/Page/PageLayout";
 import { journeyApi } from "@services/api/journeyApi";
-import { MxJourneyStore, MxStepStore } from "@stores";
+import { MxJourneyStore, MxStepStore, MxUserStore } from "@stores";
 import { observer } from 'mobx-react';
 import { toJS } from "mobx";
 import { useLocation } from "react-router";
 import { StepModel } from "@models/Step/Step";
-
 
 const MainContent = styled(Box)(
   () =>`
@@ -60,7 +59,7 @@ const Gate = () => {
   const { t } = useTranslation()
   const location = useLocation()
   const theme = useTheme();
-  const {stepsList} = MxStepStore;
+  const { stepsList, handleSteps } = MxStepStore
 
   const [container, setContainer] = useState<SearchItem | null>()
   const [driver, setDriver] = useState<SearchItem | null>()
@@ -88,26 +87,34 @@ const Gate = () => {
   }
 
   const handleJourney = async () => {
-    const created = await journeyApi.createJourney({ container, driver, step: actualStep })
-    setFormMessage(t('New journey created.'))
-    setContainer(null)
-    setDriver(null)
-
-    console.log("TODO: update driver's UI", created)
+    if (MxUserStore.user) {
+      const userId = MxUserStore.user.id
+      const created = await journeyApi.createJourney({ container, driver, step: actualStep, userId })
+      setFormMessage(t('New journey created.'))
+      setContainer(null)
+      setDriver(null)
+  
+      console.log("TODO: update driver's UI", created)
+      
+    }
   }
 
   
   useEffect(() => {
-    const { stepsList } = MxStepStore
+    handleSteps()
+    const sList = toJS(stepsList)
+    let stpList:StepModel[] = []
     const routeName = location.pathname
-    const actualStep = stepsList.find(step => {
-      if (routeName.includes(step.routeName)) {
-        return step
+    const actualStep = sList.find(item => {
+      stpList = [...stpList, item.step]
+      if (routeName.includes(item.step.routeName)) {
+        return item.step
       }
     })
-    if(stepsList && actualStep){
-      setActualStepsList(stepsList)
-      setActualStep(toJS(actualStep))
+
+    if(sList && actualStep){
+      setActualStepsList(stpList)
+      setActualStep(actualStep.step)
     }
   }, [])
   
