@@ -25,8 +25,7 @@ import ChevronRightTwoToneIcon from '@mui/icons-material/ChevronRightTwoTone';
 import {Text} from '@components';
 import MonetizationOnTwoToneIcon from '@mui/icons-material/MonetizationOnTwoTone';
 import { observer } from 'mobx-react';
-import { MxLoginStore } from '@stores/LoginStore';
-import { MxUserStore } from '@stores/UserStore';
+import { MxLoginStore, MxUserStore } from '@stores';
 
 const DotLegend = styled('span')(
   ({ theme }) => `
@@ -142,7 +141,7 @@ export const HeaderUserBox = observer(() => {
       handleClose();
     
       await MxLoginStore.logOut(userInfo?.id!);
-      navigate('/');
+      navigate('/login', {replace: true});
     } catch (err) {
       console.error(err);
     }

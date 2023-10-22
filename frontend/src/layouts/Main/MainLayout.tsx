@@ -1,10 +1,13 @@
-import { FC, ReactNode } from 'react';
+import { FC, ReactNode, useCallback, useEffect } from 'react';
 import { Box, alpha, lighten, useTheme } from '@mui/material';
-import { Outlet } from 'react-router-dom';
-import ThemeSettings from './ThemeSettings';
+import { Outlet, useLocation } from 'react-router-dom';
+// import ThemeSettings from './ThemeSettings'; keep it for later
 
 import { Header } from './Header';
 import { Sidebar } from './Sidebar/Sidebar';
+import { MxConfigStore, MxStepStore } from '@stores';
+import { PageHelper } from '@helpers/pageHelper';
+import { observer } from 'mobx-react';
 
 interface MainLayoutProps {
   children?: ReactNode;
@@ -12,6 +15,22 @@ interface MainLayoutProps {
 
 const MainLayout: FC<MainLayoutProps> = () => {
   const theme = useTheme();
+  const location = useLocation();
+
+  const setCurrentPage = useCallback(() => {
+    const findPage = PageHelper.findPageByPath(location.pathname);
+    if (findPage) {
+      MxConfigStore.setCurrentPage(findPage);
+    }
+  }, []);
+
+  useEffect(() => {
+    const globalSteps = async() => {
+      MxStepStore.handleSteps();
+    }
+    globalSteps();
+    setCurrentPage();
+  }, []);  
 
   return (
     <>
@@ -59,11 +78,10 @@ const MainLayout: FC<MainLayoutProps> = () => {
           <Box display="block">
             <Outlet />
           </Box>
-          <ThemeSettings />
         </Box>
       </Box>
     </>
   );
 };
 
-export default MainLayout;
+export default observer(MainLayout);

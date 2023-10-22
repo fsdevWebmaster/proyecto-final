@@ -1,13 +1,8 @@
-import React, { ReactNode } from 'react';
-import { Navigate } from 'react-router';
-import { MxUserStore, MxLoginStore, MxConfigStore } from '@stores';
+import React from 'react';
+import { Outlet, Navigate } from 'react-router-dom';
+import { MxUserStore, MxLoginStore } from '@stores';
 
-
-interface IAuthorization {
-    children: ReactNode;
-}
-
-export const Authorization = ({children}: IAuthorization) => {
+export const Authorization = () => {
     const localToken = MxLoginStore.getAccessToken();
     if (!localToken) {
         return <Navigate replace to={'/login'} />
@@ -15,13 +10,17 @@ export const Authorization = ({children}: IAuthorization) => {
 
     const userInfo = MxLoginStore.getUserInfoByToken(localToken!);
 
-    if (userInfo && userInfo.exp * 1000 < Date.now() ) {
-        MxLoginStore.logOut(userInfo.id);
+    try {
+        if (userInfo && userInfo.exp * 1000 < Date.now() ) {
+            MxLoginStore.logOut(userInfo.id);
+            return <Navigate replace to={'/login'} />
+        } else {
+            MxLoginStore.setSession(localToken, true);
+            MxUserStore.initProfile(userInfo.id);
+
+            return <Outlet />;
+        }   
+    } catch (error) {
         return <Navigate replace to={'/login'} />
-    } else {
-        MxUserStore.initProfile(userInfo.id);
-        const routeName = window.location.pathname.split("/")[2]
-        // MxConfigStore.initCurrentStep(routeName)
-        return children;
     }
 }
