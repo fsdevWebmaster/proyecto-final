@@ -245,3 +245,15 @@ export const getJourneyByDriver = (req, res, next) => {
     next(err)
   })    
 }
+
+export const getJourneyLogs = async (req, res, next) => {
+  const { journeyId } = req.params
+  const resp = await JourneyLog.find({ journey: journeyId }).exec()
+  const promises = resp.map(async item => {
+    await item.populate('journey')
+    return item
+  })
+  let logs = await Promise.all(promises)
+  const jLogs = logs.filter(item => item.journey.status === 'ON_HOLD' || item.journey.status === 'IN_PROGRESS')
+  return res.json(jLogs)
+}

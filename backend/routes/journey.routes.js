@@ -12,7 +12,8 @@ import {
   getJourneyByContainerNumber,
   updateJourney,
   getJourneyByDriver,
-  journeyToUnload
+  journeyToUnload,
+  getJourneyLogs
 } from "../controllers/journey.controller.js";
 
 journeyRouter.post('/journey', userAuthWithCookie, createJourney);
@@ -25,6 +26,7 @@ journeyRouter.post('/find-journey-log', userAuthWithCookie, getJourneyLog);
 journeyRouter.get('/step-journeys/:step', userAuthWithCookie, getStepJourneys);
 journeyRouter.get('/steps', userAuthWithCookie, getSteps);
 journeyRouter.get('/journey/:containerNumber', userAuthWithCookie, getJourneyByContainerNumber)
+journeyRouter.get('/journey-logs/:journeyId', getJourneyLogs);
 
 
 
