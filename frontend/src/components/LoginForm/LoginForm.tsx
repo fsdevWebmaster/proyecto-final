@@ -1,7 +1,7 @@
+import { type FC } from 'react';
 import * as Yup from 'yup';
-import { useEffect, type FC } from 'react';
 import { Formik } from 'formik';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import {
   Button,
@@ -10,9 +10,8 @@ import {
 } from '@mui/material';
 import {useRefMounted} from '@hooks/useRefMounted'
 import { useTranslation } from 'react-i18next';
-import { MxLoginStore } from '@stores/LoginStore';
+import { MxLoginStore, MxUserStore } from '@stores';
 import { JWTHelper } from '@helpers/jwtHelper';
-import { MxUserStore } from '@stores/UserStore';
 import { observer } from 'mobx-react';
 
 export const LoginForm: FC = observer(() => {
@@ -64,7 +63,7 @@ export const LoginForm: FC = observer(() => {
             setStatus({ success: true });
             setSubmitting(false);
           }
-          navigate('/main');
+          navigate('/');
         });
 
       } catch (err: any) {
