@@ -245,3 +245,19 @@ export const getJourneyByDriver = (req, res, next) => {
     next(err)
   })    
 }
+
+export const getJourneyByDriverDocId = async (req, res, next) => {
+  const { driverDocId } = req.params
+  if (!driverDocId || driverDocId === ":driverDocId") {
+    return next(new Error("Missing data"))
+  }
+  try {
+    const resp = await Journey.findOne({ driverDoc: driverDocId, status: { $in: ['ON_HOLD', 'IN_PROGRESS'] } }).exec()
+    if (!resp) {
+      return next(new Error("Not found"))
+    }
+    return res.json({ journeyId: resp._id.toString() })
+  } catch (error) {
+    return next(error)
+  }
+}
