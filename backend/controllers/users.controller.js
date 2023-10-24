@@ -8,11 +8,14 @@ export const register = (req, res, next) => {
   let { body } = req;
   bcrypt.hash(body.password, 10, (error, hash) => {
     let regData = { ...body };
+    regData = { ...regData, roles: [regData.rol] }
     regData = {...regData, password: hash };
+    delete regData.rol
+    delete regData.submit
     const regUser = new User(regData);
     regUser.save()
       .then((result) => {
-        return res.status(201).json(result);
+        return res.json(result)
       }).catch((err) => {
         next(err);
       });
@@ -123,4 +126,14 @@ export const updateProfile = (req, res, next) => {
   }).catch((err) => {
     next(err)
   });
+}
+
+export const getRoles = async (req, res, next) => {
+  const roles = await Role.find()
+  return res.json(roles)
+}
+
+export const getUsers = async (req, res, next) => {
+  const users = await User.find()
+  return res.json(users)
 }

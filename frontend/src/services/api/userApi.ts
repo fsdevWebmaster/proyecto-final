@@ -1,3 +1,4 @@
+import { User } from "@models/User/User";
 import { axiosClient } from "../axiosClient";
 
 class UserApi {
@@ -13,6 +14,14 @@ class UserApi {
                 userId,
             }
         })
+    }
+
+    registerUser(regData:User): Promise<any> {
+      return axiosClient.post(`${this.controller}/register`, regData)
+    }
+
+    getUsers = () => {
+      return axiosClient.get(`${this.controller}/users`)
     }
 }
 

@@ -87,6 +87,11 @@ export const routes: RouteObject[] = [
                 element: <CreateUser />
               },
               {
+                path: 'update-user/:userId',
+                id: 'updateuser',
+                element: <CreateUser />
+              },
+              {
                 path: 'doc',
                 id: 'doc',
                 element: <Documentation />

@@ -12,6 +12,6 @@ export type User = {
   lastName: string;
   avatar?: string;
   email: string;
-  personalId: number | string;
+  idDoc: number | string;
   roles: Role[];
 }
