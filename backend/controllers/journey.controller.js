@@ -246,6 +246,27 @@ export const getJourneyByDriver = (req, res, next) => {
   })    
 }
 
+export const getJourneyLogs = async (req, res, next) => {
+  const { journeyId } = req.params
+  if (!journeyId || journeyId === ':journeyId') {
+    return next(new Error('Missing data'))
+  }
+  try {
+    const resp = await JourneyLog.find({ journey: journeyId }).exec()
+    if (resp.length < 1) {
+      return next(new Error('Not found'))
+    }
+    const promises = resp.map(async item => {
+      await item.populate('journey')
+      return item
+    })
+    let logs = await Promise.all(promises)
+    const jLogs = logs.filter(item => item.journey.status === 'ON_HOLD' || item.journey.status === 'IN_PROGRESS')
+    return res.json(jLogs)
+  } catch (error) {
+    return next(error)
+  }
+
 export const getJourneyByDriverDocId = async (req, res, next) => {
   const { driverDocId } = req.params
   if (!driverDocId || driverDocId === ":driverDocId") {
