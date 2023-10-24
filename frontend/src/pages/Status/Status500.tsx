@@ -43,13 +43,16 @@ const TypographySecondary = styled(Typography)(
 `
 );
 
-function Status500() {
+const Status500 = () => {
   const { t }: { t: any } = useTranslation();
 
   const [pending, setPending] = useState(false);
-  function handleClick() {
+
+  const handleClick = () => {
     setPending(true);
-  }
+    window.localStorage.removeItem('accTkn');
+    return window.location.href = "/login";
+  };
 
   return (
     <>
@@ -65,68 +68,11 @@ function Status500() {
           alignItems="stretch"
           spacing={0}
         >
-          <Grid
-            xs={12}
-            md={6}
-            alignItems="center"
-            display="flex"
-            justifyContent="center"
-            item
-          >
-            <Container maxWidth="sm">
-              <Box textAlign="center">
-                <img
-                  alt="500"
-                  height={260}
-                  src="/static/images/status/500.svg"
-                />
-                <Typography
-                  variant="h2"
-                  sx={{
-                    my: 2
-                  }}
-                >
-                  {t('There was an error, please try again later')}
-                </Typography>
-                <Typography
-                  variant="h4"
-                  color="text.secondary"
-                  fontWeight="normal"
-                  sx={{
-                    mb: 4
-                  }}
-                >
-                  {t(
-                    'The server encountered an internal error and was not able to complete your request'
-                  )}
-                </Typography>
-                <LoadingButton
-                  onClick={handleClick}
-                  loading={pending}
-                  variant="outlined"
-                  color="primary"
-                  startIcon={<RefreshTwoToneIcon />}
-                >
-                  {t('Refresh view')}
-                </LoadingButton>
-                <Button
-                  href="/overview"
-                  variant="contained"
-                  sx={{
-                    ml: 1
-                  }}
-                >
-                  {t('Go back')}
-                </Button>
-              </Box>
-            </Container>
-          </Grid>
           <GridWrapper
             sx={{
               display: { xs: 'none', md: 'flex' }
             }}
             xs={12}
-            md={6}
             alignItems="center"
             display="flex"
             justifyContent="center"
@@ -140,7 +86,7 @@ function Status500() {
                     my: 2
                   }}
                 >
-                  {t('Tokyo Black React Typescript Admin Dashboard')}
+                  {t('< Uncontrolled error has affected the app >')}
                 </TypographyPrimary>
                 <TypographySecondary
                   variant="h4"
@@ -149,13 +95,17 @@ function Status500() {
                     mb: 4
                   }}
                 >
-                  {t(
-                    'High performance React template built with lots of powerful MUI (Material-UI) components across multiple product niches for fast & perfect apps development processes.'
-                  )}
+                  {t(' Please back to Login Page')}
                 </TypographySecondary>
-                <Button href="/overview" size="large" variant="contained">
-                  {t('Overview')}
-                </Button>
+                <LoadingButton
+                  onClick={handleClick}
+                  loading={pending}
+                  size="large"
+                  variant="contained"
+                  startIcon={<RefreshTwoToneIcon />}
+                >
+                  {t('Login')}
+                </LoadingButton>                
               </Box>
             </Container>
           </GridWrapper>

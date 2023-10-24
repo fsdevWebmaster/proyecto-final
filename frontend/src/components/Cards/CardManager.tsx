@@ -31,31 +31,31 @@ export const CardManager = ({imgPath, title, subtitle, actionHeader, clickHandle
 
   return (
     <Card>
-    <Box display="flex" alignItems="center" p={2}>
-      <img
-        style={{ height: 130 }}
-        src={imgPath || ''}
-        alt="..."
-      />
-      <Box pl={1}>
-        <Typography
-          sx={{
-            pb: 1,
-            fontSize: `${theme.typography.pxToRem(16)}`
-          }}
-          variant="h4"
-        >
-          {title}
-        </Typography>
-        <Typography variant="subtitle2">
-          {subtitle}
-        </Typography>
+      <Box display="flex" alignItems="center" p={2}>
+        <img
+          style={{ height: 130 }}
+          src={imgPath || ''}
+          alt="..."
+        />
+        <Box pl={1}>
+          <Typography
+            sx={{
+              pb: 1,
+              fontSize: `${theme.typography.pxToRem(16)}`
+            }}
+            variant="h4"
+          >
+            {title}
+          </Typography>
+          <Typography variant="subtitle2">
+            {subtitle}
+          </Typography>
+        </Box>
       </Box>
-    </Box>
-    <Divider />
-    <ButtonWrapper fullWidth endIcon={<ChevronRightTwoToneIcon />} onClick={clickHandler}>
-      {actionHeader}
-    </ButtonWrapper>
-  </Card>    
+      <Divider />
+      <ButtonWrapper fullWidth endIcon={<ChevronRightTwoToneIcon />} onClick={clickHandler}>
+        {actionHeader}
+      </ButtonWrapper>
+    </Card>    
   );
 }
