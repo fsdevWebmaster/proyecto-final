@@ -20,6 +20,10 @@ class UserApi {
       return axiosClient.post(`${this.controller}/register`, regData)
     }
 
+    updateUser(updData:User): Promise<any> {
+      return axiosClient.patch(`${this.controller}/profile`, updData)
+    }
+
     getUsers = () => {
       return axiosClient.get(`${this.controller}/users`)
     }

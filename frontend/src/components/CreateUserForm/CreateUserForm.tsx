@@ -6,7 +6,8 @@ import {
   Button,
   TextField,
   CircularProgress,
-  MenuItem
+  MenuItem,
+  Typography
 } from '@mui/material';
 
 import {useRefMounted} from '@hooks';
@@ -15,6 +16,7 @@ import { Role } from '@models/Role/Role';
 import { roleApi } from '@services/api/roleApi';
 import { userApi } from '@services/api/userApi';
 import { User } from '@models/User/User';
+import { RolesSelector } from './RolesSelector';
 
 export const CreateUserForm: FC = () => {
   const [roles, setRoles] = useState<Role[]>([])
@@ -27,6 +29,8 @@ export const CreateUserForm: FC = () => {
     idDoc: '',
     roles: []
   })
+  const [selectedRoles, setSelectedRoles] = useState<Role[]>([])
+
   
   // TO-DO
   const isMountedRef = useRefMounted();
@@ -36,18 +40,31 @@ export const CreateUserForm: FC = () => {
 
   const handleSubmit = async (values: any,
     { setErrors, setStatus, setSubmitting }: any): Promise<void> => {
-      try {
-        const resp = await userApi.registerUser(values)
+      const regData = { ...values }
+      let rolesIds:string[] = selectedRoles.map(role => {
+        return role.id
+      })
+      regData.roles = rolesIds
+      if (!updatingUser) {
+        try {
+          const resp = await userApi.registerUser(regData)
+          if (resp.data) {
+            navigate('/users')
+            setStatus({ success: true });
+          }
+        } catch (err: any) {
+          console.error(err);
+          if (isMountedRef.current) {
+            setStatus({ success: false });
+            setErrors({ submit: err.message });
+            setSubmitting(false);
+          }
+        }
+      }
+      else {
+        const resp = await userApi.updateUser(regData)
         if (resp.data) {
           navigate('/users')
-          setStatus({ success: true });
-        }
-      } catch (err: any) {
-        console.error(err);
-        if (isMountedRef.current) {
-          setStatus({ success: false });
-          setErrors({ submit: err.message });
-          setSubmitting(false);
         }
       }
     }
@@ -55,6 +72,10 @@ export const CreateUserForm: FC = () => {
   const handleRoles = async () => {
     const resp = await roleApi.getRoles()
     setRoles(resp.data)
+  }
+
+  const handleSelectedRoles = (roles: Role[]) => {
+    setSelectedRoles(roles)
   }
 
   const handleUser = async (userId: string) => {
@@ -96,8 +117,8 @@ export const CreateUserForm: FC = () => {
           .max(255)
           .required(t('The email field is required')),
         password: Yup.string()
-          .max(255)
-          .required(t('The password field is required')),
+          .max(255),
+          //.required(t('The password field is required')),
         idDoc: Yup.number()
           .min(255)
           .required(t('The id document field is required'))
@@ -158,20 +179,22 @@ export const CreateUserForm: FC = () => {
               value={values.email}
               variant='outlined'
             />
-            <TextField
-              error={Boolean(touched.password && errors.password)}
-              fullWidth
-              required
-              margin='normal'
-              helperText={touched.password && errors.password}
-              label={t('Password')}
-              name='password'
-              onBlur={handleBlur}
-              onChange={handleChange}
-              type='password'
-              value={values.password}
-              variant='outlined'
-            />
+            { !updatingUser && 
+              <TextField
+                error={Boolean(touched.password && errors.password)}
+                fullWidth
+                required
+                margin='normal'
+                helperText={touched.password && errors.password}
+                label={t('Password')}
+                name='password'
+                onBlur={handleBlur}
+                onChange={handleChange}
+                type='password'
+                value={values.password}
+                variant='outlined'
+              />
+            }
             <TextField
               error={Boolean(touched.idDoc && errors.idDoc)}
               fullWidth
@@ -186,27 +209,23 @@ export const CreateUserForm: FC = () => {
               value={values.idDoc}
               variant='outlined'
             />
-            { roles.length > 0 &&
-              <TextField
-                error={Boolean(touched.rol && errors.rol)}
-                fullWidth
-                select
-                margin='normal'
-                helperText={touched.rol && errors.rol}
-                label={t('Rol')}
-                name='rol'
-                onBlur={handleBlur}
-                onChange={handleChange}
-                type='text'
-                value={values.rol}
-                variant='outlined'
-              >
-                {roles.map((option) => (
-                  <MenuItem key={option.id} value={option.id}>
-                    {option.name}
-                  </MenuItem>
-                ))}
-              </TextField>
+
+            <Typography
+              variant="h3"
+              sx={{
+                    mb: 1
+              }}
+            >
+              {t('Roles')}
+            </Typography>
+            { roles.length > 0 && 
+              <>
+                <RolesSelector 
+                  roles={ roles } 
+                  sendSelected={ (selected) => handleSelectedRoles(selected) } 
+                  updatingUser={ updatingUser }
+                />
+              </>
             }
 
             <Button
