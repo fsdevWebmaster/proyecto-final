@@ -1,4 +1,4 @@
-import { MouseEvent, useEffect } from 'react';
+import { MouseEvent, useEffect, useState } from 'react';
 import { useTranslation } from "react-i18next";
 import { Card, Grid, Table, TableBody, TableCell, TableContainer, TableHead, 
   TableRow, Typography, useTheme
@@ -10,85 +10,67 @@ import { TableAction } from "@components/Tables/TableAction";
 import { JourneyModel } from "@models/Journey/Journey";
 import { JourneyLog } from '@models/Journey/Log';
 import { StepModel } from '@models/Step/Step';
+import { journeyApi } from '@services/api/journeyApi';
+import { toJS } from 'mobx';
+import { MxStepStore, MxUserStore } from '@stores';
+import { stepApi } from '@services/api/stepApi';
+import { StepJourney } from '@models/Step/StepJourney';
+
 
 export const Yard = () => {
   const { t }: { t: any } = useTranslation();
   const theme = useTheme();
+  // const { stepsList } = MxStepStore
+  const { user} = MxUserStore
+  const [actualStep, setActualStep] = useState<StepJourney | undefined>(undefined)
+  const [actualStepsList, setActualStepsList] = useState<StepModel[]>([])
+  const [stepsList, setStepsList] = useState<StepJourney[]>([])
+  
 
-  const handleActions = (e: MouseEvent<HTMLElement>, actionName: string, journey:JourneyModel) => {
-    if (actionName === "next" && journey.step.next) {
-      const newLog:JourneyLog = {
-        id: "x",
-        journey: journey.id,
-        step: journey.step.next as StepModel,
-        stepValue: null,
-        user: "TODO: set logged user.",
-        description: ""
-      }
+  const setSteps = async () => {
+    const resp = await stepApi.getSteps()
+    setStepsList(resp.data)
+  }
 
-      console.log("TODO: post journey", newLog)
+  const handleSendToScale = async (journey:JourneyModel, step: StepModel) => {
+    const updData = {
+      journey: journey.id,
+      step: step.next,
+      value: "",
+      status: "IN_PROGRESS",
+      userId: user.id
     }
-    else if (actionName === "other") {
-      
-      console.log("TODO: Select target step and justify the change.")
-
+    if (actualStep) {
+      const journeysLeft = actualStep.journeys.filter(j => j.id !== journey.id)
+      setActualStep({ ...actualStep, journeys: journeysLeft })
+      await journeyApi.updateJourney(updData)
     }
   }
 
-  const tableActions = [
-    {
-      title: t('Enviar a siguiente paso'),//Send to next step
-      name: 'next',
-      clickHandler: handleActions,
-      visible: true,
-      icon: <FastForwardIcon />,
-      iconText: t('Siguiente paso'), //Next step
-      colors: {
-        background: theme.colors.primary.lighter,
-        color: theme.palette.primary.main,
-      }
-    },
-    {
-      title: 'Enviar a otro paso', //'Send to another step'
-      name: 'other',
-      clickHandler: handleActions,
-      visible: true,
-      icon: <RedoIcon />,
-      iconText: t('Another step'),
-      colors: {
-        background: theme.colors.primary.lighter,
-        color: theme.palette.primary.main,
-      }
-    }
-  ]
+  useEffect(() => {
+    setSteps()
+  }, [])
 
-  const mockJourneys = [
-    {
-      driver: "64dbeb400422576f15717ada",
-      container: "64dc0fe53ad970d6e4d9c951",
-      step: {
-        name: "Patio",
-        order: 2,
-        previous: "64f7a092eb2116cb79ca7445",
-        next: "64f7a18ceb2116cb79ca7449",
-        isActive: true,
-        id: "64f7a10aeb2116cb79ca7447"
-      },
-      containerNumber: "001",
-      driverDoc: "1111",
-      id: "65007586b6efe051c2e1217d"
+  useEffect(() => {
+    if (stepsList.length > 0) {
+      const routeName = location.pathname
+      const route = routeName.split('/')[1]
+      const actualStep = stepsList.find(item => item.step.routeName === route)
+      setActualStep(actualStep)
     }
-  ]
+  }, [stepsList])
+  
 
   return (
     <PageLayout
       seoTitle={t('Users List')}
       title={t('Yard')}
       buttonConfig={{
-        visible: true,
+        visible: false,
         title: t('Create User'),
         action: () => alert('To-do')}
     }>
+
       <Grid item xs={12}>
         <Card>
           <TableContainer>
@@ -100,32 +82,19 @@ export const Yard = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                { mockJourneys && mockJourneys.map((journey:JourneyModel) => (
-                  <TableRow key={journey.id}>
-                    <TableCell align="center">
+                { actualStep && actualStep.journeys.map((journey) => (
+                  <TableRow key={ journey.id }>
+                    <TableCell align='center'>
                       <Typography>
-                        {journey.containerNumber}
+                        { journey.containerNumber }
                       </Typography>
                     </TableCell>
-                    <TableCell align="center">
-                      <Typography noWrap>
-                        {
-                          tableActions.map(action => (
-                            <TableAction
-                              title={action.title}
-                              name={action.name}
-                              journey={journey}
-                              iconText={action.iconText}
-                              key={`action-${action.name}`}
-                              clickHandler={(e:MouseEvent<HTMLElement>, name:string) => 
-                                  action.clickHandler(e, action.name, journey)
-                              }
-                              icon={action.icon}
-                              colors={action.colors}
-                              visible={action.visible} />
-                          ))
-                        }
-                      </Typography>
+                    <TableCell 
+                      align='center' 
+                      onClick={ () => handleSendToScale(journey, actualStep.step) }
+                    >
+                      <Typography>Send to scale 1</Typography>
+                      <FastForwardIcon />
                     </TableCell>
                   </TableRow>
                 ))}
