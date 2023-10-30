@@ -17,6 +17,11 @@ interface ITableActionProps {
 }
 
 export const TableAction = ({title, name, clickHandler, visible, icon, colors, iconText, journey}: ITableActionProps) => {
+  const handleClick = (e: MouseEvent<HTMLElement>) => {
+    if (name && journey) {
+      clickHandler(e, name, journey);
+    }
+  };
   return visible && (
     //
     <Tooltip title={title} arrow
@@ -28,6 +33,7 @@ export const TableAction = ({title, name, clickHandler, visible, icon, colors, i
     }}
     color="inherit"
     size="small"
+    onClick={handleClick}
   >
   {/* */}
 

@@ -1,5 +1,5 @@
 import { PageLayout } from '@layouts/Page/PageLayout'
-import { MouseEvent } from "react";
+import { MouseEvent, useEffect, useState } from "react";
 import {
     Box,
     Card,
@@ -19,6 +19,13 @@ import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import { useTranslation } from 'react-i18next'
 import { TableAction } from '@components/Tables/TableAction';
 import { useNavigate } from 'react-router';
+import { useParams } from 'react-router-dom';
+import { journeyApi } from '@services/api/journeyApi';
+import { MxJourneyStore } from '../../stores/JourneyStore';
+import { StepModel } from '@models/Step/Step';
+import { ContainerModel } from '@models';
+
+
 
 const MainContent = styled(Box)(
   () =>`
@@ -30,7 +37,6 @@ const MainContent = styled(Box)(
   `
 )
 
-// Journey[] type setted to any[] while merge approval
 const mockActiveJourneys: any[] = [
   {
     id: "65007586b6efe051c2e1217d",
@@ -50,15 +56,44 @@ const mockActiveJourneys: any[] = [
   }
 ]
 
+
+
 const AdminDashboard = () => {
   const { t } = useTranslation()
   const theme = useTheme();
   const navigate = useNavigate();
   const handleDetails = (e:MouseEvent<HTMLElement>, journey:any) => {
-    // TODO: Handle
-    // journeyStore.setCurrentJourney(journey)
-    // navigate(`/journey-detail/${journey.id}`)
+
   }
+  const stepId = MxJourneyStore.stepId;
+  const { step } = useParams();
+
+  interface StepData {
+      driver: string,
+      container: string,
+      step: StepModel,
+      createdAt: string,
+      updatedAt: string,
+      containerNumber: string,
+      driverDoc: string,
+      id: string
+  }
+ 
+  const [stepsData, setStepsData] = useState<StepData[]>([]);
+  useEffect(() => {
+    if (step) {
+      journeyApi.getStepJourneys(step)
+        .then((response) => {
+          console.log(response);
+          setStepsData(response.data);
+          console.log(response.data);
+          console.log(response.data.length);
+
+        })
+        .catch((error) => console.error('Error fetching data:', error));
+    }
+  }, [step]);
+
 
   const tableActions = [
     {
@@ -80,8 +115,8 @@ const AdminDashboard = () => {
       <PageLayout seoTitle={t('Admin Dashboard')}
         title={t('Admin Dashboard')}
         buttonConfig={{
-          visible: false, 
-          title: t('Create User'), 
+          visible: true, 
+          title: t('Go back to Admin Journeys Dashboard'), 
           action: () => alert('To-do')}
       }>
         <MainContent>
@@ -91,22 +126,18 @@ const AdminDashboard = () => {
                 <TableHead>
                   <TableRow>
                     <TableCell align='center'>{t('Container number')}</TableCell>
-                    <TableCell align='center'>{t('Entrance date')}</TableCell>
-                    <TableCell align='center'>{t('Step')}</TableCell>
+                    <TableCell align='center'>{t('Entry Date')}</TableCell>
                     <TableCell align='center'>{t('Details')}</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  { mockActiveJourneys.map((journey) => (
+                  { stepsData.map((journey) => (
                     <TableRow key={journey.id}>
                       <TableCell align='center'>
                         {journey.containerNumber}
                       </TableCell>
                       <TableCell align='center'>
-                        {journey.createDate.toDateString()}
-                      </TableCell>
-                      <TableCell align='center'>
-                        {journey.step.name}
+                        {journey.createdAt}
                       </TableCell>
                       <TableCell align="center">
                           <Typography noWrap>
