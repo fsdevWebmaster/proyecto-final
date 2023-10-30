@@ -80,6 +80,9 @@ const AdminDashboard = () => {
   }
  
   const [stepsData, setStepsData] = useState<StepData[]>([]);
+  const stepName = MxJourneyStore.stepName;
+console.log(stepName)
+
   useEffect(() => {
     if (step) {
       journeyApi.getStepJourneys(step)
@@ -94,6 +97,9 @@ const AdminDashboard = () => {
     }
   }, [step]);
 
+  const handleTableActionClick = () => {
+    navigate(`/admin-journeys-dashboard/`)
+  };
 
   const tableActions = [
     {
@@ -114,12 +120,13 @@ const AdminDashboard = () => {
     <Grid item xs={12}>
       <PageLayout seoTitle={t('Admin Dashboard')}
         title={t('Admin Dashboard')}
+        subtitle={stepName}
         buttonConfig={{
           visible: true, 
           title: t('Go back to Admin Journeys Dashboard'), 
-          action: () => alert('To-do')}
+          action: () => handleTableActionClick()}
       }>
-        <MainContent>
+        <MainContent padding={2}>
           <Card>
             <TableContainer>
               <Table>

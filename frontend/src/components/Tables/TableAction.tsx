@@ -6,7 +6,7 @@ interface ITableActionProps {
   title: string;
   name?: string
   journey?: JourneyModel;
-  clickHandler: (e: MouseEvent<HTMLElement>, name:string, journey:JourneyModel) => void;
+  clickHandler: (e: MouseEvent<HTMLElement>, name?: string, journey?: JourneyModel) => void;
   visible: boolean;
   icon: ReactNode;
   iconText?: string;
@@ -18,14 +18,11 @@ interface ITableActionProps {
 
 export const TableAction = ({title, name, clickHandler, visible, icon, colors, iconText, journey}: ITableActionProps) => {
   const handleClick = (e: MouseEvent<HTMLElement>) => {
-    if (name && journey) {
       clickHandler(e, name, journey);
-    }
   };
   return visible && (
     //
-    <Tooltip title={title} arrow
-  onClick={() => (e: MouseEvent<HTMLElement>, name: string, journey: JourneyModel) => clickHandler(e, name, journey)}>
+    <Tooltip title={title} arrow>
   <IconButton
     sx={{
       '&:hover': { background: colors.background },

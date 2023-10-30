@@ -3,13 +3,18 @@ import { JourneyModel } from "@models/Journey/Journey";
 
 class JourneyStore {
   journey: JourneyModel | undefined = undefined
-  stepId: string | undefined = undefined;
+  stepId: string = '';
+  stepName: string = '';
   constructor() {
       makeAutoObservable(this);
   }
 
-  setStepId(stepId: string){
-    this.stepId = stepId;
+  setStepId(id: string){
+    this.stepId = id;
+  }
+
+  setStepName(name: string){
+    this.stepName = name;
   }
 }
 

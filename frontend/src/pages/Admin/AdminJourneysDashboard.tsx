@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next'
 import { useEffect, useState } from 'react';
 import { stepApi } from '@services/api/stepApi';
 import { StepModel } from '@models/Step/Step';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { MxJourneyStore } from '../../stores/JourneyStore';
 
 
@@ -32,8 +32,10 @@ const TopWrapper = styled(Box)(
 )
 
 const AdminJourneysDashboard = () => {
+  const navigate = useNavigate();
   const { t }: { t: any } = useTranslation();
   const theme = useTheme();
+
   interface StepData {
     step: {
       id: string
@@ -61,9 +63,12 @@ const AdminJourneysDashboard = () => {
       .catch((error) => console.error('Error fetching data:', error));
   }, []);
 
-  const handleViewContainersClick = (stepId: string) => {
-    MxJourneyStore.setStepId(stepId);
-    console.log('Setting stepId:', stepId);
+  const handleTableActionClick = (stepId: string, stepName: string) => {
+    MxJourneyStore.setStepId(stepId); 
+    MxJourneyStore.setStepName(stepName); 
+    navigate(`/admin-dashboard/${stepId}`)
+    console.log("Stored stepId:", MxJourneyStore.stepId, "Stored stepName:", MxJourneyStore.stepName);
+
   };
   
 
@@ -122,7 +127,7 @@ const AdminJourneysDashboard = () => {
                         <TableCell align="center">Step</TableCell>
                         <TableCell align="center">Containers</TableCell>
 
-                        <TableCell align="center">Actions</TableCell>
+                        <TableCell align="center">See Containers in step</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
@@ -140,18 +145,13 @@ const AdminJourneysDashboard = () => {
                       </TableCell>
                       <TableCell align="center">
                         <Typography noWrap>
-                          <Link to={`/admin-dashboard/${action.stepId}`}>
                             <TableAction
                               title={action.title}
                               icon={action.icon}
                               colors={action.colors}
                               visible={action.visible}
-                              clickHandler={() => {
-                                MxJourneyStore.setStepId(action.stepId); 
-                                console.log(action.stepId);
-                              }}
+                              clickHandler={(e) => handleTableActionClick(action.stepId, stepsData.find(stepData => stepData.step.id === action.stepId)?.step.name || '')}
                             />
-                          </Link>
                         </Typography>
                       </TableCell>
                     </TableRow>
