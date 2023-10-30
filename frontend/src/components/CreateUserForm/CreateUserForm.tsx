@@ -8,7 +8,8 @@ import {
   CircularProgress,
   MenuItem,
   Typography,
-  Alert
+  Alert,
+  Box
 } from '@mui/material';
 
 import {useRefMounted} from '@hooks';
@@ -18,6 +19,7 @@ import { roleApi } from '@services/api/roleApi';
 import { userApi } from '@services/api/userApi';
 import { User } from '@models/User/User';
 import { RolesSelector } from './RolesSelector';
+import { ArrowBack } from '@mui/icons-material';
 
 export const CreateUserForm: FC = () => {
   const [roles, setRoles] = useState<Role[]>([])
@@ -46,6 +48,10 @@ export const CreateUserForm: FC = () => {
       let rolesIds:string[] = selectedRoles.map(role => {
         return role.id
       })
+      if (rolesIds.length === 0) {
+        setErrorMsg(t("Please select a role."))
+        return
+      }
       regData.roles = rolesIds
       if (!updatingUser) {
         try {
@@ -84,6 +90,10 @@ export const CreateUserForm: FC = () => {
     const resp = await userApi.getProfile(userId)
     setUpdatingUser(resp.data)
   }
+
+  const handleCancel = () => {
+    navigate('/')
+  }
   
   useEffect(() => {
     handleRoles()
@@ -105,11 +115,46 @@ export const CreateUserForm: FC = () => {
   
   return (
     <>
+      { updatingUser ?
+        <Box>
+          <Typography
+            variant="h2"
+            sx={{
+              mb: 1
+            }}
+            color='secondary'
+          >
+            {t('Update user')}
+          </Typography>
+        </Box>    
+        :
+        <Box>
+          <Typography
+            variant="h2"
+            sx={{
+              mb: 1
+            }}
+            color='secondary'
+          >
+            {t('Create user')}
+          </Typography>
+        </Box>        
+      }
       { errorMsg &&
-        <Alert severity='error'>
-          {t('User registration failed.')}
+        <Alert severity='error' sx={{ marginBottom: '5px' }}>
+          {t(`${errorMsg}`)}
         </Alert>
       }
+      <Button
+        variant='contained'
+        color='secondary'
+        startIcon={<ArrowBack />}
+        size='small'
+        onClick={handleCancel}
+        sx={{ marginBottom: '15px' }}
+      >
+        {t('Cancel')}
+      </Button>
       <Formik
         initialValues={formState}
         enableReinitialize={true}
@@ -147,7 +192,7 @@ export const CreateUserForm: FC = () => {
                 error={Boolean(touched.name && errors.name)}
                 fullWidth
                 required
-                margin='normal'
+                margin='dense'
                 autoFocus
                 helperText={touched.name && errors.name}
                 label={t('Name')}
@@ -162,8 +207,7 @@ export const CreateUserForm: FC = () => {
                 error={Boolean(touched.name && errors.name)}
                 fullWidth
                 required
-                margin='normal'
-                autoFocus
+                margin='dense'
                 helperText={touched.lastName && errors.lastName}
                 label={t('Last name')}
                 name='lastName'
@@ -177,7 +221,7 @@ export const CreateUserForm: FC = () => {
                 error={Boolean(touched.email && errors.email)}
                 fullWidth
                 required
-                margin='normal'
+                margin='dense'
                 helperText={touched.email && errors.email}
                 label={t('Email address')}
                 name='email'
@@ -192,7 +236,7 @@ export const CreateUserForm: FC = () => {
                   error={Boolean(touched.password && errors.password)}
                   fullWidth
                   required
-                  margin='normal'
+                  margin='dense'
                   helperText={touched.password && errors.password}
                   label={t('Password')}
                   name='password'
@@ -207,7 +251,7 @@ export const CreateUserForm: FC = () => {
                 error={Boolean(touched.idDoc && errors.idDoc)}
                 fullWidth
                 required
-                margin='normal'
+                margin='dense'
                 helperText={touched.idDoc && errors.idDoc}
                 label={t('Identification')}
                 name='idDoc'
@@ -217,15 +261,6 @@ export const CreateUserForm: FC = () => {
                 value={values.idDoc}
                 variant='outlined'
               />
-
-              <Typography
-                variant="h3"
-                sx={{
-                      mb: 1
-                }}
-              >
-                {t('Roles')}
-              </Typography>
               { roles.length > 0 && 
                 <>
                   <RolesSelector 
@@ -238,15 +273,12 @@ export const CreateUserForm: FC = () => {
 
               <Button
                 sx={{
-                  mt:2,
-                  ml:2,
-                  backgroundColor: '#3E3E3E'
+                  mt:2
                 }}
-                style={{ backgroundColor: '#3E3E3E' }}
                 startIcon={isSubmitting ? <CircularProgress size="1rem" /> : null}
                 disabled={isSubmitting}
                 type='submit'
-                size='large'
+                size='medium'
                 variant='contained'
               >
                 {t('Save')}
