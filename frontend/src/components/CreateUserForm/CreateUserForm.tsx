@@ -7,7 +7,8 @@ import {
   TextField,
   CircularProgress,
   MenuItem,
-  Typography
+  Typography,
+  Alert
 } from '@mui/material';
 
 import {useRefMounted} from '@hooks';
@@ -30,6 +31,7 @@ export const CreateUserForm: FC = () => {
     roles: []
   })
   const [selectedRoles, setSelectedRoles] = useState<Role[]>([])
+  const [errorMsg, setErrorMsg] = useState<string | null>(null)
 
   
   // TO-DO
@@ -53,7 +55,7 @@ export const CreateUserForm: FC = () => {
             setStatus({ success: true });
           }
         } catch (err: any) {
-          console.error(err);
+          setErrorMsg(err)
           if (isMountedRef.current) {
             setStatus({ success: false });
             setErrors({ submit: err.message });
@@ -102,149 +104,156 @@ export const CreateUserForm: FC = () => {
   
   
   return (
-    <Formik
-      initialValues={formState}
-      enableReinitialize={true}
-      validationSchema={Yup.object().shape({
-        name: Yup.string()
-          .max(255)
-          .required(t('The name field is required')),
-        lastName: Yup.string()
-          .max(255)
-          .required(t('The last name field is required')),
-        email: Yup.string()
-          .email(t('The email provided should be a valid email address'))
-          .max(255)
-          .required(t('The email field is required')),
-        password: Yup.string()
-          .max(255),
-          //.required(t('The password field is required')),
-        idDoc: Yup.number()
-          .min(255)
-          .required(t('The id document field is required'))
-      })}
-      onSubmit={handleSubmit}
-      >
-        {({
-          errors,
-          handleBlur,
-          handleChange,
-          handleSubmit,
-          isSubmitting,
-          touched,
-          values
-        }): JSX.Element => (
-          <form noValidate onSubmit={handleSubmit}>
-            <TextField
-              error={Boolean(touched.name && errors.name)}
-              fullWidth
-              required
-              margin='normal'
-              autoFocus
-              helperText={touched.name && errors.name}
-              label={t('Name')}
-              name='name'
-              onBlur={handleBlur}
-              onChange={handleChange}
-              type='text'
-              value={values.name}
-              variant='outlined'
-            />
-            <TextField
-              error={Boolean(touched.name && errors.name)}
-              fullWidth
-              required
-              margin='normal'
-              autoFocus
-              helperText={touched.lastName && errors.lastName}
-              label={t('Last name')}
-              name='lastName'
-              onBlur={handleBlur}
-              onChange={handleChange}
-              type='text'
-              value={values.lastName}
-              variant='outlined'
-            />
-            <TextField
-              error={Boolean(touched.email && errors.email)}
-              fullWidth
-              required
-              margin='normal'
-              helperText={touched.email && errors.email}
-              label={t('Email address')}
-              name='email'
-              onBlur={handleBlur}
-              onChange={handleChange}
-              type='email'
-              value={values.email}
-              variant='outlined'
-            />
-            { !updatingUser && 
+    <>
+      { errorMsg &&
+        <Alert severity='error'>
+          {t('User registration failed.')}
+        </Alert>
+      }
+      <Formik
+        initialValues={formState}
+        enableReinitialize={true}
+        validationSchema={Yup.object().shape({
+          name: Yup.string()
+            .max(255)
+            .required(t('The name field is required')),
+          lastName: Yup.string()
+            .max(255)
+            .required(t('The last name field is required')),
+          email: Yup.string()
+            .email(t('The email provided should be a valid email address'))
+            .max(255)
+            .required(t('The email field is required')),
+          password: Yup.string()
+            .max(255),
+            //.required(t('The password field is required')),
+          idDoc: Yup.number()
+            .min(255)
+            .required(t('The id document field is required'))
+        })}
+        onSubmit={handleSubmit}
+        >
+          {({
+            errors,
+            handleBlur,
+            handleChange,
+            handleSubmit,
+            isSubmitting,
+            touched,
+            values
+          }): JSX.Element => (
+            <form noValidate onSubmit={handleSubmit}>
               <TextField
-                error={Boolean(touched.password && errors.password)}
+                error={Boolean(touched.name && errors.name)}
                 fullWidth
                 required
                 margin='normal'
-                helperText={touched.password && errors.password}
-                label={t('Password')}
-                name='password'
+                autoFocus
+                helperText={touched.name && errors.name}
+                label={t('Name')}
+                name='name'
                 onBlur={handleBlur}
                 onChange={handleChange}
-                type='password'
-                value={values.password}
+                type='text'
+                value={values.name}
                 variant='outlined'
               />
-            }
-            <TextField
-              error={Boolean(touched.idDoc && errors.idDoc)}
-              fullWidth
-              required
-              margin='normal'
-              helperText={touched.idDoc && errors.idDoc}
-              label={t('Identification')}
-              name='idDoc'
-              onBlur={handleBlur}
-              onChange={handleChange}
-              type='number'
-              value={values.idDoc}
-              variant='outlined'
-            />
-
-            <Typography
-              variant="h3"
-              sx={{
-                    mb: 1
-              }}
-            >
-              {t('Roles')}
-            </Typography>
-            { roles.length > 0 && 
-              <>
-                <RolesSelector 
-                  roles={ roles } 
-                  sendSelected={ (selected) => handleSelectedRoles(selected) } 
-                  updatingUser={ updatingUser }
+              <TextField
+                error={Boolean(touched.name && errors.name)}
+                fullWidth
+                required
+                margin='normal'
+                autoFocus
+                helperText={touched.lastName && errors.lastName}
+                label={t('Last name')}
+                name='lastName'
+                onBlur={handleBlur}
+                onChange={handleChange}
+                type='text'
+                value={values.lastName}
+                variant='outlined'
+              />
+              <TextField
+                error={Boolean(touched.email && errors.email)}
+                fullWidth
+                required
+                margin='normal'
+                helperText={touched.email && errors.email}
+                label={t('Email address')}
+                name='email'
+                onBlur={handleBlur}
+                onChange={handleChange}
+                type='email'
+                value={values.email}
+                variant='outlined'
+              />
+              { !updatingUser && 
+                <TextField
+                  error={Boolean(touched.password && errors.password)}
+                  fullWidth
+                  required
+                  margin='normal'
+                  helperText={touched.password && errors.password}
+                  label={t('Password')}
+                  name='password'
+                  onBlur={handleBlur}
+                  onChange={handleChange}
+                  type='password'
+                  value={values.password}
+                  variant='outlined'
                 />
-              </>
-            }
+              }
+              <TextField
+                error={Boolean(touched.idDoc && errors.idDoc)}
+                fullWidth
+                required
+                margin='normal'
+                helperText={touched.idDoc && errors.idDoc}
+                label={t('Identification')}
+                name='idDoc'
+                onBlur={handleBlur}
+                onChange={handleChange}
+                type='number'
+                value={values.idDoc}
+                variant='outlined'
+              />
 
-            <Button
-              sx={{
-                mt:2,
-                ml:2,
-                backgroundColor: '#3E3E3E'
-              }}
-              style={{ backgroundColor: '#3E3E3E' }}
-              startIcon={isSubmitting ? <CircularProgress size="1rem" /> : null}
-              disabled={isSubmitting}
-              type='submit'
-              size='large'
-              variant='contained'
-            >
-              {t('Save')}
-            </Button>
-          </form>
-        )}
-    </Formik>
+              <Typography
+                variant="h3"
+                sx={{
+                      mb: 1
+                }}
+              >
+                {t('Roles')}
+              </Typography>
+              { roles.length > 0 && 
+                <>
+                  <RolesSelector 
+                    roles={ roles } 
+                    sendSelected={ (selected) => handleSelectedRoles(selected) } 
+                    updatingUser={ updatingUser }
+                  />
+                </>
+              }
+
+              <Button
+                sx={{
+                  mt:2,
+                  ml:2,
+                  backgroundColor: '#3E3E3E'
+                }}
+                style={{ backgroundColor: '#3E3E3E' }}
+                startIcon={isSubmitting ? <CircularProgress size="1rem" /> : null}
+                disabled={isSubmitting}
+                type='submit'
+                size='large'
+                variant='contained'
+              >
+                {t('Save')}
+              </Button>
+            </form>
+          )}
+      </Formik>
+    </>
   )
 }

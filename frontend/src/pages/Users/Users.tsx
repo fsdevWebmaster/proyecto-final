@@ -143,6 +143,7 @@ const handleSelected = (selectedUser: User) => {
   navigate(`/update-user/${selectedUser.id}`)
 }
 
+
 useEffect(() => {
   handleData()
 }, [])
@@ -179,28 +180,29 @@ useEffect(() => {
                     <TableRow hover key={user.id}>
                       <TableCell>
                         <Typography variant="h5">
-                          {user.personalId}
+                          {user.idDoc}
                         </Typography>
                       </TableCell>
                       <TableCell>
                         <Box display="flex" alignItems="center">
                           <Avatar
                             sx={{
-                              fontSize: `${theme.typography.pxToRem(15)}`,
+                              fontSize: `${theme.typography.pxToRem(14)}`,
                               background: `${theme.colors.warning.main}`,
                               color: `${theme.palette.getContrastText(
                                 theme.colors.warning.dark
                               )}`,
-                              width: 45,
-                              height: 45,
+                              width: 40,
+                              height: 40,
                               mr: 1
                             }}
                           >
-                            GA
+                            { user.name.substring(0, 1) }
+                            { user.lastName.substring(0, 1) }
                           </Avatar>                          
                           <Box>
                             <Typography noWrap variant="subtitle2">
-                              {user.name}
+                              {user.name } { user.lastName }
                             </Typography>
                           </Box>
                         </Box>
@@ -209,9 +211,6 @@ useEffect(() => {
                         <Typography>{user.email}</Typography>
                       </TableCell>
                       <TableCell>{getUserRoleLabel(user.roles)}</TableCell>
-                      {/* <TableCell>
-                        <Typography>{format(new Date(), 'MMMM yyyy')}</Typography>
-                      </TableCell> */}
                       <TableCell align="center">
                         <Typography noWrap>
                           {
@@ -220,13 +219,6 @@ useEffect(() => {
                                 onClick={ () => handleSelected(user) }>
                                 <EditTwoToneIcon fontSize="small" />
                               </div>
-                              // <TableAction
-                              //   title={action.title}
-                              //   key={`action-${action.title}`}
-                              //   clickHandler={action.clickHandler}
-                              //   icon={action.icon}
-                              //   colors={action.colors}
-                              //   visible={action.visible} />
                             ))
                           }
                         </Typography>
