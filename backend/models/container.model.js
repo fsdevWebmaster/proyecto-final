@@ -8,6 +8,7 @@ const containerSchema = new mongoose.Schema({
     unique: true,
   }
 }, {
+  timestamps: true,
   toJSON: {
     virtuals: true,
     transform: (doc, ret) => {
