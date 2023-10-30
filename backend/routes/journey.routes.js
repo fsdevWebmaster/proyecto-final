@@ -13,7 +13,7 @@ import {
   updateJourney,
   getJourneyByDriver,
   journeyToUnload,
-  getJourneyLogs,
+  getJourneyLogs
   getJourneyByDriverDocId
 } from "../controllers/journey.controller.js";
 
