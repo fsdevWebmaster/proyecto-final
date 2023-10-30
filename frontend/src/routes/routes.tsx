@@ -2,7 +2,6 @@ import { lazy } from 'react';
 import { RouteObject } from 'react-router';
 import { Loader } from "@components";
 import { Authorization } from '@components';
-import { Yard } from '@pages/Yard/Yard';
 import Gate from '@pages/Gate/Gate';
 import { Check } from '@pages/Check/Check';
 import { Scale } from '../pages/Scale/Scale';
@@ -28,6 +27,8 @@ const ContainerRegistration = Loader(lazy(() => import('@pages/Container/Contain
 const AdminDashboard = Loader(lazy(() => import('@pages/Admin/AdminDashboard')))
 const AdminJourneysDashboard = Loader(lazy(() => import('@pages/Admin/AdminJourneysDashboard')))
 const JourneyStatus = Loader(lazy(() => import('@pages/JourneyLog/JourneyLog')));
+const Yard = Loader(lazy(() => import('@pages/Yard/Yard')));
+
 
 //docs
 const Documentation = Loader(lazy(() => import('@pages/Doc/Documentation')));
@@ -84,6 +85,11 @@ export const routes: RouteObject[] = [
               {
                 path: 'create-user',
                 id: 'createuser',
+                element: <CreateUser />
+              },
+              {
+                path: 'update-user/:userId',
+                id: 'updateuser',
                 element: <CreateUser />
               },
               {
