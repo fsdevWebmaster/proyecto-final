@@ -1,5 +1,7 @@
 import {
+  Alert,
   Box,
+  Button,
   Card,
   Container,
   Typography,
@@ -8,13 +10,16 @@ import {
 import { Helmet } from "react-helmet-async";
 import { useTranslation } from "react-i18next";
 import { ContainerRegistryForm } from "@components/ContainerRegistrationForm/ContainerRegistrationForm";
+import { ArrowBack } from "@mui/icons-material";
+import { useNavigate } from "react-router";
+import { useState } from "react";
 
 const MainContent = styled(Box)(
   () => `
     height: 100%;
     display: flex;
     flex: 1;
-    flex-direction: colum;
+    flex-direction: column;
   `
 )
 
@@ -28,8 +33,13 @@ const TopWrapper = styled(Box)(
 )
 
 const ContainerRegistry = () => {
-
+  const navigate = useNavigate()
   const { t } = useTranslation();
+
+
+  const handleBack = () => {
+    navigate('/containers')
+  }
 
   return(
     <>
@@ -58,6 +68,14 @@ const ContainerRegistry = () => {
               </Box>
               <ContainerRegistryForm />
             </Card>
+            <Button
+              variant='contained'
+              startIcon={<ArrowBack />}
+              sx={{ marginTop: '15px' }}
+              onClick={handleBack}
+            >
+              {t('back')}
+            </Button>
           </Container>
         </TopWrapper>
       </MainContent>

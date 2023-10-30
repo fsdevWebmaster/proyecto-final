@@ -1,110 +1,82 @@
-import React from 'react';
+import { useEffect, useState } from 'react';
 import { observer } from 'mobx-react';
 import { PageLayout } from '@layouts/Page/PageLayout';
-import { Table, Box, Card, Container, Typography,styled,Grid,TableCell,ListItemText,useTheme, stepClasses, TableRow, TableContainer, TableHead , TableBody } from '@mui/material'
-import { TableAction } from '@components/Tables/TableAction';
+import { Table, Card, Typography,Grid,TableCell,useTheme, TableRow, TableContainer, TableHead , TableBody, Button } from '@mui/material'
 import { useTranslation } from 'react-i18next';
-import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
-import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
-
-const mockJourneysContainers:any[] = [
-  { containersNumber: "3", entryDate: "12-12-2023"},
-  { containersNumber: "4", entryDate: "03-03-2023"},
-  { containersNumber: "7", entryDate: "05-03-2023"},
-]
- 
-//const journeyContainersSteps = () =>{
-//     let step = mockJourneysContainers.map(stepName) =>{
-      
-// }
-const MainContent = styled(Box)(
-() =>`
-  height: 100%;
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-`
-)
-
-const TopWrapper = styled(Box)(
-() =>`
-  display: flex;
-  width: 100%;
-  flex: 1;
-  padding: 20px
-`
-)
+import { containerApi } from '@services/api/containerApi';
+import { ContainerModel } from '@models';
+import { Add, ArrowBack } from '@mui/icons-material';
+import { useNavigate } from 'react-router';
 
 
 const Containers = () => {
   const { t }: { t: any } = useTranslation();
+  const navigate = useNavigate()
   const theme = useTheme();
+  const [containers, setContainers] = useState<ContainerModel[]>([])
 
-  const tableHeaderOptions = {
-    btnTitle: 'Add Item',
-    onClickHandler: () => alert('custom implementation')
-  };
-  const headers = ['Step', 'Containers', 'Actions'];
-
-const tableActions = [
-  {
-    title: 'View',
-    clickHandler: () => {},
-    visible: true,
-    icon: <OpenInNewIcon fontSize="small" />,
-    colors: {
-      background: theme.colors.primary.lighter,
-      color: theme.palette.primary.main,
-    }
+  const handleContainers = async () => {
+    const resp = await containerApi.getContainers()
+    let containers = resp.data.map((container:ContainerModel) => {
+      const date = new Date(container.createdAt)
+      container.createdAt = date
+      return container
+    })
+    setContainers(resp.data)
   }
-];
+
+  const handleBack = () => {
+    navigate('/')
+  }
+
+  const handleCreate = () => {
+    navigate('/container-registry')
+  }
+
+  useEffect(() => {
+    handleContainers()
+  }, [])
+  
 
   return (
     <>
     <PageLayout seoTitle='Container List' title='Containers' buttonConfig={{ visible: false }}>
       <Grid item>
-        <p>Container List</p>
       </Grid>
-    </PageLayout><Grid item lg={8} md={6} xs={12}>
+      <Grid item lg={8} md={6} xs={12}>
+        <Button
+          variant='contained'
+          color='primary'
+          startIcon={<Add />}
+          sx={{ marginBottom: '15px' }}
+          onClick={handleCreate}
+        >
+          {t('Create container')}
+        </Button>
         <Card>
           <TableContainer>
             <Table>
               <TableHead>
                 <TableRow>
                   <TableCell align="center">Container Number</TableCell>
-                  <TableCell align="center">Entry Date</TableCell>
-                  <TableCell align="center">Actions</TableCell>
+                  <TableCell align="center">Creation date</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
-                {mockJourneysContainers.map((mockJourneysContainer) => {
+                {containers.map((container) => {
                   return (
-                    <TableRow>
+                    <TableRow key={container.id}>
                       <TableCell align='center'>
                         <Typography variant="h5" noWrap>
-                          {t(mockJourneysContainer.containersNumber)}
+                          {t(container.containerNumber)}
                         </Typography>
                       </TableCell>
                       <TableCell align="center">
                         <Typography variant='h5' noWrap>
-                          {mockJourneysContainer.entryDate}
+                          {container.createdAt.toDateString()}
                         </Typography>
                       </TableCell>
-                      <TableCell align="center">
-                        <Typography noWrap>
-                          {tableActions.map(action => (
-                            <TableAction
-                              title={action.title}
-                              key={`action-${action.title}`}
-                              clickHandler={action.clickHandler}
-                              icon={action.icon}
-                              colors={action.colors}
-                              visible={action.visible} />
-                          ))}
-                        </Typography>
-                      </TableCell>
-
                     </TableRow>
                   );
                 })}
@@ -112,8 +84,18 @@ const tableActions = [
             </Table>
           </TableContainer>
         </Card>
-
-      </Grid></>
+        <Button
+          variant='contained'
+          startIcon={<ArrowBack />}
+          sx={{ marginTop: '15px' }}
+          onClick={handleBack}
+          color='secondary'
+        >
+          {t('back')}
+        </Button>
+      </Grid>
+    </PageLayout>
+    </>
   );
 }
 
