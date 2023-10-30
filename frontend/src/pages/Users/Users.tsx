@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { format } from 'date-fns';
-import { Avatar, Box, Card, Grid, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, 
+import { Avatar, Box, Card, Grid, Icon, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, 
   Typography, useTheme 
 } from '@mui/material';
 import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
@@ -15,68 +15,28 @@ import { CustomDialog } from '@components/Dialog/CustomDialog';
 import { ButtonConfig } from '@common/interfaces';
 import { CreateUser } from '@components/Dialog/CreateUser';
 import { useTranslation } from 'react-i18next';
+import { userApi } from '@services/api/userApi';
+import { roleApi } from '@services/api/roleApi';
+import { useNavigate } from 'react-router';
 
 const Users = () => {
   const [openDialog, setOpenDialog] = useState(false);
   const [openCUDialog, setCUDialog] = useState(false);
   const { t }: { t: any } = useTranslation();
   const theme = useTheme();
+  const navigate = useNavigate()
 
-  const users: User[] = [
-    {
-      id: '11',
-      name: 'Jose',
-      lastName: 'Zuniga',
-      email: 'josemzr@hotmail.com',
-      personalId: '401900767',
-      roles: [{
-        id: '123456',
-        code: 1,
-        role: 'ADMIN',
-      }]
-    },
-    {
-      id: '12',
-      name: 'Francisco',
-      lastName: 'Jimenez',
-      email: 'fr@hotmail.com',
-      personalId: '401900111',
-      roles: [{
-        id: '654321',
-        code: 4,
-        role: 'INSPECTOR',
-      }]
-    },
-    {
-      id: '13',
-      name: 'Fidel',
-      lastName: 'Silva',
-      email: 'fidel@hotmail.com',
-      personalId: '101900111',
-      roles: [{
-        id: '33126',
-        code: 5,
-        role: 'ANALYST',
-      }]
-    },
-    {
-      id: '14',
-      name: 'David',
-      lastName: 'Calderon',
-      email: 'dcal@hotmail.com',
-      personalId: '101900122',
-      roles: [{
-        id: '33127',
-        code: 5,
-        role: 'DRIVER',
-      }]
-    }     
-  ];
+  const [users, setUsers] = useState<User[]>([])
+  const [roles, setRoles] = useState<Role[]>([])
 
   const tableActions = [
     {
       title: t('Edit User'),
-      clickHandler: () => {},
+      clickHandler: () => {
+
+        console.log("hola")
+
+      },
       visible: true,
       icon: <EditTwoToneIcon fontSize="small" />,
       colors: {
@@ -84,21 +44,22 @@ const Users = () => {
         color: theme.palette.primary.main,
       }
     },
-    {
-      title: t('Delete User'),
-      clickHandler: () => { setOpenDialog(true)},
-      visible: true,
-      icon: <DeleteTwoToneIcon fontSize="small" />,
-      colors: {
-        background: theme.colors.error.lighter,
-        color: theme.palette.error.main,
-      }      
-    }
+    // {
+    //   title: t('Delete User'),
+    //   clickHandler: () => { setOpenDialog(true)},
+    //   visible: true,
+    //   icon: <DeleteTwoToneIcon fontSize="small" />,
+    //   colors: {
+    //     background: theme.colors.error.lighter,
+    //     color: theme.palette.error.main,
+    //   }      
+    // }
 ];
 
-const getUserRoleLabel = (roles: Role[]) => {
-  const map = {
-    'ADMIN': {
+const getUserRoleLabel = (userRoles: Role[]) => {
+
+  const map: any = {
+    'ADMINISTRATOR': {
       text: t('Administrator'),
       color: 'error'
     },
@@ -122,14 +83,17 @@ const getUserRoleLabel = (roles: Role[]) => {
 
   const roleLabels: React.ReactNode[] = [];
 
-  roles.map(role => {
-    const { text, color }: any = map[role.role];
-    roleLabels.push(<Label color={color} key={role.id}>{text}</Label>)
-  });
-
+  userRoles.map(uRole => {
+    const uRoles = roles.filter(role => role.id === uRole)
+    if (uRoles.length > 0) {
+      uRoles.map(item => {
+        const { text, color }: any = map[item.name]
+        roleLabels.push(<Label color={color} key={item.id}>{text}</Label>)
+      })
+    }
+  })
   return roleLabels;
-
-};
+}
 
 const onCreateUserHandler = async () => {
   alert('TO-DO call API')
@@ -162,6 +126,28 @@ const dialogButtons: ButtonConfig[] = [
   }
 ];
 
+const handleData = async () => {
+  // users
+  const result = await userApi.getUsers()
+  setUsers(result.data)
+  // roles
+  const roleResult = await roleApi.getRoles()
+  setRoles(roleResult.data)
+}
+
+const handleCreate = () => {
+  navigate('/create-user')
+}
+
+const handleSelected = (selectedUser: User) => {
+  navigate(`/update-user/${selectedUser.id}`)
+}
+
+useEffect(() => {
+  handleData()
+}, [])
+
+
   return (
     <PageLayout
       seoTitle={t('Users List')}
@@ -169,8 +155,9 @@ const dialogButtons: ButtonConfig[] = [
       buttonConfig={{
         visible: true, 
         title: t('Create User'),
-        action: () => setCUDialog(true)}
-      }>
+        // action: () => setCUDialog(true)
+        action: () => handleCreate()
+      }}>
       <Grid item xs={12}>
         <Card>
           <TableContainer>
@@ -181,7 +168,7 @@ const dialogButtons: ButtonConfig[] = [
                   <TableCell align="center">{t('Name')}</TableCell>
                   <TableCell align="center">{t('Email')}</TableCell>
                   <TableCell align="center">{t('Rol')}</TableCell>
-                  <TableCell align="center">{t('Date Created')}</TableCell>
+                  {/* <TableCell align="center">{t('Date Created')}</TableCell> */}
                   <TableCell align="center">{t('Actions')}</TableCell>
                 </TableRow>
               </TableHead>
@@ -222,20 +209,24 @@ const dialogButtons: ButtonConfig[] = [
                         <Typography>{user.email}</Typography>
                       </TableCell>
                       <TableCell>{getUserRoleLabel(user.roles)}</TableCell>
-                      <TableCell>
+                      {/* <TableCell>
                         <Typography>{format(new Date(), 'MMMM yyyy')}</Typography>
-                      </TableCell>
+                      </TableCell> */}
                       <TableCell align="center">
                         <Typography noWrap>
                           {
                             tableActions.map(action => (
-                              <TableAction
-                                title={action.title}
-                                key={`action-${action.title}`}
-                                clickHandler={action.clickHandler}
-                                icon={action.icon}
-                                colors={action.colors}
-                                visible={action.visible} />
+                              <div key={user.id}
+                                onClick={ () => handleSelected(user) }>
+                                <EditTwoToneIcon fontSize="small" />
+                              </div>
+                              // <TableAction
+                              //   title={action.title}
+                              //   key={`action-${action.title}`}
+                              //   clickHandler={action.clickHandler}
+                              //   icon={action.icon}
+                              //   colors={action.colors}
+                              //   visible={action.visible} />
                             ))
                           }
                         </Typography>
