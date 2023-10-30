@@ -1,21 +1,23 @@
 import * as Yup from 'yup';
-import { FC } from "react";
+import { ChangeEvent, FC, useEffect, useState } from "react";
 import { Formik } from "formik";
 import { useNavigate } from "react-router";
 
 import {
+  Alert,
   Button,
   TextField
 } from "@mui/material";
 
 import { useRefMounted } from "@hooks";
 import { useTranslation } from "react-i18next";
+import { containerApi } from '@services/api/containerApi';
 
 export const ContainerRegistryForm: FC = () => {
-
   const isMountedRef = useRefMounted();
   const { t }: { t: any } = useTranslation();
   const navigate = useNavigate();
+  const [errorMsg, setErrorMsg] = useState<string | null>(null)
 
   const initValues = {
     containerNumber: ''
@@ -24,60 +26,68 @@ export const ContainerRegistryForm: FC = () => {
   const handleSubmit = async (values: any,
     { setErrors, setStatus, setSubmitting }: any): Promise<void> => {
       try {
-        console.log(values)
-        // navigate('/dashboard')
+        await containerApi.createContainer(values)
+        navigate('/containers')
         if (isMountedRef.current) {
             setStatus({ success: true })
             setSubmitting(false)
         }
       } catch (error: any) {
-        console.log(error);
         if (isMountedRef.current) {
+            setErrorMsg('Container creation failed.')
             setStatus({ success: false })
             setErrors({ submit: error.message })
             setSubmitting(false)
         }
       }
     }
+  
 
   return (
-    <Formik
-      initialValues={initValues}
-      validationSchema={Yup.object().shape({
-        containerNumber: Yup.string()
-          .max(255)
-          .required(t('Container number is required'))
-      })}
-      onSubmit={handleSubmit}
-    >
-      {({
-        errors,
-        handleBlur,
-        handleChange,
-        handleSubmit,
-        isSubmitting,
-        touched,
-        values
-      }): JSX.Element => (
-        <form noValidate onSubmit={handleSubmit}>
-          <TextField
-            error={Boolean(touched.containerNumber && errors.containerNumber)}
-            fullWidth
-            required
-            margin="normal"
-            autoFocus
-            helperText={touched.containerNumber && errors.containerNumber}
-            label={t('Container number')}
-            name="containerNumber"
-            onBlur={handleBlur}
-            onChange={handleChange}
-            type="text"
-            value={values.containerNumber}
-            variant="outlined"
-          />
-        <Button type='submit'>{t('Save')}</Button>
-        </form>
-      )}
-    </Formik>
+    <>
+     { errorMsg &&
+        <Alert severity="error">
+          {t(`${errorMsg}`)}
+        </Alert>
+      }
+      <Formik
+        initialValues={initValues}
+        validationSchema={Yup.object().shape({
+          containerNumber: Yup.string()
+            .max(255)
+            .required(t('Container number is required'))
+        })}
+        onSubmit={handleSubmit}
+      >
+        {({
+          errors,
+          handleBlur,
+          handleChange,
+          handleSubmit,
+          isSubmitting,
+          touched,
+          values
+        }): JSX.Element => (
+          <form noValidate onSubmit={handleSubmit}>
+            <TextField
+              error={Boolean(touched.containerNumber && errors.containerNumber)}
+              fullWidth
+              required
+              margin="normal"
+              autoFocus
+              helperText={touched.containerNumber && errors.containerNumber}
+              label={t('Container number')}
+              name="containerNumber"
+              onBlur={handleBlur}
+              onChange={handleChange}
+              type="text"
+              value={values.containerNumber}
+              variant="outlined"
+            />
+          <Button type='submit'>{t('Save')}</Button>
+          </form>
+        )}
+      </Formik>
+    </>
   )
 }
