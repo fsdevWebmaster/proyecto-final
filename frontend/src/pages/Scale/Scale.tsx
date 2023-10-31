@@ -1,6 +1,6 @@
 import { SearchForm } from "@components/Search/SearchForm"
 import { PageLayout } from "@layouts/Page/PageLayout"
-import { Box, Button, Card, Grid, IconButton, TextField, Typography, styled, useTheme } from "@mui/material"
+import { Alert, Avatar, Box, Button, Card, Grid, IconButton, TextField, Typography, styled, useTheme } from "@mui/material"
 import { SearchItem } from '../../components/Search/useSearch';
 import { useTranslation } from "react-i18next";
 import { ChangeEvent, useEffect, useState } from "react";
@@ -12,6 +12,8 @@ import { JourneyModel } from "@models/Journey/Journey";
 import { StepModel } from "@models/Step/Step";
 import { MxStepStore, MxUserStore } from "@stores";
 import { toJS } from "mobx";
+import { ScaleOutlined } from "@mui/icons-material";
+import { observer } from "mobx-react";
 
 const MainContent = styled(Box)(
   () =>`
@@ -58,26 +60,32 @@ export const Scale = () => {
   const [selectedWeight, setSelectedWeight] = useState<number | null>()
   const [weight, setWeight] = useState(0)
   const [validWeight, setValidWeight] = useState(false)
-  const [journey, setJourney] = useState<JourneyModel | undefined>(undefined)
+  const [journey, setJourney] = useState<JourneyModel | null>(null)
   const [actualStep, setActualStep] = useState<StepModel | undefined>(undefined)
   const [actualStepsList, setActualStepsList] = useState<StepModel[]>([])
   const [journeyLog, setJourneyLog] = useState<JourneyLog | undefined>()
-
+  const [stepMessage, setStepMessage] = useState<string | null>(null)
 
   const handleSelected = async (selected:SearchItem) => {
-    setSelectedContainer(selected as ContainerModel)
+
     // get journey
     try {
       const journeyResp = await journeyApi.getJourneyByContainerNumber(selected.containerNumber)
       const journey = journeyResp.data
-
       setJourney(journey)
       if(journey && actualStep) {
-        const journeyLog = await journeyApi.getJourneyLog(journey, actualStep)
-        setJourneyLog(journeyLog.data)
-      }
-      else {
-        console.log('Error: there is no container with that number in this step')
+        if (actualStep.id === journey.step.id) {
+          setSelectedContainer(selected as ContainerModel)
+          const journeyLog = await journeyApi.getJourneyLog(journey, actualStep)
+          setJourneyLog(journeyLog.data)
+        }
+        else {
+          setSelectedContainer(null)
+          setStepMessage('There is no container with that number in this step')
+          setTimeout(() => {
+            setStepMessage(null)
+          }, 2000);          
+        }
       }
     } catch (error) {
       console.log("TODO: Error handling:", error)
@@ -167,6 +175,42 @@ export const Scale = () => {
         action: () => alert('To-do')}
     }>
       <MainContent className="main-content" sx={{ marginTop: 2 }}>
+        { stepMessage && 
+          <Alert severity="error" sx={{ marginBottom: 1 }}>
+            {t(stepMessage)}
+          </Alert>
+        }
+        { actualStep && 
+          <Box sx={{ display: 'flex', marginBottom: 2 }}>
+            <Avatar 
+              variant="square"
+              sx={{ 
+                marginRight: 1,
+                backgroundColor: theme.colors.primary.dark 
+              }}
+
+            >
+              <ScaleOutlined />
+            </Avatar>
+            { actualStep.routeName.includes('one') &&
+              <Typography 
+                variant='h3' 
+                color={theme.colors.primary.dark}
+              >
+                {t('Scale One')}
+              </Typography>
+            }
+            { actualStep.routeName.includes('two') &&
+              <Typography 
+                variant='h3' 
+                color={theme.colors.primary.dark}
+              >
+                {t('Scale Two')}
+              </Typography>
+            }
+          </Box>
+        }
+
         { selectedContainer && 
           <InfoContainer>
             <Typography variant="h4">
@@ -239,3 +283,5 @@ export const Scale = () => {
     </PageLayout>
   )
 }
+
+export default observer(Scale);

@@ -1,7 +1,7 @@
 
 import { useEffect, useState } from 'react';
 import { useTranslation } from "react-i18next";
-import { Card, Grid, Table, TableBody, TableCell, TableContainer, TableHead, 
+import { Avatar, Box, Card, Grid, Table, TableBody, TableCell, TableContainer, TableHead, 
   TableRow, Typography, useTheme
 } from "@mui/material"
 import FastForwardIcon from '@mui/icons-material/FastForward';
@@ -11,9 +11,9 @@ import { JourneyModel } from "@models/Journey/Journey";
 import { StepModel } from '@models/Step/Step';
 import { journeyApi } from '@services/api/journeyApi';
 import { MxStepStore, MxUserStore } from '@stores';
-import { stepApi } from '@services/api/stepApi';
 import { StepJourney } from '@models/Step/StepJourney';
 import { observer } from 'mobx-react';
+import { LocalShipping, Warehouse } from '@mui/icons-material';
 
 
 const Yard = () => {
@@ -25,17 +25,22 @@ const Yard = () => {
   const [actualStepsList, setActualStepsList] = useState<StepModel[]>([])  
 
   const handleSendToScale = async (journey:JourneyModel, step: StepModel) => {
-    const updData = {
-      journey: journey.id,
-      step: step.next,
-      value: "",
-      status: "IN_PROGRESS",
-      userId: user.id
+    if (user) {
+      const updData = {
+        journey: journey.id,
+        step: step.next,
+        value: "",
+        status: "IN_PROGRESS",
+        userId: user.id
+      }
+      if (actualStep) {
+        const journeysLeft = actualStep.journeys.filter(j => j.id !== journey.id)
+        setActualStep({ ...actualStep, journeys: journeysLeft })
+        await journeyApi.updateJourney(updData)
+      }      
     }
-    if (actualStep) {
-      const journeysLeft = actualStep.journeys.filter(j => j.id !== journey.id)
-      setActualStep({ ...actualStep, journeys: journeysLeft })
-      await journeyApi.updateJourney(updData)
+    else {
+
     }
   }
 
@@ -60,13 +65,32 @@ const Yard = () => {
     }>
 
       <Grid item xs={12}>
+        <Box sx={{ display: 'flex', marginBottom: 2 }}>
+          <Avatar 
+            variant="square"
+            sx={{ 
+              marginRight: 1,
+              backgroundColor: theme.colors.primary.dark 
+            }}
+
+          >
+              <Warehouse />
+          </Avatar>
+          <Typography variant='h3' color={theme.colors.primary.dark}>
+            On hold containers
+          </Typography>
+        </Box>
         <Card>
           <TableContainer>
             <Table>
               <TableHead>
                 <TableRow>
-                  <TableCell align="center">{t('Container number')}</TableCell>
-                  <TableCell align="center">{t('Actions')}</TableCell>
+                  <TableCell align="center" sx={{ color: theme.colors.primary.dark }}>
+                    {t('Container number')}
+                  </TableCell>
+                  <TableCell align="center" sx={{ color: theme.colors.primary.dark }}>
+                    {t('Actions')}
+                  </TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
