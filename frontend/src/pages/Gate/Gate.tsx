@@ -1,4 +1,6 @@
 import {
+  Alert,
+  Avatar,
   Box,
   Button,
   Card,
@@ -24,6 +26,8 @@ import { observer } from 'mobx-react';
 import { toJS } from "mobx";
 import { useLocation } from "react-router";
 import { StepModel } from "@models/Step/Step";
+import { LocalShipping, Warehouse } from "@mui/icons-material";
+import { green } from "@mui/material/colors";
 
 const MainContent = styled(Box)(
   () =>`
@@ -90,13 +94,20 @@ const Gate = () => {
   const handleJourney = async () => {
     if (MxUserStore.user) {
       const userId = MxUserStore.user.id
-      const created = await journeyApi.createJourney({ container, driver, step: actualStep, userId })
-      setFormMessage(t('New journey created.'))
-      setContainer(null)
-      setDriver(null)
-  
-      console.log("TODO: update driver's UI", created)
+      try {
+        const created = await journeyApi.createJourney({ container, driver, step: actualStep, userId })
+        setFormMessage(t('New journey created.'))
+        setContainer(null)
+        setDriver(null)
+        setTimeout(() => {
+          setFormMessage(undefined)
+        }, 2000)
+        
+        console.log("TODO: update driver's UI", created)
       
+      } catch (error) {
+        
+      }
     }
   }
 
@@ -125,7 +136,7 @@ const Gate = () => {
       seoTitle= {t('Gate')}
       title= {t('Gate')}
       buttonConfig= {{
-        visible: true, 
+        visible: false, 
         title: t('Create User'), 
         action: () => alert('To-do')}
       }>
@@ -139,7 +150,21 @@ const Gate = () => {
                 pb: 5
               }}
             >
-              <Box mb={2}>
+              { formMessage && 
+                <Alert severity="info">
+                  {t(formMessage)}
+                </Alert>
+              }
+              <Box mb={2} sx={{ display: 'flex' }}>
+                <Avatar 
+                  variant="square"
+                  sx={{ 
+                    bgcolor: theme.colors.primary.dark,
+                    marginRight: 1
+                  }}
+                >
+                  <LocalShipping />
+                </Avatar>
                 <Typography
                   variant="h2"
                   sx={{

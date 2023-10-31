@@ -2,7 +2,7 @@ import { SearchForm } from "@components/Search/SearchForm"
 import { SearchItem } from "@components/Search/useSearch"
 import { PageLayout } from "@layouts/Page/PageLayout"
 import { ContainerModel, JourneyLog } from "@models"
-import { Box, Button, Card, Checkbox, FormControlLabel, Grid, IconButton, Typography, styled, useTheme } from "@mui/material"
+import { Alert, Avatar, Box, Button, Card, Checkbox, FormControlLabel, Grid, IconButton, Typography, styled, useTheme } from "@mui/material"
 import { SyntheticEvent, useState, useEffect } from 'react';
 import { useTranslation } from "react-i18next"
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -14,6 +14,8 @@ import { MxStepStore, MxUserStore } from "@stores"
 import { StepModel } from "@models/Step/Step"
 import { toJS } from "mobx"
 import { JourneyModel } from "@models/Journey/Journey"
+import { ScaleOutlined } from "@mui/icons-material"
+import { green, grey } from "@mui/material/colors"
 
 const SearchContainer = styled(Box)(
   () => `
@@ -52,6 +54,7 @@ const ButtonsContainer = styled(Box)(
   () => `
     display: flex;
     flex-direction: row;
+    margin-bottom: 25px;
   `
 )
 
@@ -137,7 +140,6 @@ export const Check = () => {
           setErrorMsg(t(`Container ${selected.containerNumber} was not found in this step`))
           setSelectedContainer(null)
         }
-
       }
     } catch (error) {
       setErrorMsg(t('Container number not found at this step'))
@@ -238,7 +240,39 @@ export const Check = () => {
     }>
     <MainContent className="main-content" sx={{ marginTop: 2 }}>
       { errorMsg && 
-        <p>{errorMsg}</p>
+          <Alert severity="error" sx={{ marginBottom: 1 }}>
+            {t(errorMsg)}
+          </Alert>
+      }
+      { actualStep && 
+        <Box sx={{ display: 'flex', marginBottom: 2 }}>
+          <Avatar 
+            variant="square"
+            sx={{ 
+              marginRight: 1,
+              backgroundColor: theme.colors.primary.dark 
+            }}
+
+          >
+            <ScaleOutlined />
+          </Avatar>
+          { actualStep.routeName.includes('one') &&
+            <Typography 
+              variant='h3' 
+              color={theme.colors.primary.dark}
+            >
+              {t('Scale One')}
+            </Typography>
+          }
+          { actualStep.routeName.includes('two') &&
+            <Typography 
+              variant='h3' 
+              color={theme.colors.primary.dark}
+            >
+              {t('Scale Two')}
+            </Typography>
+          }
+        </Box>
       }
       { !selectedContainer &&
         <SearchContainer>
@@ -269,52 +303,76 @@ export const Check = () => {
       }
 
       { actualStep?.routeName === "check-one" &&
-        <ButtonsContainer>
-          <Typography variant="h4">
-            { title }
-          </Typography>
-          <Button onClick={() => handleType("load")}>
-            <FileUploadIcon />
-            {t('Load')}
-          </Button>
-          <Button onClick={() => handleType("unload")}>
-            <FileDownloadIcon />
-            {t('Unload')}
-          </Button>
-        </ButtonsContainer>
+        <>
+          <ButtonsContainer>
+            <Button 
+              onClick={() => handleType("load")}
+              sx={{ color: grey[700] }}
+            >
+              <FileUploadIcon />
+              {t('Load')}
+            </Button>
+            <Button 
+              onClick={() => handleType("unload")}
+              sx={{ color: grey[700] }}
+            >
+              <FileDownloadIcon />
+              {t('Unload')}
+            </Button>
+          </ButtonsContainer>
+          { selectedType && 
+            <Box sx={{ 
+              display: 'flex', 
+              color: green[700],
+              borderRadius: '5px',
+              }}
+            >
+              { selectedType === 'load' ? 
+                <FileUploadIcon />
+                :
+                <FileDownloadIcon />
+              }
+              <Typography variant="h4" sx={{ color: green[700] }}>
+                { title }
+              </Typography>
+            </Box>
+          }
+        </>
       }
 
       { selectedType === "load" && 
         <RevisionContainer>
-          <Typography variant="h3">
-            Revisión
-          </Typography>
-          { actualStep?.routeName === "check-one" ?
+          <Card sx={{ p: 2, mt: 1 }}>
+            <Typography variant="h3">
+              {t('Revision')}
+            </Typography>
+            { actualStep?.routeName === "check-one" ?
+              <FormControlLabel 
+                control={<Checkbox />} 
+                label={t("CT-PAT norm OK")}
+                name="ct-pat"
+                onChange={e => handleChecks(e)}
+              />
+            :
+              <FormControlLabel 
+                control={<Checkbox />} 
+                label={t("Stamp information OK")}
+                name="stamps"
+                onChange={e => handleChecks(e)}
+              />
+            }
             <FormControlLabel 
               control={<Checkbox />} 
-              label={t("CT-PAT norm OK")}
-              name="ct-pat"
+              label={t("Previous information OK")} 
+              name="previous"
               onChange={e => handleChecks(e)}
             />
-          :
-            <FormControlLabel 
-              control={<Checkbox />} 
-              label={t("Stamp information OK")}
-              name="stamps"
-              onChange={e => handleChecks(e)}
-            />
-          }
-          <FormControlLabel 
-            control={<Checkbox />} 
-            label={t("Previous information OK")} 
-            name="previous"
-            onChange={e => handleChecks(e)}
-          />
-          { buttonVisible &&  
-            <Button onClick={handleSubmit}>
-              {t("Continue")}
-            </Button>
-          }
+            { buttonVisible &&  
+              <Button onClick={handleSubmit}>
+                {t("Continue")}
+              </Button>
+            }
+          </Card>
         </RevisionContainer>
       }
     </MainContent>

@@ -22,8 +22,7 @@ const journeySchema = new mongoose.Schema({
   },
   step:{
     type: mongoose.Schema.Types.ObjectId,
-    ref: "Step",
-    required: true
+    ref: "Step"
   },
   status:{
     type: String,

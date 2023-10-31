@@ -8,6 +8,7 @@ import {
 import { Helmet } from 'react-helmet-async';
 import { useTranslation } from 'react-i18next';
 import { CreateUserForm } from '@components/CreateUserForm/CreateUserForm';
+import { PageLayout } from '@layouts/Page/PageLayout';
 
 const MainContent = styled(Box)(
   () => `
@@ -32,7 +33,13 @@ const CreateUser = () => {
   const { t } = useTranslation();
 
   return (
-    <>
+    <PageLayout
+    seoTitle={t('Users List')}
+    title={t('Users Management')}
+    buttonConfig={{
+      visible: false, 
+      title: t('Create User')
+    }}>
       <Helmet>
         <title>{t('Create User')}</title>
       </Helmet>
@@ -46,22 +53,12 @@ const CreateUser = () => {
                 pb: 3
               }}
             >
-              <Box>
-                <Typography
-                  variant="h2"
-                  sx={{
-                    mb: 1
-                  }}
-                >
-                  {t('Register User')}
-                </Typography>
-              </Box>
               <CreateUserForm />
             </Card>
           </Container>
         </TopWrapper>
       </MainContent>
-    </>
+    </PageLayout>
   );
 }
 

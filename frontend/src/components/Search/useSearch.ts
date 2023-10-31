@@ -3,23 +3,6 @@ import { searchApi } from "@services/api/searchApi"
 import { ChangeEvent, useState } from "react"
 import { useNavigate } from "react-router"
 
-const mockContainers:ContainerModel[] = [
-  { id: "1", containerNumber: "123" },
-  { id: "2", containerNumber: "234" },
-  { id: "3", containerNumber: "345" }
-]
-const mockDrivers:Driver[] = [
-  {
-    name: 'Fidel',
-    idDoc: "91",
-    email: "fidel@mail.com"
-  },
-  {
-    name: 'Juan',
-    idDoc: "92",
-    email: "juan@mail.com"
-  }
-]
 
 export type SearchItem = { [showData: string]: string }
 
