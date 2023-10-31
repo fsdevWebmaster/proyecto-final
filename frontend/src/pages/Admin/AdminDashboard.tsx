@@ -37,27 +37,6 @@ const MainContent = styled(Box)(
   `
 )
 
-const mockActiveJourneys: any[] = [
-  {
-    id: "65007586b6efe051c2e1217d",
-    driver: "65007586b6efe051c2e12170",
-    container: "65007586b6efe051c2e12171",
-    step: {
-      name: "Patio",
-      order: 2,
-      previous: "64f7a092eb2116cb79ca7445",
-      next: "64f7a18ceb2116cb79ca7449",
-      isActive: true,
-      id: "64f7a10aeb2116cb79ca7447"      
-    },
-    createDate: new Date("2023-09-19 17:01:05"),
-    containerNumber: "001",
-    driverDoc: "1111"
-  }
-]
-
-
-
 const AdminDashboard = () => {
   const { t } = useTranslation()
   const theme = useTheme();
@@ -67,6 +46,8 @@ const AdminDashboard = () => {
   }
   const stepId = MxJourneyStore.stepId;
   const { step } = useParams();
+  const [stepsData, setStepsData] = useState<StepData[]>([]);
+  const stepName = MxJourneyStore.stepName;
 
   interface StepData {
       driver: string,
@@ -79,19 +60,12 @@ const AdminDashboard = () => {
       id: string
   }
  
-  const [stepsData, setStepsData] = useState<StepData[]>([]);
-  const stepName = MxJourneyStore.stepName;
-console.log(stepName)
 
   useEffect(() => {
     if (step) {
       journeyApi.getStepJourneys(step)
         .then((response) => {
-          console.log(response);
           setStepsData(response.data);
-          console.log(response.data);
-          console.log(response.data.length);
-
         })
         .catch((error) => console.error('Error fetching data:', error));
     }

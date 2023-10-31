@@ -22,7 +22,6 @@ app.use('/api', containerRouter)
 
 // error handling
 app.use((err, req, res, next) => {
-  console.log('Received request:', req.url);
   let message = "Server error"
   
   if (

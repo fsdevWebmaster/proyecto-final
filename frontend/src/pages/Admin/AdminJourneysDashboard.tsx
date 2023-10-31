@@ -9,10 +9,6 @@ import { StepModel } from '@models/Step/Step';
 import { Link, useNavigate } from 'react-router-dom';
 import { MxJourneyStore } from '../../stores/JourneyStore';
 
-
-
-
-
 const MainContent = styled(Box)(
   () =>`
     height: 100%;
@@ -127,7 +123,7 @@ const AdminJourneysDashboard = () => {
                         <TableCell align="center">Step</TableCell>
                         <TableCell align="center">Containers</TableCell>
 
-                        <TableCell align="center">See Containers in step</TableCell>
+                        <TableCell align="center">See Containers in Station</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
