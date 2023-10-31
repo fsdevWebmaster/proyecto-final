@@ -267,6 +267,7 @@ export const getJourneyLogs = async (req, res, next) => {
     return next(error)
   }
 }
+
 export const getJourneyByDriverDocId = async (req, res, next) => {
   const { driverDocId } = req.params
   if (!driverDocId || driverDocId === ":driverDocId") {
@@ -278,6 +279,25 @@ export const getJourneyByDriverDocId = async (req, res, next) => {
       return next(new Error("Not found"))
     }
     return res.json({ journeyId: resp._id.toString() })
+  } catch (error) {
+    return next(error)
+  }
+}
+
+export const finishJourney = async (req, res, next) => {
+  const { journeyId, step, journeyLogId } = req.body
+  
+  if (!journeyId || !step || !journeyLogId) {
+    return next(new Error("Missing data"))
+  }
+  
+  try {
+    const journey = await Journey.findByIdAndUpdate(journeyId, { status: 'DONE' })
+    const journeyLog = await JourneyLog.findByIdAndUpdate(journeyLogId, { stepValue: true })
+    if (!journey || !journeyLog) {
+      return next(new Error("Not found"))
+    }
+    return res.json({ journeyFinished: true })
   } catch (error) {
     return next(error)
   }

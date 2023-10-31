@@ -14,16 +14,18 @@ import {
   getJourneyByDriver,
   journeyToUnload,
   getJourneyLogs,
-  getJourneyByDriverDocId
+  getJourneyByDriverDocId,
+  finishJourney
 } from "../controllers/journey.controller.js";
 
 journeyRouter.post('/journey', userAuthWithCookie, createJourney);
-journeyRouter.patch('/journey', /* userAuthWithCookie, */ updateJourney);
 journeyRouter.post('/journey-log', userAuthWithCookie, createJourneyLog);
-journeyRouter.patch('/journey-log', userAuthWithCookie, updateJourneyLog);
 journeyRouter.post('/journey-by-driver', userAuthWithCookie, getJourneyByDriver);
 journeyRouter.post('/journey-to-unload', userAuthWithCookie, journeyToUnload)
 journeyRouter.post('/find-journey-log', userAuthWithCookie, getJourneyLog);
+journeyRouter.post('/finish-journey', userAuthWithCookie, finishJourney);
+journeyRouter.patch('/journey', userAuthWithCookie, updateJourney);
+journeyRouter.patch('/journey-log', userAuthWithCookie, updateJourneyLog);
 journeyRouter.get('/step-journeys/:step', userAuthWithCookie, getStepJourneys);
 journeyRouter.get('/steps', userAuthWithCookie, getSteps);
 journeyRouter.get('/journey/:containerNumber', userAuthWithCookie, getJourneyByContainerNumber)

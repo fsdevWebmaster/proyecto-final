@@ -113,5 +113,5 @@ export const appPages: PagesStatus[] = [
     title: 'Set second container weight',
     svgPath: '/static/images/illustrations/handshake.svg',
     visible: false,
-  },      
+  }   
 ];

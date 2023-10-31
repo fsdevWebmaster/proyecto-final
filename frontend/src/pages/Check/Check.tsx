@@ -170,7 +170,7 @@ export const Check = () => {
             userId: user.id
           }
           try {
-            const resp = await journeyApi.journeyToUnload(postData)
+            await journeyApi.journeyToUnload(postData)
             resetValues()
           } catch (error) {
             console.log("TODO: Error handling ", error)
