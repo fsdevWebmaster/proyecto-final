@@ -267,7 +267,6 @@ export const getJourneyLogs = async (req, res, next) => {
     return next(error)
   }
 }
-
 export const getJourneyByDriverDocId = async (req, res, next) => {
   const { driverDocId } = req.params
   if (!driverDocId || driverDocId === ":driverDocId") {

@@ -10,9 +10,7 @@ class JourneyApi {
     }
 
     getStepJourneys = (step:string) => {
-      return axiosClient.get(`${this.controller}/step-journeys`, {
-        params: { step }
-      });
+      return axiosClient.get(`${this.controller}/step-journeys/${step}`)
     }
 
     createJourney(createData: any) {

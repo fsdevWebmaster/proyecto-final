@@ -98,7 +98,7 @@ export const routes: RouteObject[] = [
                 element: <Documentation />
               },
               {
-                path: 'admin-dashboard',
+                path: 'admin-dashboard/:step',
                 id: 'adminDashboard',
                 element: <AdminDashboard />
               },

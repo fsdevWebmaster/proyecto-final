@@ -1,20 +1,14 @@
-import { Table, Box,Card,Container,Typography,styled,Grid,TableCell,ListItemText,useTheme, stepClasses, TableRow, TableContainer, TableHead , TableBody } from '@mui/material'
-import OpenInNewIcon from '@mui/icons-material/OpenInNew';
+import { Table, Box,Card,Container,Typography,styled,Grid,TableCell,useTheme, TableRow, TableContainer, TableHead , TableBody } from '@mui/material'
+import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import { TableAction } from '@components/Tables/TableAction';
 import { Helmet } from 'react-helmet-async'
 import { useTranslation } from 'react-i18next'
+import { useEffect, useState } from 'react';
+import { stepApi } from '@services/api/stepApi';
+import { StepModel } from '@models/Step/Step';
+import { Link, useNavigate } from 'react-router-dom';
+import { MxJourneyStore } from '../../stores/JourneyStore';
 
-
-const mockJourneysContainers:any[] = [
-    { stepName: "Yard", containersCount: "3" },
-    { stepName: "Romana1", containersCount: "4" },
-    { stepName: "Check1", containersCount: "7" }
-  ]
-   
-// const journeyContainersSteps = () =>{
-//     let step = mockJourneysContainers.map(stepName) =>{
-        
-// }
 const MainContent = styled(Box)(
   () =>`
     height: 100%;
@@ -30,32 +24,62 @@ const TopWrapper = styled(Box)(
     width: 100%;
     flex: 1;
     padding: 20px
-  `
+    `
 )
 
 const AdminJourneysDashboard = () => {
-    const { t }: { t: any } = useTranslation();
-    const theme = useTheme();
-  
-    const tableHeaderOptions = {
-      btnTitle: 'Add Item',
-      onClickHandler: () => alert('custom implementation')
-    };
-    const headers = ['Step', 'Containers', 'Actions'];
+  const navigate = useNavigate();
+  const { t }: { t: any } = useTranslation();
+  const theme = useTheme();
 
-const tableActions = [
-  {
-    title: 'View',
-    clickHandler: () => {},
+  interface StepData {
+    step: {
+      id: string
+      name: string
+      url: string
+      order: number
+      previous: StepModel | string | null
+      next: StepModel | string | null
+      routeName: string
+      isActive: boolean
+    };
+    journeys: {
+      
+    }[];
+  }
+  const [stepsData, setStepsData] = useState<StepData[]>([]);
+
+  useEffect(() => {
+    stepApi.getSteps()
+      .then((response) => {
+        setStepsData(response.data);
+        console.log(response.data);
+        
+      })
+      .catch((error) => console.error('Error fetching data:', error));
+  }, []);
+
+  const handleTableActionClick = (stepId: string, stepName: string) => {
+    MxJourneyStore.setStepId(stepId); 
+    MxJourneyStore.setStepName(stepName); 
+    navigate(`/admin-dashboard/${stepId}`)
+    console.log("Stored stepId:", MxJourneyStore.stepId, "Stored stepName:", MxJourneyStore.stepName);
+
+  };
+  
+
+  const tableActions = stepsData.map((stepData) => ({
+    title: 'View Containers',
+    stepId: stepData.step.id,
     visible: true,
-    icon: <OpenInNewIcon fontSize="small" />,
+    icon: <NavigateNextIcon fontSize="small" />,
     colors: {
       background: theme.colors.primary.lighter,
       color: theme.palette.primary.main,
-    }
-  }
-];
+    },
+  }));
   
+
 
   return(
     <>
@@ -63,6 +87,7 @@ const tableActions = [
         <title>{t('Admin Journeys Dashboard')}</title>
       </Helmet>
       <MainContent>
+
         <TopWrapper>
           <Container maxWidth="sm">
             <Card
@@ -89,7 +114,7 @@ const tableActions = [
       </MainContent>
 
        {/* Table */}
-       <Grid item lg={8} md={6} xs={12}>
+       <Grid padding={2} item lg={8} md={6} xs={12}>
        <Card>
           <TableContainer>
             <Table>
@@ -98,42 +123,35 @@ const tableActions = [
                         <TableCell align="center">Step</TableCell>
                         <TableCell align="center">Containers</TableCell>
 
-                        <TableCell align="center">Actions</TableCell>
+                        <TableCell align="center">See Containers in Station</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                {mockJourneysContainers.map((mockJourneysContainer) => {
-                    return (
-                    <TableRow>
-                    <TableCell align='center'>
+                  {tableActions.map((action) => (
+                    <TableRow key={action.stepId}>
+                      <TableCell align='center'>
                         <Typography variant="h5" noWrap>
-                        {t( mockJourneysContainer.stepName)}
-                        </Typography>
-                    </TableCell>
-                    <TableCell align='center'>
-                        <Typography variant="h5" noWrap>
-                        {t( mockJourneysContainer.containersCount)}
-                        </Typography>
-                    </TableCell>
-                    <TableCell align="center">
-                        <Typography noWrap>
-                          {
-                            tableActions.map(action => (
-                              <TableAction
-                                title={action.title}
-                                key={`action-${action.title}`}
-                                clickHandler={action.clickHandler}
-                                icon={action.icon}
-                                colors={action.colors}
-                                visible={action.visible} />
-                            ))
-                          }
+                        {t(stepsData.find(stepData => stepData.step.id === action.stepId)?.step.name)}
                         </Typography>
                       </TableCell>
-
+                      <TableCell align='center'>
+                        <Typography variant="h5" noWrap>
+                        {t(stepsData.find(stepData => stepData.step.id === action.stepId)?.journeys.length)}
+                        </Typography>
+                      </TableCell>
+                      <TableCell align="center">
+                        <Typography noWrap>
+                            <TableAction
+                              title={action.title}
+                              icon={action.icon}
+                              colors={action.colors}
+                              visible={action.visible}
+                              clickHandler={(e) => handleTableActionClick(action.stepId, stepsData.find(stepData => stepData.step.id === action.stepId)?.step.name || '')}
+                            />
+                        </Typography>
+                      </TableCell>
                     </TableRow>
-                    )
-                })}
+                  ))}
                 </TableBody>
             </Table>
            </TableContainer>        
