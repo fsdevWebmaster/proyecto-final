@@ -212,6 +212,17 @@ export const getSteps = async (req, res, next) => {
   return res.json(stepsData)
 }
 
+export const getStations = async (req, res, next) => {
+  try {
+    const steps = await Step.find();
+    if (steps) {
+      return res.status(200).json(steps);
+    }
+  } catch (error) {
+    next();
+  }  
+}
+
 const stepJourneys = async (step) => {
   const journeys = await Journey.find({ step });
   return journeys
@@ -269,16 +280,18 @@ export const getJourneyLogs = async (req, res, next) => {
 }
 
 export const getJourneyByDriverDocId = async (req, res, next) => {
-  const { driverDocId } = req.params
-  if (!driverDocId || driverDocId === ":driverDocId") {
+  const { docId } = req.params;
+
+  if (!docId || docId.length === 0) {
     return next(new Error("Missing data"))
   }
+
   try {
-    const resp = await Journey.findOne({ driverDoc: driverDocId, status: { $in: ['ON_HOLD', 'IN_PROGRESS'] } }).exec()
+    const resp = await Journey.findOne({ driverDoc: docId, status: { $in: ['ON_HOLD', 'IN_PROGRESS'] } }).exec()
     if (!resp) {
-      return next(new Error("Not found"))
+      return next(new Error("Not found"));
     }
-    return res.json({ journeyId: resp._id.toString() })
+    return res.json({ journeyId: resp._id.toString() })    
   } catch (error) {
     return next(error)
   }

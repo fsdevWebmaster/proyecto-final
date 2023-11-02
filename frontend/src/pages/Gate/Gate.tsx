@@ -28,6 +28,8 @@ import { useLocation } from "react-router";
 import { StepModel } from "@models/Step/Step";
 import { LocalShipping, Warehouse } from "@mui/icons-material";
 import { green } from "@mui/material/colors";
+import useWS from "@hooks/useWS";
+import { PageHelper } from "@helpers/pageHelper";
 
 const MainContent = styled(Box)(
   () =>`
@@ -64,7 +66,8 @@ const Gate = () => {
   const { t } = useTranslation()
   const location = useLocation()
   const theme = useTheme();
-  const { stepsList, handleSteps } = MxStepStore
+  const { stepsList } = MxStepStore
+  const socket = useWS();
 
   const [container, setContainer] = useState<SearchItem | null>()
   const [driver, setDriver] = useState<SearchItem | null>()
@@ -102,34 +105,27 @@ const Gate = () => {
         setTimeout(() => {
           setFormMessage(undefined)
         }, 2000)
-        
+
+        if (created.data && socket) socket?.emit('journey:send_journey', { id: created.data.id});
         console.log("TODO: update driver's UI", created)
-      
       } catch (error) {
         
       }
     }
   }
 
-  
   useEffect(() => {
-    handleSteps()
-    const sList = toJS(stepsList)
-    let stpList:StepModel[] = []
-    const routeName = location.pathname
-    const actualStep = sList.find(item => {
-      stpList = [...stpList, item.step]
-      if (routeName.includes(item.step.routeName)) {
-        return item.step
+    const loadSteps = async () => {
+      if(stepsList.length === 0) {
+        const steps = await MxStepStore.handleSteps();
+        MxStepStore.setStepsList(steps.data);
+        const step = PageHelper.getStepInfoByRouteName(location.pathname, steps.data);
+        setActualStep(step?.step);
       }
-    })
-
-    if(sList && actualStep){
-      setActualStepsList(stpList)
-      setActualStep(actualStep.step)
-    }
-  }, [])
-  
+    };
+    
+    loadSteps();
+  }, [stepsList.length]);
 
   return (
     <PageLayout

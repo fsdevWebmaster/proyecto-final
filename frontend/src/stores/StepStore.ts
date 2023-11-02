@@ -1,27 +1,33 @@
-import { makeAutoObservable } from "mobx";
+import { makeAutoObservable, toJS } from "mobx";
 import { StepModel } from "@models/Step/Step";
 import { stepApi } from "@services/api/stepApi";
 import { JourneyModel } from "@models/Journey/Journey";
-
+import { Station } from "src/types/common";
 class StepStore {
-  stepsList: {
-    step: StepModel,
-    journeys: JourneyModel[]
-  }[] = []
+  stepsList: Station[] = [];
 
   constructor() {
-      makeAutoObservable(this);
+    makeAutoObservable(this);
   }
 
+  setStepsList(steps: Station[]) {
+    this.stepsList = steps;
+  }
+  
   async handleSteps() {
-    const steps = await stepApi.getSteps()
-    if(this) {
-      this.stepsList = steps.data
+    try {
+      return await stepApi.getSteps();
+    } catch (error) {
+      console.log(error);
     }
   }
 
-  setStepsList(items: []) {  
-    this.stepsList = items
+  async handleStepsForDriver() {
+    try {
+      return await stepApi.getStepsForDriver();
+    } catch (error) {
+      console.log(error);
+    }
   }
 }
 

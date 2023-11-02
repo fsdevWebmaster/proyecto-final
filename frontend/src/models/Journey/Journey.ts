@@ -7,4 +7,6 @@ export type JourneyModel = {
   step: StepModel
   containerNumber: string
   driverDoc: string
+  createdAt: Date
+  status: string
 }

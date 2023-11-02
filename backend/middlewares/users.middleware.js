@@ -14,6 +14,7 @@ export const userAuthWithBearer = (req, res, next) => {
         return res.status(401).json({ error: "Missing or invalid token" })
       }
       if (result) {
+        req.id = result.id;
         next()
       }
     })

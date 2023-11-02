@@ -1,14 +1,18 @@
 import express from 'express';
 import dotenv from 'dotenv';
-dotenv.config();
 import cors from 'cors';
+import http from 'http';
+import { Server } from 'socket.io';
 import { connectDB } from './database/config.js';
 import routes from './routes/app.routes.js';
 import journeyRouter from './routes/journey.routes.js';
 import containerRouter from './routes/container.routes.js';
-import { socketApp } from './socket-server.js';
+// import { socketApp } from './socket-server.js';
 import cookieParser from 'cookie-parser';
-export const app = express();
+import { initSocketEvents } from './socket/socketEvents.js';
+
+dotenv.config();
+const app = express();
 
 // cors - json
 app.use(cors());
@@ -17,8 +21,8 @@ app.use(cookieParser());
 
 // routes
 app.use('/api', routes);
-app.use('/api', journeyRouter)
-app.use('/api', containerRouter)
+app.use('/api', journeyRouter);
+app.use('/api', containerRouter);
 
 // error handling
 app.use((err, req, res, next) => {
@@ -51,9 +55,19 @@ connectDB()
     console.log("Error connection to mongo db.");
   });
 
-app.listen(process.env.LOCAL_PORT, () => {
-  console.log(`Api server listening at :${process.env.LOCAL_PORT}`);
-}); 
 
-// socket server
-socketApp
+const server = http.createServer(app);
+const io = new Server(server, {
+  cors: {
+    // origin: 'http://localhost:5173',
+    methods: ['GET', 'POST']
+  }
+});
+
+initSocketEvents(io);
+
+const PORT = process.env.LOCAL_PORT || 8000;
+
+server.listen(PORT, () => {
+  console.log(`Api server listening on Port: ${PORT}`);
+});

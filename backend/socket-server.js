@@ -2,6 +2,7 @@ import express from 'express'
 import { Server } from 'socket.io'
 import { getStep } from './utils/app.utils.js'
 import http from 'http'
+
 const app = express()
 const server = http.createServer(app)
 const io = new Server(server)
@@ -15,3 +16,6 @@ export const socketApp = server.listen(process.env.SOCKET_PORT, () => {
   })
   console.log(`Socket server listening at :${process.env.SOCKET_PORT}`);
 })
+
+
+

@@ -26,10 +26,10 @@ export default defineConfig({
       '/api': {
         target: 'http://localhost:8000'
       },
-      '/socket.io':
-      {
-        target: 'ws://localhost:5174',
-        ws: true,        
+      '/socket.io': {
+        target: 'http://localhost:8000',
+        changeOrigin: true,
+        ws: true,
       }
     },
   }

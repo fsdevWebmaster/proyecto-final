@@ -13,8 +13,12 @@ class StepApi {
       });      
     }
 
-    getSteps() {
+    getSteps(): Promise<any> {
       return axiosClient.get(`${this.controller}/steps`)
+    }
+
+    getStepsForDriver(): Promise<any> {
+      return axiosClient.get(`${this.controller}/steps-driver`)
     }
 }
 

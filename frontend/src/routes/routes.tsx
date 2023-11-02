@@ -10,6 +10,7 @@ import { RoleAuth } from '@components/Auth/RoleAuth';
 
 const Recovery = Loader(lazy(() => import('@components/LoginForm/RecoverPass')))
 const Layout = Loader(lazy(() => import('@layouts/Main/MainLayout')));
+const BasicLayout = Loader(lazy(() => import('@layouts/Basic/BasicLayout')));
 
 // Auth
 
@@ -47,10 +48,16 @@ export const routes: RouteObject[] = [
     element: <Status404 />
   },
   {
-    path: 'driver-dashboard',
-    id: 'driverDashboard',
-    element: <DriverDashboard />
-  },  
+    id: 'basic',
+    element: <BasicLayout />,
+    children: [
+      {
+        path: 'driver-dashboard',
+        id: 'driverDashboard',
+        element: <DriverDashboard />
+      }
+    ],
+  },
   {
     path: 'recover-password',
     id: 'recover',
