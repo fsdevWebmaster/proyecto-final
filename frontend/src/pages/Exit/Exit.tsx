@@ -1,12 +1,17 @@
 import { SearchForm } from "@components/Search/SearchForm"
 import { PageLayout } from "@layouts/Page/PageLayout"
 import { ContainerModel } from "@models"
-import { Box, Button, Card, IconButton, Typography, styled, useTheme } from "@mui/material"
-import { useState } from "react"
+import { Alert, Box, Button, Card, IconButton, Typography, styled, useTheme } from "@mui/material"
+import { useEffect, useState } from "react"
 import DeleteIcon from '@mui/icons-material/Delete';
 import { SearchItem } from "@components/Search/useSearch"
 import { useTranslation } from "react-i18next"
 import { JourneyModel } from "@models/Journey/Journey"
+import { MxStepStore } from "@stores"
+import { StepModel } from "@models/Step/Step"
+import { toJS } from "mobx"
+import { observer } from "mobx-react"
+import { journeyApi } from "@services/api/journeyApi"
 
 const MainContent = styled(Box)(
   () =>`
@@ -41,53 +46,86 @@ const InfoContainer = styled(Box)(
   `
 )
 
-const mockJourney = {
-  driver: "64dbeb400422576f15717ada",
-  container: "64dc0fe53ad970d6e4d9c951",
-  step: {
-    name: "Patio",
-    order: 2,
-    previous: "64f7a092eb2116cb79ca7445",
-    next: "64f7a18ceb2116cb79ca7449",
-    isActive: true,
-    id: "64f7a10aeb2116cb79ca7447"
-  },
-  containerNumber: "001",
-  driverDoc: "1111",
-  id: "65007586b6efe051c2e1217d"
-}
-
-const mockStep = {
-  name: "Exit",
-  order: 1,
-  previous: null,
-  next: "64f7a10aeb2116cb79ca7447",
-  isActive: true,
-  id: "64f7a092eb2116cb79ca7445"
-}
-
 export const Exit = () => {
-  const [selectedContainer, setSelectedContainer] = useState<ContainerModel | null>()
   const theme = useTheme()
   const {t} = useTranslation()
+  const { stepsList } = MxStepStore
+  
+  const [selectedContainer, setSelectedContainer] = useState<ContainerModel | null>()
+  const [actualStep, setActualStep] = useState<StepModel | undefined>(undefined)
+  const [actualStepsList, setActualStepsList] = useState<StepModel[]>([])
+  const [journey, setJourney] = useState<JourneyModel | null>(null)
+  const [stepMsg, setStepMsg] = useState<string | null>(null)
 
-  const handleSelected = (selected:SearchItem) => {
+
+  const handleSelected = async (selected:SearchItem) => {
     setSelectedContainer(selected as ContainerModel)
+    try {
+      const resp = await journeyApi.getJourneyByContainerNumber(selected.containerNumber)
+      setJourney(resp.data)
+    } catch (error) {
+      setStepMsg('Error: no journey found.')
+      setSelectedContainer(null)
+      setTimeout(() => {
+        setStepMsg(null)
+      }, 2000)
+    }
   }
 
   const deleteSelected = () => {
     setSelectedContainer(null)
   }
 
-  const handleFinished = () => { 
-    const patchData = {
-      journeyId: mockJourney.id,
-      step: mockStep.id,
-      value: null
+  const handleFinished = async () => { 
+    if (journey && actualStep) {
+      const respLog  = await journeyApi.getJourneyLog(journey, actualStep)
+      const journeyLog = respLog.data
+      const patchData = {
+        journeyId: journey.id,
+        step: actualStep.id,
+        journeyLogId: journeyLog.id
+      }
+      const respFinish = await journeyApi.finishJourney(patchData)
+      if (respFinish) {
+        setStepMsg("Journey finished ok.")
+        setSelectedContainer(null)
+        setTimeout(() => {
+          setStepMsg(null)
+        }, 2000)
+      }
+      else {
+        setStepMsg("Server error.")
+        setSelectedContainer(null)
+        setTimeout(() => {
+          setStepMsg(null)
+        }, 2000)
+      }
     }
-
-    console.log("TODO: Patch to /journey", patchData)
+    else {
+      setStepMsg("Error: No journey or actual step found.")
+      setSelectedContainer(null)
+      setTimeout(() => {
+        setStepMsg(null)
+      }, 2000)
+    }
   }
+
+  useEffect(() => {
+    const sList = toJS(stepsList)
+    let stpList:StepModel[] = []
+    const routeName = location.pathname
+    const actualStep = sList.find(item => {
+      stpList = [...stpList, item.step]
+      if (routeName.includes(item.step.routeName)) {
+        return item.step
+      }
+    })
+
+    if(sList && actualStep){
+      setActualStepsList(stpList)
+      setActualStep(actualStep.step)
+    }    
+  }, [])  
 
   return (
     <PageLayout
@@ -99,6 +137,15 @@ export const Exit = () => {
         action: () => alert('To-do')}
     }>
       <MainContent className="main-content" sx={{ marginTop: 2 }}>
+        { stepMsg && 
+          <>
+            { stepMsg.includes("Error") ? 
+                <Alert severity="error">{ stepMsg }</Alert>
+              :
+                <Alert>{ stepMsg }</Alert>
+            } 
+          </>
+        }
         { selectedContainer && 
           <InfoContainer>
             <Typography variant="h4">
@@ -128,10 +175,12 @@ export const Exit = () => {
         }
         { selectedContainer &&
           <Button onClick={handleFinished}>
-            {t('Finished')}
+            {t('Finish journey')}
           </Button>
         }
       </MainContent>
     </PageLayout>
   )
 }
+
+export default observer(Exit)
