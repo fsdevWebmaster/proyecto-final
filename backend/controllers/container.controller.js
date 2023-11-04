@@ -21,8 +21,7 @@ export const getContainers = (req, res, next) => {
     });
 }
 
-
-export const updateContainer = (req, res) => {
+export const updateContainer = (req, res, next) => {
   const { id } = req.params
   const { containerNumber } = req.body
   Container.findById(id)
@@ -35,7 +34,8 @@ export const updateContainer = (req, res) => {
           return res.status(500).json({ error })
         });
       }).catch((error) => {
-          });
+        next(error)
+      });
 }
 
 export const containerByNumber = (req, res, next) => {

@@ -6,7 +6,8 @@
   "main": "server.js",
   "scripts": {
     "dev": "nodemon server.js",
-    "start": "node server.js"
+    "start": "node server.js",
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --watchAll"
   },
   "author": "Francisco Jiménez - José Manuel Zúñiga - Fidel Silva - David Calderón",
   "license": "ISC",
@@ -20,5 +21,9 @@
     "mongoose": "^7.3.1",
     "nodemon": "^2.0.22",
     "socket.io": "^4.7.2"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "supertest": "^6.3.3"
   }
 }
