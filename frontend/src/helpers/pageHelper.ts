@@ -1,10 +1,16 @@
 import { Role, rolePermissions } from "@models/Role/Role";
-import { PagesStatus, appPages } from "../types/common";
+import { PagesStatus, Station, appPages } from "../types/common";
+import { StepModel } from "@models/Step/Step";
 
 export class PageHelper {
   static findPageByPath(path: string) {
     const currentPage = path.replace('/', '');
     return appPages.find(page => page.path === currentPage);
+  }
+
+  static getStepInfoByRouteName(path: string, steps: Station[]): Station | undefined {
+    const currentPage = path.replace('/', '');
+    return steps.find(step => step.step.routeName === currentPage);
   }
 
   static allowedPagesByUserRoles(roles: Role[]) {

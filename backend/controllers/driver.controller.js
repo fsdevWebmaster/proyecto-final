@@ -1,4 +1,5 @@
 import Driver from '../models/driver.model.js';
+import { getToken } from '../utils/app.utils.js';
 
 export const newDriver = (req, res) => {
     const newDriver = new Driver(req.body)  
@@ -31,6 +32,7 @@ export const getDriver = (req, res) => {
 
   export const searchDriver = (req, res) => {
     const { idDoc } = req.params;
+
     if (!idDoc) {
       return res.status(500).json({ TODO: "Search error" })
     }
@@ -62,6 +64,41 @@ export const getDriver = (req, res) => {
           });
       }).catch((err) => {
         
+      });
+  }
+
+  export const loginDriver = async (req, res, next) => {
+    let { body } = req;
+
+    const { idDoc } = body;
+
+    if (!idDoc) {
+      next(new Error("Missing data"));
+    }
+
+    Driver.find({ idDoc })
+      .then((result) => {
+        const driverFound = result[0];
+
+        if(!driverFound) {
+          next(new Error("Driver not found"))
+        }
+
+        // generate jwt
+        const payload = {
+          driver: driverFound
+        }
+
+        const maxAge = 6 * 60 * 60; // 6 hours
+        const token = getToken(payload, maxAge);
+
+        return res.json(
+          {
+            token
+          }
+        );
+      }).catch((err) => {
+        next(err);
       });
   }
   

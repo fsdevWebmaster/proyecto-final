@@ -8,4 +8,5 @@ export * from './LoginForm/RecoverPass'
 export * from './Auth/Authorization';
 export * from './PageHeader/PageHeader';
 export * from './PageTitleWrapper/PageTitleWrapper';
+export * from './ColorLibStepIcon/ColorLibStepIcon';
 export * from './App';

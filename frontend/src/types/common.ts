@@ -1,3 +1,6 @@
+import { JourneyModel } from "@models/Journey/Journey";
+import { StepModel } from "@models/Step/Step";
+
 export type Status = 'error' | 'warning' | 'success' | 'secondary';
 
 export type PagesStatus = {
@@ -7,6 +10,11 @@ export type PagesStatus = {
   svgPath: string;
   visible: boolean;
 };
+
+export type Station = {
+  step: StepModel,
+  journeys?: JourneyModel[],
+}
 
 export const appPages: PagesStatus[] = [
   {

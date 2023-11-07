@@ -1,18 +1,20 @@
-import React from 'react';
-import { Link as RouterLink } from 'react-router-dom';
+import React, { useCallback, useEffect, useState } from 'react';
 import {
   Box,
   Card,
   Typography,
   Container,
   styled,
-  Avatar
+  Avatar,
+  useTheme
 } from '@mui/material';
 import { Helmet } from 'react-helmet-async';
 import { LoginForm } from '@components'
 import { useTranslation } from 'react-i18next';
-import CardItem from '@components/Cards/CardItem';
-import EmojiTransportationIcon from '@mui/icons-material/EmojiTransportation';
+import AssignmentIndIcon from '@mui/icons-material/AssignmentInd';
+import LocalShippingIcon from '@mui/icons-material/LocalShipping';
+import { MxLoginStore } from '@stores';
+import { LoginDriver } from '@components/LoginForm/LoginDriver';
 
 const CardImg = styled(Card)(
   ({ theme }) => `
@@ -33,21 +35,13 @@ const CardImg = styled(Card)(
 `
 );
 
-const BottomWrapper = styled(Box)(
-  ({ theme }) => `
-    padding: ${theme.spacing(3)};
-    display: flex;
-    align-items: center;
-    justify-content: center;
-`
-);
-
 const MainContent = styled(Box)(
-  () => `
+  ({ theme }) => `
     height: 100%;
     display: flex;
     flex: 1;
     flex-direction: column;
+    background: ${theme.colors.gradients.blue3};
 `
 );
 
@@ -60,18 +54,55 @@ const TopWrapper = styled(Box)(
 `
 );
 
-const AvatarLogin = styled(Avatar)(
+const AvatarPrimary = styled(Avatar)(
   ({ theme }) => `
-      background-color: ${theme.colors.success.main};
-      color: ${theme.palette.primary.contrastText};
+      background-color: ${theme.colors.primary.main};
+      color: ${theme.palette.getContrastText(theme.colors.primary.main)};
       width: ${theme.spacing(8)};
       height: ${theme.spacing(8)};
-      box-shadow: ${theme.colors.shadows.success};
+      box-shadow: ${theme.colors.shadows.primary};
+`
+);
+
+const AvatarWarning = styled(Avatar)(
+  ({ theme }) => `
+      background-color: ${theme.colors.warning.main};
+      color:  ${theme.palette.primary.contrastText};
+      width: ${theme.spacing(8)};
+      height: ${theme.spacing(8)};
+      box-shadow: ${theme.colors.shadows.warning};
 `
 );
 
 const Login = () => {
   const { t } = useTranslation();
+  const theme = useTheme();
+  const [AmIUser, setImUser] = useState(false);
+  const [AmIDriver, setImDriver] = useState(false);
+  const [title, setTitle] = useState(null);
+  const date = new Date();
+
+  const handleUser = useCallback(() => {
+    setImUser(!AmIUser);
+    setImDriver(false);
+    setTitle(t('User'));
+  }, [AmIUser, title]);
+
+  const handleDriver = useCallback(() => {
+    setImDriver(!AmIDriver);
+    setImUser(false);
+    setTitle(t('Driver'));
+  }, [AmIDriver, title]);
+
+  useEffect(() => {
+    // Reset user authentication
+    MxLoginStore.resetAuth();
+    MxLoginStore.setSession(null, false);  
+  }, []);
+
+  useEffect(() => {
+    if (!AmIDriver && !AmIUser) setTitle(null);
+  }, [AmIDriver, AmIUser]);
 
   return (
     <>
@@ -80,30 +111,60 @@ const Login = () => {
       </Helmet>
       <MainContent>
         <TopWrapper>
-          <Container maxWidth="sm">
+          <Container maxWidth="sm" sx={{
+            display: 'flex',
+            justifyContent: 'center',
+            flexDirection: 'column',
+            alignItems: 'center',
+            minWidth: 200,
+          }}>
             <Card
+              className='Login'
               sx={{
                 mt: 3,
+                mb: 3,
                 px: 4,
                 pt: 5,
-                pb: 3
+                pb: 5,
+                width: 'inherit'
               }}
             >
-              <Box display="flex" alignItems="center" flexDirection="row" justifyContent="space-between">
-                <Typography
-                  variant="h2"
-                  sx={{
-                    mb: 1
-                  }}
-                >
-                  {t('hello')}
-                </Typography>
-                  <AvatarLogin variant='rounded'>
-                    <EmojiTransportationIcon fontSize="large"/>
-                  </AvatarLogin>
+              <Typography
+                variant="h2"
+                sx={{
+                  mb: 1,
+                  textAlign: 'center'
+                }}
+              >
+                {t('Login {{as}}', {as: title})}
+              </Typography>              
+              <Box
+                display="flex"
+                width={1}
+                alignItems="center"
+                justifyContent="space-around"
+                sx={{
+                  '& .MuiAvatar-root': {
+                    transition: 'transform .5s ease-in',
+                    ':hover': {
+                      transform: 'scale(1.2)',
+                    }
+                  }
+                }}
+              >
+                <AvatarPrimary variant='rounded' alt={t('Login as User')} onClick={handleUser} sx={{ cursor: 'pointer', display: 'flex', flexDirection: 'column'}}>
+                  <AssignmentIndIcon fontSize="large"/>
+                  <Typography>{t('User')}</Typography>
+                </AvatarPrimary>
+                <AvatarWarning variant='rounded' alt={t('Login as Driver')} onClick={handleDriver} sx={{ cursor: 'pointer', display: 'flex', flexDirection: 'column'}}>
+                  <LocalShippingIcon fontSize="large"/>
+                  <Typography>{t('Driver')}</Typography>
+                </AvatarWarning>                
               </Box>
-              <LoginForm />
+              {AmIUser && <LoginForm />}
+              {AmIDriver && <LoginDriver />}
             </Card>
+            <Typography color={theme.colors.info.light} mt={5}>{t(`Copyright FFJD, ${date.getFullYear()}`)}</Typography>
           </Container>
         </TopWrapper>
       </MainContent>

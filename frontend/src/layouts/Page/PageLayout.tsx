@@ -1,17 +1,18 @@
 import React, { ReactNode } from 'react';
 import { PageHeader, PageTitleWrapper } from '@components'
 import { Button, Grid } from '@mui/material';
-import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
 import { Helmet } from 'react-helmet-async';
 import { IPageHeaderProps } from '@common/interfaces';
 
 interface IPageLayoutProps extends IPageHeaderProps {
   children?: ReactNode;
   seoTitle: string;
-  buttonConfig: {
+  icon?: React.ReactNode;
+  buttonConfig?: {
     visible: boolean;
     action?: (ev: React.MouseEvent<HTMLButtonElement>) => void;
     title?: string;
+    icon?: React.ReactNode;
   }
 }
 
@@ -22,16 +23,37 @@ export const PageLayout = ({ children, seoTitle, title, subtitle, icon, buttonCo
         <title>{seoTitle}</title>
       </Helmet>
       <PageTitleWrapper>
-        <PageHeader title={title} subtitle={subtitle} icon={icon}/>
+        <PageHeader title={title} subtitle={subtitle} icon={icon} sx={{
+          '& .lineUp': {
+            animation: '3s anim-lineUp ease-out',
+          },
+          '@keyframes anim-lineUp': {
+            "0%": {
+              opacity: 0,
+              transform: 'translateY(80%)',
+            },
+            "20%": {
+              opacity: 0,
+            },
+            "50%": {
+              opacity: 1,
+              transform: 'translateY(0%)',
+            },
+            "100%": {
+              opacity: 1,
+              transform: 'translateY(0%)',
+            }
+          }
+        }} />
 
-        {buttonConfig.visible && (
+        {buttonConfig?.visible && (
           <Button
             sx={{
               mt: { xs: 0 }
             }}
             onClick={buttonConfig.action}
             variant="contained"
-            startIcon={<AddTwoToneIcon fontSize="small" />}
+            startIcon={buttonConfig.icon || undefined}
           >
             {buttonConfig.title}
           </Button>
