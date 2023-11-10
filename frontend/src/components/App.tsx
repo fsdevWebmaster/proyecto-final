@@ -6,6 +6,7 @@ import { SnackbarProvider } from 'notistack';
 import { routes } from '../routes/routes';
 import '@helpers/i18n';
 import { ErrorBoundary } from './ErrorBoundary';
+import { BaseDialog } from './Dialog/BaseDialog';
 
 export const App = () => {
   const content = useRoutes(routes);

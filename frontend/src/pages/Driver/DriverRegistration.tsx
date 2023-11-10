@@ -1,3 +1,4 @@
+import React, { MouseEvent, useCallback, useState } from 'react';
 import {
   Box,
   Card,
@@ -8,6 +9,8 @@ import {
 import { Helmet } from "react-helmet-async";
 import { useTranslation } from "react-i18next";
 import { DriverRegistrationForm } from "@components/DriverRegistrationForm/DriverRegistrationForm";
+import { ButtonConfig } from '@common/interfaces';
+import { CustomDialog } from '@components/Dialog/CustomDialog';
 
 const MainContent = styled(Box)(
   () => `
@@ -30,6 +33,21 @@ const TopWrapper = styled(Box)(
 const DriverRegistration = () => {
 
   const { t } = useTranslation();
+  const [openDialog, setOpenDialog] = useState(false);
+
+  const handleDialog =  useCallback(() => {
+    setOpenDialog(!openDialog);
+  }, []);
+
+  const dialogButtons: ButtonConfig[] = [
+    {
+      action: (ev: MouseEvent<HTMLButtonElement>) => {
+        ev.preventDefault();
+        handleDialog();
+      },
+      title: t('Cerrar'),
+    }
+  ];   
 
   return(
     <>
@@ -56,10 +74,16 @@ const DriverRegistration = () => {
                   {t('Driver Registration')}
                 </Typography>
               </Box>
-              <DriverRegistrationForm />
+              <DriverRegistrationForm modalAction={handleDialog} />
             </Card>
           </Container>
         </TopWrapper>
+        <CustomDialog
+          isOpen={openDialog}
+          type="success"
+          header={t('Nuevo chofer ingresado al sistema')}
+          configBtn={dialogButtons}
+        />
       </MainContent>
     </>
   )

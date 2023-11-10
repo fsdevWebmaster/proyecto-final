@@ -1,3 +1,4 @@
+import React, { MouseEvent } from 'react';
 import {
   Alert,
   Avatar,
@@ -8,28 +9,24 @@ import {
   IconButton,
   Typography,
   styled,
-  useTheme
+  useTheme,
 } from "@mui/material";
 import DeleteIcon from '@mui/icons-material/Delete';
-
-import { Helmet } from "react-helmet-async";
 import { useTranslation } from "react-i18next";
-import { GateForm } from "@components/GateForm/GateForm";
 import { SearchForm } from "@components/Search/SearchForm";
-import { ContainerModel } from "@models/Container/Container";
 import { useEffect, useState } from "react";
-import { SearchItem, useSearch } from "@components/Search/useSearch";
+import { SearchItem } from "@components/Search/useSearch";
 import { PageLayout } from "@layouts/Page/PageLayout";
 import { journeyApi } from "@services/api/journeyApi";
-import { MxJourneyStore, MxStepStore, MxUserStore } from "@stores";
+import { MxStepStore, MxUserStore } from "@stores";
 import { observer } from 'mobx-react';
-import { toJS } from "mobx";
 import { useLocation } from "react-router";
 import { StepModel } from "@models/Step/Step";
-import { LocalShipping, Warehouse } from "@mui/icons-material";
-import { green } from "@mui/material/colors";
+import { LocalShipping } from "@mui/icons-material";
 import useWS from "@hooks/useWS";
 import { PageHelper } from "@helpers/pageHelper";
+import { CustomDialog } from "@components/Dialog/CustomDialog";
+import { ButtonConfig } from '@common/interfaces';
 
 const MainContent = styled(Box)(
   () =>`
@@ -73,11 +70,25 @@ const Gate = () => {
   const [driver, setDriver] = useState<SearchItem | null>()
   const [formMessage, setFormMessage] = useState<string | undefined>(undefined)
   const [actualStep, setActualStep] = useState<StepModel | undefined>(undefined)
-  const [actualStepsList, setActualStepsList] = useState<StepModel[]>([])
+  const [openDialog, setOpenDialog] = useState(false);
 
   const handleContainer = (item:SearchItem) => {
     setContainer(item)
   }
+
+  const handleDialog = () => {
+    setOpenDialog(!openDialog);
+  }
+
+  const dialogButtons: ButtonConfig[] = [
+    {
+      action: (ev: MouseEvent<HTMLButtonElement>) => {
+        ev.preventDefault();
+        handleDialog();
+      },
+      title: t('Cerrar'),
+    }
+  ];
 
   const handleDriver = (item:SearchItem) => {
     setDriver(item)
@@ -107,9 +118,9 @@ const Gate = () => {
         }, 2000)
 
         if (created.data && socket) socket?.emit('journey:send_journey', { id: created.data.id});
-        console.log("TODO: update driver's UI", created)
+        handleDialog();
       } catch (error) {
-        
+        console.error(error)
       }
     }
   }
@@ -225,7 +236,13 @@ const Gate = () => {
             </Card>
           </Container>
         </TopWrapper>
-      </MainContent>      
+      </MainContent>
+      <CustomDialog
+        isOpen={openDialog}
+        type="success"
+        header={t('Ha iniciado el flujo del contenedor')}
+        configBtn={dialogButtons}
+      />
     </PageLayout>
   )
 }
