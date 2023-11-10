@@ -6,3 +6,7 @@ export interface IPageHeaderProps {
   icon?: React.ReactNode;
   sx?: SxProps;
 }
+
+export interface IContainerFormProps {
+  modalAction: () => void;
+}

@@ -1,3 +1,4 @@
+import React, { MouseEvent } from 'react';
 import { SearchForm } from "@components/Search/SearchForm"
 import { SearchItem } from "@components/Search/useSearch"
 import { PageLayout } from "@layouts/Page/PageLayout"
@@ -16,6 +17,8 @@ import { toJS } from "mobx"
 import { JourneyModel } from "@models/Journey/Journey"
 import { ScaleOutlined } from "@mui/icons-material"
 import { green, grey } from "@mui/material/colors"
+import { CustomDialog } from "@components/Dialog/CustomDialog"
+import { ButtonConfig } from "@common/interfaces"
 
 const SearchContainer = styled(Box)(
   () => `
@@ -83,6 +86,7 @@ export const Check = () => {
   const [selectedContainer, setSelectedContainer] = useState<ContainerModel | null>()
   const [selectedType, setSelectedType] = useState<string | null>(null)
   const [ctPat, setCtPat] = useState(false)
+  const [openDialog, setOpenDialog] = useState(false);
   const [ctPatChecked, setCtPatChecked] = useState(false)
   const [previousOk, setPreviousOk] = useState(false)
   const [stamps, setStamps] = useState(false)
@@ -196,6 +200,20 @@ export const Check = () => {
     }
   }
 
+  const handleDialog = () => {
+    setOpenDialog(!openDialog);
+  }
+
+  const dialogButtons: ButtonConfig[] = [
+    {
+      action: (ev: MouseEvent<HTMLButtonElement>) => {
+        ev.preventDefault();
+        handleDialog();
+      },
+      title: t('Cerrar'),
+    }
+  ];  
+
   const handleSubmit = async () => {
     if (journey && actualStep && MxUserStore.user) {
       let patchData:CheckData = {
@@ -216,6 +234,7 @@ export const Check = () => {
         break;      
       }
       await journeyApi.updateJourney(patchData)
+      handleDialog();
       resetValues()
     }
   }
@@ -376,6 +395,12 @@ export const Check = () => {
         </RevisionContainer>
       }
     </MainContent>
+    <CustomDialog
+        isOpen={openDialog}
+        type="success"
+        header={t('Datos del contenedor actualizados')}
+        configBtn={dialogButtons}
+      />    
     </PageLayout>
   )
 }

@@ -89,7 +89,7 @@ export const CustomDialog = ({isOpen, type, configBtn, onCloseHandler, header}: 
             py: 4,
             px: 6
           }}
-          variant="h3"
+          variant="h4"
         >
           {header}
         </Typography>
@@ -97,7 +97,7 @@ export const CustomDialog = ({isOpen, type, configBtn, onCloseHandler, header}: 
         <Box display="flex" className="btn-container" width={1} justifyContent="flex-end">
           {configBtn.map((btn: ButtonConfig, index: number) => (
             <Button
-              size='large'
+              size='medium'
               onClick={btn.action}
               key={`btn-${index}`}
               sx={btn.sx}
