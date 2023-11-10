@@ -1,5 +1,5 @@
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, MouseEvent } from 'react';
 import { useTranslation } from "react-i18next";
 import { Avatar, Box, Card, Grid, Table, TableBody, TableCell, TableContainer, TableHead, 
   TableRow, Typography, useTheme
@@ -14,6 +14,8 @@ import { MxStepStore, MxUserStore } from '@stores';
 import { StepJourney } from '@models/Step/StepJourney';
 import { observer } from 'mobx-react';
 import { LocalShipping, Warehouse } from '@mui/icons-material';
+import { ButtonConfig } from '@common/interfaces';
+import { CustomDialog } from '@components/Dialog/CustomDialog';
 
 
 const Yard = () => {
@@ -22,7 +24,23 @@ const Yard = () => {
   const { stepsList } = MxStepStore
   const { user } = MxUserStore
   const [actualStep, setActualStep] = useState<StepJourney | undefined>(undefined)
-  const [actualStepsList, setActualStepsList] = useState<StepModel[]>([])  
+  const [actualStepsList, setActualStepsList] = useState<StepModel[]>([])
+  const [openDialog, setOpenDialog] = useState(false);
+
+
+  const handleDialog = () => {
+    setOpenDialog(!openDialog);
+  }
+
+  const dialogButtons: ButtonConfig[] = [
+    {
+      action: (ev: MouseEvent<HTMLButtonElement>) => {
+        ev.preventDefault();
+        handleDialog();
+      },
+      title: t('Cerrar'),
+    }
+  ];
 
   const handleSendToScale = async (journey:JourneyModel, step: StepModel) => {
     if (user) {
@@ -37,6 +55,7 @@ const Yard = () => {
         const journeysLeft = actualStep.journeys.filter(j => j.id !== journey.id)
         setActualStep({ ...actualStep, journeys: journeysLeft })
         await journeyApi.updateJourney(updData)
+        handleDialog();
       }      
     }
     else {
@@ -115,6 +134,12 @@ const Yard = () => {
           </TableContainer>
         </Card>      
       </Grid>
+      <CustomDialog
+        isOpen={openDialog}
+        type="success"
+        header={t('Contenedor movido a la siguiente estación')}
+        configBtn={dialogButtons}
+      />      
     </PageLayout>
   )
 }

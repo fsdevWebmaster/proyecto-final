@@ -1,3 +1,4 @@
+import React, { MouseEvent } from 'react';
 import { SearchForm } from "@components/Search/SearchForm"
 import { PageLayout } from "@layouts/Page/PageLayout"
 import { Alert, Avatar, Box, Button, Card, Grid, IconButton, TextField, Typography, styled, useTheme } from "@mui/material"
@@ -14,6 +15,8 @@ import { MxStepStore, MxUserStore } from "@stores";
 import { toJS } from "mobx";
 import { ScaleOutlined } from "@mui/icons-material";
 import { observer } from "mobx-react";
+import { CustomDialog } from '@components/Dialog/CustomDialog';
+import { ButtonConfig } from '@common/interfaces';
 
 const MainContent = styled(Box)(
   () =>`
@@ -65,6 +68,7 @@ export const Scale = () => {
   const [actualStepsList, setActualStepsList] = useState<StepModel[]>([])
   const [journeyLog, setJourneyLog] = useState<JourneyLog | undefined>()
   const [stepMessage, setStepMessage] = useState<string | null>(null)
+  const [openDialog, setOpenDialog] = useState(false);
 
   const handleSelected = async (selected:SearchItem) => {
 
@@ -133,9 +137,24 @@ export const Scale = () => {
         await journeyApi.updateJourney(patchData)
         setSelectedContainer(null)
         setSelectedWeight(null)
+        handleDialog();
       }
     }
   }
+
+  const handleDialog = () => {
+    setOpenDialog(!openDialog);
+  }
+
+  const dialogButtons: ButtonConfig[] = [
+    {
+      action: (ev: MouseEvent<HTMLButtonElement>) => {
+        ev.preventDefault();
+        handleDialog();
+      },
+      title: t('Cerrar'),
+    }
+  ];
 
   useEffect(() => {
     const sList = toJS(stepsList)
@@ -280,6 +299,12 @@ export const Scale = () => {
           </InfoContainer>
         }
       </MainContent>
+      <CustomDialog
+        isOpen={openDialog}
+        type="success"
+        header={t('Datos del contenedor actualizados')}
+        configBtn={dialogButtons}
+      />      
     </PageLayout>
   )
 }

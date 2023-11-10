@@ -1,3 +1,4 @@
+import React, { MouseEvent } from 'react';
 import { SearchForm } from "@components/Search/SearchForm"
 import { PageLayout } from "@layouts/Page/PageLayout"
 import { ContainerModel } from "@models"
@@ -12,6 +13,8 @@ import { StepModel } from "@models/Step/Step"
 import { toJS } from "mobx"
 import { observer } from "mobx-react"
 import { journeyApi } from "@services/api/journeyApi"
+import { CustomDialog } from '@components/Dialog/CustomDialog';
+import { ButtonConfig } from '@common/interfaces';
 
 const MainContent = styled(Box)(
   () =>`
@@ -56,6 +59,7 @@ export const Exit = () => {
   const [actualStepsList, setActualStepsList] = useState<StepModel[]>([])
   const [journey, setJourney] = useState<JourneyModel | null>(null)
   const [stepMsg, setStepMsg] = useState<string | null>(null)
+  const [openDialog, setOpenDialog] = useState(false);
 
 
   const handleSelected = async (selected:SearchItem) => {
@@ -75,6 +79,10 @@ export const Exit = () => {
   const deleteSelected = () => {
     setSelectedContainer(null)
   }
+
+  const handleDialog = () => {
+    setOpenDialog(!openDialog);
+  }  
 
   const handleFinished = async () => { 
     if (journey && actualStep) {
@@ -100,6 +108,7 @@ export const Exit = () => {
           setStepMsg(null)
         }, 2000)
       }
+      handleDialog();
     }
     else {
       setStepMsg("Error: No journey or actual step found.")
@@ -109,6 +118,16 @@ export const Exit = () => {
       }, 2000)
     }
   }
+
+  const dialogButtons: ButtonConfig[] = [
+    {
+      action: (ev: MouseEvent<HTMLButtonElement>) => {
+        ev.preventDefault();
+        handleDialog();
+      },
+      title: t('Cerrar'),
+    }
+  ];
 
   useEffect(() => {
     const sList = toJS(stepsList)
@@ -179,6 +198,12 @@ export const Exit = () => {
           </Button>
         }
       </MainContent>
+      <CustomDialog
+        isOpen={openDialog}
+        type="success"
+        header={t('Proceso terminado con éxito. Puede salir!')}
+        configBtn={dialogButtons}
+      />      
     </PageLayout>
   )
 }

@@ -1,5 +1,5 @@
 import * as Yup from 'yup';
-import { ChangeEvent, FC, useEffect, useState } from "react";
+import { ChangeEvent, FC, useEffect, useState, MouseEvent } from "react";
 import { Formik } from "formik";
 import { useNavigate } from "react-router";
 
@@ -9,11 +9,12 @@ import {
   TextField
 } from "@mui/material";
 
-import { useRefMounted } from "@hooks";
+import { useRefMounted } from "@hooks/useRefMounted";
 import { useTranslation } from "react-i18next";
 import { containerApi } from '@services/api/containerApi';
+import { IContainerFormProps } from '@common/interfaces';
 
-export const ContainerRegistryForm: FC = () => {
+export const ContainerRegistryForm: FC<IContainerFormProps> = ({modalAction}: IContainerFormProps) => {
   const isMountedRef = useRefMounted();
   const { t }: { t: any } = useTranslation();
   const navigate = useNavigate();
@@ -21,7 +22,7 @@ export const ContainerRegistryForm: FC = () => {
 
   const initValues = {
     containerNumber: ''
-  }
+  } 
 
   const handleSubmit = async (values: any,
     { setErrors, setStatus, setSubmitting }: any): Promise<void> => {
@@ -40,6 +41,7 @@ export const ContainerRegistryForm: FC = () => {
             setSubmitting(false)
         }
       }
+      modalAction();
     }
   
 

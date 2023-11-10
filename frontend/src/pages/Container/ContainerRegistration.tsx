@@ -1,3 +1,4 @@
+import React, { MouseEvent, useCallback } from 'react';
 import {
   Alert,
   Box,
@@ -13,6 +14,8 @@ import { ContainerRegistryForm } from "@components/ContainerRegistrationForm/Con
 import { ArrowBack } from "@mui/icons-material";
 import { useNavigate } from "react-router";
 import { useState } from "react";
+import { CustomDialog } from "@components/Dialog/CustomDialog";
+import { ButtonConfig } from "@common/interfaces";
 
 const MainContent = styled(Box)(
   () => `
@@ -35,11 +38,25 @@ const TopWrapper = styled(Box)(
 const ContainerRegistry = () => {
   const navigate = useNavigate()
   const { t } = useTranslation();
-
+  const [openDialog, setOpenDialog] = useState(false);
 
   const handleBack = () => {
     navigate('/containers')
   }
+
+  const handleDialog =  useCallback(() => {
+    setOpenDialog(!openDialog);
+  }, []);
+
+  const dialogButtons: ButtonConfig[] = [
+    {
+      action: (ev: MouseEvent<HTMLButtonElement>) => {
+        ev.preventDefault();
+        handleDialog();
+      },
+      title: t('Cerrar'),
+    }
+  ];   
 
   return(
     <>
@@ -66,7 +83,7 @@ const ContainerRegistry = () => {
                   {t('Container Registry')}
                 </Typography>
               </Box>
-              <ContainerRegistryForm />
+              <ContainerRegistryForm modalAction={handleDialog} />
             </Card>
             <Button
               variant='contained'
@@ -78,6 +95,12 @@ const ContainerRegistry = () => {
             </Button>
           </Container>
         </TopWrapper>
+        <CustomDialog
+          isOpen={openDialog}
+          type="success"
+          header={t('Se ha creado un nuevo contenedor')}
+          configBtn={dialogButtons}
+        />        
       </MainContent>
     </>
   )
