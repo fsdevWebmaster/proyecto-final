@@ -13,10 +13,16 @@ interface IPageLayoutProps extends IPageHeaderProps {
     action?: (ev: React.MouseEvent<HTMLButtonElement>) => void;
     title?: string;
     icon?: React.ReactNode;
+  };
+  backButtonConfig?: {
+    visible: boolean;
+    action?: (ev: React.MouseEvent<HTMLButtonElement>) => void;
+    title?: string;
+    icon?: React.ReactNode;
   }
 }
 
-export const PageLayout = ({ children, seoTitle, title, subtitle, icon, buttonConfig }: IPageLayoutProps) => {
+export const PageLayout = ({ children, seoTitle, title, subtitle, icon, buttonConfig, backButtonConfig }: IPageLayoutProps) => {
   return (
     <>
       <Helmet>
@@ -56,6 +62,18 @@ export const PageLayout = ({ children, seoTitle, title, subtitle, icon, buttonCo
             startIcon={buttonConfig.icon || undefined}
           >
             {buttonConfig.title}
+          </Button>
+        )}
+        {backButtonConfig?.visible && (
+          <Button
+            sx={{
+              mt: { xs: 0 }
+            }}
+            onClick={backButtonConfig.action}
+            variant="contained"
+            startIcon={backButtonConfig.icon || undefined}
+          >
+            {backButtonConfig.title}
           </Button>
         )}
       </PageTitleWrapper>

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { format } from 'date-fns';
-import { Avatar, Box, Card, Grid, Icon, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, 
+import { Avatar, Box, Button, Card, Grid, Icon, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, 
   Typography, useTheme 
 } from '@mui/material';
 import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
@@ -139,6 +139,10 @@ const handleCreate = () => {
   navigate('/create-user')
 }
 
+const handleBack = () => {
+  navigate('/')
+}
+
 const handleSelected = (selectedUser: User) => {
   navigate(`/update-user/${selectedUser.id}`)
 }
@@ -158,7 +162,13 @@ useEffect(() => {
         title: t('Create User'),
         // action: () => setCUDialog(true)
         action: () => handleCreate()
-      }}>
+      }}
+      backButtonConfig={{
+        visible : true,
+        title: t('Back'),
+        action: () => handleBack()
+      }}
+      >
       <Grid item xs={12}>
         <Card>
           <TableContainer>
