@@ -2,6 +2,7 @@ import { PageLayout } from '@layouts/Page/PageLayout'
 import { MouseEvent, useEffect, useState } from "react";
 import {
     Box,
+    Button,
     Card,
     Container,
     Grid,
@@ -24,6 +25,7 @@ import { journeyApi } from '@services/api/journeyApi';
 import { MxJourneyStore } from '../../stores/JourneyStore';
 import { StepModel } from '@models/Step/Step';
 import { ContainerModel } from '@models';
+import { ArrowBack } from '@mui/icons-material';
 
 
 
@@ -74,6 +76,10 @@ const AdminDashboard = () => {
   const handleTableActionClick = () => {
     navigate(`/admin-journeys-dashboard/`)
   };
+  
+  const handleBack = () => {
+    navigate('/')
+  }
 
   const tableActions = [
     {
@@ -97,9 +103,10 @@ const AdminDashboard = () => {
         subtitle={stepName}
         buttonConfig={{
           visible: true, 
-          title: t('Go back to Admin Journeys Dashboard'), 
+          title: t('Go back to Admin Containers in statios'), 
           action: () => handleTableActionClick()}
-      }>
+      }
+      >
         <MainContent padding={2}>
           <Card>
             <TableContainer>
@@ -143,6 +150,15 @@ const AdminDashboard = () => {
           </Card>
         </MainContent>
       </PageLayout>        
+        <Button
+          variant='contained'
+          startIcon={<ArrowBack />}
+          sx={{ marginTop: '15px' }}
+          onClick={handleBack}
+          color='secondary'
+        >
+          {t('back')}
+        </Button>
     </Grid>
   )
 }
