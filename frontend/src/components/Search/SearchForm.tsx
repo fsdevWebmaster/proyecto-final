@@ -81,7 +81,7 @@ export const SearchForm = ({ sendSelected, searchType, formTitle }: Props) => {
         }
         { searchValue && baseList.length === 0 &&
           <Alert severity="info" sx={{ display: "flex", alignItems: "center" }}>
-            <span>No se ha encontado ningún resultado</span>
+            <span>No se ha encontrado ningún resultado</span>
             <Button onClick={ handleNewItem }>
               Crear nuevo
             </Button>
