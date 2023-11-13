@@ -1,56 +1,58 @@
 import Driver from '../models/driver.model.js';
 
-export const newDriver = (req, res) => {
+export const newDriver = (req, res, next) => {
     const newDriver = new Driver(req.body)  
     newDriver.save()
       .then((result) => {
         return res.json(result)
       }).catch((err) => {
-        if (err.message.includes('E11000 duplicate key error')) {
-          return res.status(400).json({ error: 'User already registered.' })
-        }
-        if (err.message.includes('is required')) {
-          return res.status(400).json({ error: 'Wrong or missing data.' })
-        }
+        return next(err)
       });
   }
 
-export const getDriver = (req, res) => {
+export const getDriver = (req, res, next) => {
     const { id } = req.params;
     if (!id) {
-      return res.status(400).json({ error: "Wrong or missing id." })
+      return next(new Error('Missing data'))
     }
-  
-    Driver.findById(id)
+    Driver.findByI(id)
       .then((result) => {
         return res.json(result)
       }).catch((err) => {
-        return res.status(400).json({ error: err.message })
+        return next(err)
       });
   }
 
-  export const searchDriver = (req, res) => {
+  export const searchDriver = (req, res, next) => {
     const { idDoc } = req.params;
-    if (!idDoc) {
-      return res.status(500).json({ TODO: "Search error" })
+    if (!idDoc || idDoc === ':idDoc') {
+      return next(new Error('Missing data'))
     }
     Driver.find({ idDoc })
       .then((result) => {
         if (result.length === 0) {
-          return res.status(404).json({ error: "User not found." })
+          return next(new Error('Not found'))
         }
         return res.json(result[0])
       }).catch((err) => {
-        return res.status(500).json({ TODO: "Error finding driver by idDoc:", err })
+
+        console.log(err)
+
+        return next(err)
       });
-  
   }
 
-  export const updateDriver = (req, res) => {
+  export const updateDriver = (req, res, next) => {
     const { id } = req.params
     const { name, idDoc, email } = req.body
-    Driver.findById(id)
+    if (!name || !idDoc || !email) {
+      return next(new Error('Missing data'))
+    }
+    Driver.findByI(id)
       .then((result) => {
+        if (!result) {
+          return next(new Error('Not found'))
+        }
         result.name = name
         result.idDoc = idDoc
         result.email = email
