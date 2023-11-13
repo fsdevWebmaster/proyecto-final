@@ -1,7 +1,5 @@
 import express from "express";
-
-const journeyRouter = express.Router();
-import { userAuthWithCookie } from "../middlewares/users.middleware.js";
+import { userAuthWithCookie, userAuthWithBearer } from "../middlewares/users.middleware.js";
 import { 
   createJourney, 
   createJourneyLog,
@@ -14,9 +12,29 @@ import {
   getJourneyByDriver,
   journeyToUnload,
   getJourneyLogs,
-  getJourneyByDriverDocId
+  getJourneyByDriverDocId,
+  finishJourney,
+  getStations
 } from "../controllers/journey.controller.js";
 
+const journeyRouter = express.Router();
+
+journeyRouter.post('/journey', userAuthWithCookie, createJourney);
+journeyRouter.post('/journey-log', userAuthWithCookie, createJourneyLog);
+journeyRouter.post('/journey-by-driver', userAuthWithCookie, getJourneyByDriver);
+journeyRouter.post('/journey-to-unload', userAuthWithCookie, journeyToUnload)
+journeyRouter.post('/find-journey-log', userAuthWithCookie, getJourneyLog);
+journeyRouter.post('/finish-journey', userAuthWithCookie, finishJourney);
+journeyRouter.patch('/journey', userAuthWithCookie, updateJourney);
+journeyRouter.patch('/journey-log', userAuthWithCookie, updateJourneyLog);
+journeyRouter.get('/step-journeys/:step', userAuthWithCookie, getStepJourneys);
+journeyRouter.get('/steps', userAuthWithCookie, getSteps);
+journeyRouter.get('/journey/:containerNumber', userAuthWithCookie, getJourneyByContainerNumber)
+
+// Driver panel
+journeyRouter.get('/journey-logs/:journeyId', userAuthWithBearer, getJourneyLogs);
+journeyRouter.get('/steps-driver', userAuthWithBearer, getStations);
+journeyRouter.get('/journey-by-driver-doc-id/:docId', userAuthWithBearer, getJourneyByDriverDocId);
 journeyRouter.post('/journey', /* userAuthWithCookie,*/ createJourney);
 journeyRouter.patch('/journey', /* userAuthWithCookie, */ updateJourney);
 journeyRouter.post('/journey-log', /*userAuthWithCookie,*/ createJourneyLog);

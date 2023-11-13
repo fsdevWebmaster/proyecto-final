@@ -26,12 +26,13 @@ const AvatarPageTitle = styled(Avatar)(
 `
 );
 
-export const PageHeader = ({title, subtitle, icon}: IPageHeaderProps) => {
+export const PageHeader = ({title, subtitle, icon, sx}: IPageHeaderProps) => {
   return (
     <Box
       display="flex"
       alignItems={{ xs: 'stretch', md: 'center' }}
-      flexDirection={{ xs: 'column', md: 'row' }}>
+      flexDirection={{ xs: 'column', md: 'row' }}
+      sx={sx}>
         <Box display="flex" alignItems="center">
           {icon && (
             <AvatarPageTitle variant="rounded">
@@ -40,7 +41,7 @@ export const PageHeader = ({title, subtitle, icon}: IPageHeaderProps) => {
           }
 
           <Box>
-            <Typography variant="h3" component="h3" gutterBottom>{title}</Typography>
+            <Typography className="lineUp" variant="h3" component="h3" gutterBottom>{title}</Typography>
             {subtitle && (<Typography variant="subtitle2">{subtitle}</Typography>)}
           </Box>         
         </Box>       

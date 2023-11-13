@@ -14,6 +14,10 @@ class LoginApi {
         });
     }
 
+    loginDriver(idDoc: string): Promise<any> {
+        return axiosClient.post(`${this.controller}/login-driver`, {idDoc});
+    }
+
     logout(userId: string): Promise<any> {
         return axiosClient.post(`${this.controller}/logout`, {userId});
     }

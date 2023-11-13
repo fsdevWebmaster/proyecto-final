@@ -10,10 +10,11 @@ import {
 } from "@mui/material";
 
 import { useNavigate } from "react-router";
-import { useRefMounted } from "@hooks"
+import { useRefMounted } from "@hooks/useRefMounted"
 import { useTranslation } from "react-i18next";
+import { IContainerFormProps } from '@common/interfaces';
 
-export const DriverRegistrationForm: FC = () => {
+export const DriverRegistrationForm: FC<IContainerFormProps> = ({modalAction}: IContainerFormProps) => {
 
   const isMountedRef = useRefMounted();
   const { t } : { t: any } = useTranslation();
@@ -43,6 +44,7 @@ export const DriverRegistrationForm: FC = () => {
           setSubmitting(false)
         }
       }
+      modalAction();
   }
 
   return(

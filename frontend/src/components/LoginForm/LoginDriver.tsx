@@ -10,43 +10,45 @@ import {
 } from '@mui/material';
 import {useRefMounted} from '@hooks/useRefMounted'
 import { useTranslation } from 'react-i18next';
-import { MxLoginStore, MxUserStore } from '@stores';
-import { JWTHelper } from '@helpers/jwtHelper';
+// import { JWTHelper } from '@helpers/jwtHelper';
 import { observer } from 'mobx-react';
+import { MxDriverStore } from '@stores';
+import { Driver } from '@models';
+import { JWTHelper } from '@helpers/jwtHelper';
 
-export const LoginForm: FC = observer(() => {
+export const LoginDriver: FC = observer(() => {
 
   const isMountedRef = useRefMounted();
   const { t }: { t: any } = useTranslation();
   const navigate = useNavigate();
 
   const initValues = {
-    email: '',
-    password: '',
+    idDoc: '',
     submit: null
   };
 
-  const initProfile = async (token: string) => {
-    const info = JWTHelper.decodeToken(token);
-
-    if (info!.id) {
-      await MxUserStore.initProfile(info.id);
-    }
-  }
-
-  const login = async (email: string, pass: string, callback?: Function) => {
+  const login = async (idDoc: string, callback?: Function) => {
 
     try {
-      const response = await MxLoginStore.loginUser(email, pass);
-      const { logged, user } = response.data;
+      const response = await MxDriverStore.loginDriver(idDoc);
+      const {token} = response.data;
 
-      if (logged && user) {
-        MxLoginStore.setSession(user, logged);
-        await initProfile(user);
-        callback!();        
+      if(token) {
+        const decodedToken = JWTHelper.decodeToken(token);
+
+        if (decodedToken.driver) {
+          MxDriverStore.setDriverAuth(true);
+          MxDriverStore.setDriver(decodedToken.driver as Driver);
+          MxDriverStore.setSession(token);
+          callback!();
+        } else {
+          MxDriverStore.setDriverAuth(false);
+          MxDriverStore.setDriver(null);
+        }
       } else {
-        MxLoginStore.resetAuth();
-        MxLoginStore.setSession(null, false);        
+        MxDriverStore.setDriverAuth(false);
+        MxDriverStore.setDriver(null);
+        MxDriverStore.setSession(null);
       }
 
     } catch (error) {
@@ -58,12 +60,12 @@ export const LoginForm: FC = observer(() => {
     { setErrors, setStatus, setSubmitting }: any): Promise<void> => {
 
       try {
-        await login(values.email, values.password, () => {
+        await login(values.idDoc, () => {
           if (isMountedRef.current) {
             setStatus({ success: true });
             setSubmitting(false);
           }
-          navigate('/');
+          navigate('/driver-dashboard');
         });
 
       } catch (err: any) {
@@ -77,16 +79,12 @@ export const LoginForm: FC = observer(() => {
 
   return (
     <Formik
-      name="login-user"
+      name="login-driver"
       initialValues={initValues}
       validationSchema={Yup.object().shape({
-        email: Yup.string()
-          .email(t('The email provided should be a valid email address'))
-          .max(255)
-          .required(t('The email field is required')),
-        password: Yup.string()
-          .max(255)
-          .required(t('The password field is required'))
+        idDoc: Yup.string()
+          .max(14)
+          .required(t('Your document ID is required')),
       })}
       onSubmit={handleSubmit}
     >
@@ -101,32 +99,18 @@ export const LoginForm: FC = observer(() => {
       }): JSX.Element => (
         <form noValidate onSubmit={handleSubmit}>
           <TextField
-            error={Boolean(touched.email && errors.email)}
+            error={Boolean(touched.idDoc && errors.idDoc)}
             fullWidth
             required
             margin="normal"
             autoFocus
-            helperText={touched.email && errors.email}
-            label={t('Email')}
-            name="email"
+            helperText={touched.idDoc && errors.idDoc}
+            label={t('ID')}
+            name="idDoc"
             onBlur={handleBlur}
             onChange={handleChange}
-            type="email"
-            value={values.email}
-            variant="outlined"
-          />
-          <TextField
-            error={Boolean(touched.password && errors.password)}
-            fullWidth
-            required
-            margin="normal"
-            helperText={touched.password && errors.password}
-            label={t('Password')}
-            name="password"
-            onBlur={handleBlur}
-            onChange={handleChange}
-            type="password"
-            value={values.password}
+            type="text"
+            value={values.idDoc}
             variant="outlined"
           />
             <Button

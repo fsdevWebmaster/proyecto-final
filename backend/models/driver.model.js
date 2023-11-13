@@ -25,7 +25,7 @@ const driverSchema = new mongoose.Schema({
     transform: (doc, ret) => {
       delete ret._id
       delete ret.__v
-      ret.id = doc._id
+      ret.id = doc.id
       return ret
     }
   }

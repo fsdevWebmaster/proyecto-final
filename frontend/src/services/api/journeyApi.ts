@@ -35,6 +35,18 @@ class JourneyApi {
     journeyToUnload(updateData: any) {
       return axiosClient.post(`${this.controller}/journey-to-unload`, updateData)
     }
+
+    finishJourney(updateData: any) {
+      return axiosClient.post(`${this.controller}/finish-journey`, updateData)
+    }
+    
+    getJourneyInfoByDriverId(idDoc: string): Promise<any> {
+      return axiosClient.get(`${this.controller}/journey-by-driver-doc-id/${idDoc}`);
+    }
+
+    getJourneyLogsDriverByJourneyId(journeyId: string): Promise<any> {
+      return axiosClient.get(`${this.controller}/journey-logs/${journeyId}`);
+    }
 }
 
 export const journeyApi = new JourneyApi();

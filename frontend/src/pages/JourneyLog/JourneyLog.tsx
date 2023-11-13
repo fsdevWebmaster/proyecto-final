@@ -17,26 +17,7 @@ import NoCrashIcon from '@mui/icons-material/NoCrash';
 import DoneOutlineIcon from '@mui/icons-material/DoneOutline';
 import DoDisturbOnIcon from '@mui/icons-material/DoDisturbOn';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
-
-const ColorlibStepIcon = (props: StepIconProps) => {
-  const { active, completed, className } = props;  
-
-  const icons: { [index: string]: React.ReactElement } = {
-    1 : <HouseSidingIcon />,
-    2 : <CarRepairIcon />,
-    3 : <MinorCrashIcon />,
-    4:  <NoCrashIcon />,
-    5 : <ContentPasteSearchIcon />,
-    6 : <ScaleIcon />,
-    7 : <LocalShippingIcon />,
-  };
-
-  return (
-    <ColorlibStepIconRoot ownerState={{ completed, active }} className={className}>
-      {icons[String(props.icon)]}
-    </ColorlibStepIconRoot>
-  );
-};
+import { ColorlibStepIcon } from '@components';
 
 const JourneyLog = () => {
   const { t } = useTranslation();
@@ -49,10 +30,6 @@ const JourneyLog = () => {
   const progress = {
     level: 'In Progress',
     type: 'success' as Status,
-  }
-
-  const showInfoHandler = () => {
-
   }
 
 
