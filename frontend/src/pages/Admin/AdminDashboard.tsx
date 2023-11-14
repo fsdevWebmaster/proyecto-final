@@ -44,7 +44,7 @@ const AdminDashboard = () => {
   const theme = useTheme();
   const navigate = useNavigate();
   const handleDetails = (e:MouseEvent<HTMLElement>, journey:any) => {
-
+    navigate(`/journey-status/${journey.containerNumber}`);
   }
   const stepId = MxJourneyStore.stepId;
   const { step } = useParams();

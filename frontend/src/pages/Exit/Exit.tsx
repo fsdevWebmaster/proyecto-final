@@ -15,6 +15,7 @@ import { observer } from "mobx-react"
 import { journeyApi } from "@services/api/journeyApi"
 import { CustomDialog } from '@components/Dialog/CustomDialog';
 import { ButtonConfig } from '@common/interfaces';
+import { useNavigate } from 'react-router';
 
 const MainContent = styled(Box)(
   () =>`
@@ -60,6 +61,7 @@ export const Exit = () => {
   const [journey, setJourney] = useState<JourneyModel | null>(null)
   const [stepMsg, setStepMsg] = useState<string | null>(null)
   const [openDialog, setOpenDialog] = useState(false);
+  const navigate = useNavigate();
 
 
   const handleSelected = async (selected:SearchItem) => {
@@ -145,15 +147,18 @@ export const Exit = () => {
       setActualStep(actualStep.step)
     }    
   }, [])  
-
+  
+  const handleBack = () => {
+    navigate('/')
+  }
   return (
     <PageLayout
       seoTitle={t('Exit')}
       title={t('Exit')}
       buttonConfig={{
-        visible: false, 
-        title: '', 
-        action: () => alert('To-do')}
+        visible: true, 
+        title: 'Go Back to main page', 
+        action: () => handleBack()}
     }>
       <MainContent className="main-content" sx={{ marginTop: 2 }}>
         { stepMsg && 

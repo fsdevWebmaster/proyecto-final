@@ -90,7 +90,7 @@ const AdminJourneysDashboard = () => {
       title={'Admin Journeys Dashboard'}
       backButtonConfig={{
         visible : true,
-        title: t('Back'),
+        title: t('Go Back to main page'),
         action: () => handleBack()
       }}
       >
