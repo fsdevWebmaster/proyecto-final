@@ -26,8 +26,13 @@ const MainLayout: FC<MainLayoutProps> = () => {
 
   useEffect(() => {
     const globalSteps = async() => {
-      MxStepStore.handleSteps();
+      const steps = await MxStepStore.handleSteps();
+
+      if(steps.data) {
+        MxStepStore.setStepsList(steps.data);
+      }
     }
+    
     globalSteps();
     setCurrentPage();
   }, []);  
