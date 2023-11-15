@@ -123,7 +123,7 @@ export const DriverRegistrationForm: FC<IContainerFormProps> = ({modalAction}: I
               mt: 4,
               mb: 2
             }}
-            style={{ background: theme.colors.primary.dark, marginLeft: 12 }}
+            style={{ background: theme.colors.secondary.dark, marginLeft: 12 }}
             startIcon={isSubmitting ? <CircularProgress size="1-rem"/> : null}
             disabled={isSubmitting}
             type='submit'
@@ -131,7 +131,7 @@ export const DriverRegistrationForm: FC<IContainerFormProps> = ({modalAction}: I
             variant='contained'
             onClick={handleBack}
           >
-            {t('Back')}
+            {t('Go back to main page')}
           </Button>
         </form>
       )}

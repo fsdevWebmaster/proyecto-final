@@ -16,6 +16,7 @@ import { observer } from 'mobx-react';
 import { LocalShipping, Warehouse } from '@mui/icons-material';
 import { ButtonConfig } from '@common/interfaces';
 import { CustomDialog } from '@components/Dialog/CustomDialog';
+import { useNavigate } from 'react-router';
 
 
 const Yard = () => {
@@ -72,15 +73,18 @@ const Yard = () => {
     }
   }, [stepsList])
   
-
+  const navigate = useNavigate();
+  const handleBack = () => {
+    navigate('/')
+  }
   return (
     <PageLayout
       seoTitle={t('Users List')}
       title={t('Yard')}
       buttonConfig={{
-        visible: false,
-        title: t('Create User'),
-        action: () => alert('To-do')}
+        visible: true,
+        title: t('Go Back to main page'),
+        action: () => handleBack()}
     }>
 
       <Grid item xs={12}>

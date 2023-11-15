@@ -160,12 +160,14 @@ useEffect(() => {
       buttonConfig={{
         visible: true, 
         title: t('Create User'),
+        color: 'primary',
         // action: () => setCUDialog(true)
         action: () => handleCreate()
       }}
       backButtonConfig={{
         visible : true,
-        title: t('Back'),
+        title: t('Go Back to main page'),
+        color: 'secondary',
         action: () => handleBack()
       }}
       >

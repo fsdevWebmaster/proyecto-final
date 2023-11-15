@@ -151,7 +151,7 @@ const Gate = () => {
       title= {t('Gate')}
       buttonConfig= {{
         visible: true, 
-        title: t('Back'), 
+        title: t('Go Back to main page'), 
         action: () => handleBack()}
       }>
       <MainContent>
