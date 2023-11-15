@@ -14,5 +14,5 @@ export const isJourneyValid = async (journeyId) => {
     };
   } catch (error) {
     return { isValid: false, journeyId: null, err: error};
-  }  
+  }
 }

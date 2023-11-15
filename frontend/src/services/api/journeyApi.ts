@@ -47,6 +47,14 @@ class JourneyApi {
     getJourneyLogsDriverByJourneyId(journeyId: string): Promise<any> {
       return axiosClient.get(`${this.controller}/journey-logs/${journeyId}`);
     }
+
+    getLogs(journeyId: string): Promise<any> {
+      return axiosClient.get(`${this.controller}/logsByJourney/${journeyId}`);
+    }
+
+    getDriverOnJourney(driverId: string) {
+      return axiosClient.get(`${this.controller}/driver/${driverId}`);
+    }
 }
 
 export const journeyApi = new JourneyApi();

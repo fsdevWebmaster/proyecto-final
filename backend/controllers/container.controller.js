@@ -55,3 +55,17 @@ export const containerByNumber = (req, res, next) => {
       next(err)
     });
 }
+
+export const containerById = (req, res, next) => {
+  const { containerId } = req.params;
+
+  if(!containerId) {
+    next(new Error("Missing data"));
+  }
+
+  Container.findById({ "_id": containerId})
+  .then((result) => {
+    return res.json({ isValidId: result ? true : false, containerNumber: result ? result.containerNumber : null });
+  })
+  .catch((err) => next(err))
+}

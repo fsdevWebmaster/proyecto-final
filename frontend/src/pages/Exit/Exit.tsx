@@ -16,6 +16,7 @@ import { journeyApi } from "@services/api/journeyApi"
 import { CustomDialog } from '@components/Dialog/CustomDialog';
 import { ButtonConfig } from '@common/interfaces';
 import { useNavigate } from 'react-router';
+import useWS from '@hooks/useWS';
 
 const MainContent = styled(Box)(
   () =>`
@@ -53,6 +54,7 @@ const InfoContainer = styled(Box)(
 export const Exit = () => {
   const theme = useTheme()
   const {t} = useTranslation()
+  const socket = useWS();
   const { stepsList } = MxStepStore
   
   const [selectedContainer, setSelectedContainer] = useState<ContainerModel | null>()
@@ -97,6 +99,8 @@ export const Exit = () => {
       }
       const respFinish = await journeyApi.finishJourney(patchData)
       if (respFinish) {
+        if (respFinish.data && socket) socket?.emit('journey:send_journey', { id: respFinish.data.journey});
+        
         setStepMsg("Journey finished ok.")
         setSelectedContainer(null)
         setTimeout(() => {

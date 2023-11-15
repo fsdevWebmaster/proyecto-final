@@ -13,7 +13,7 @@ const journeyUpdated = (socket) => {
 
 export const initSocketEvents = (server) => {
   server.on('connection', (socket) => {
-    console.log('WS connection ready');
+    console.log('WS connection ready', socket.id);
 
     journeyUpdated(socket);
   });
