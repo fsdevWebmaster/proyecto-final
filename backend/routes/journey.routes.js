@@ -29,7 +29,7 @@ journeyRouter.patch('/journey', userAuthWithCookie, updateJourney);
 journeyRouter.patch('/journey-log', userAuthWithCookie, updateJourneyLog);
 journeyRouter.get('/step-journeys/:step', userAuthWithCookie, getStepJourneys);
 journeyRouter.get('/steps', userAuthWithCookie, getSteps);
-journeyRouter.get('/journey/:containerNumber', userAuthWithCookie, getJourneyByContainerNumber)
+journeyRouter.get('/journey-status/:containerNumber', userAuthWithCookie, getJourneyByContainerNumber)
 
 // Driver panel
 journeyRouter.get('/journey-logs/:journeyId', userAuthWithBearer, getJourneyLogs);

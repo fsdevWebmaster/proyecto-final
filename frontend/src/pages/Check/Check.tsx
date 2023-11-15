@@ -248,14 +248,17 @@ export const Check = () => {
     setTitle(null)  
   }
 
+  const handleBack = () => {
+    navigate('/')
+  }
   return (
     <PageLayout
       seoTitle='Check dashboard'
       title='Check dashboard'
       buttonConfig={{
-        visible: false, 
-        title: '', 
-        action: () => alert('To-do')}
+        visible: true, 
+        title: 'Go Back to main page', 
+        action: () => handleBack()}
     }>
     <MainContent className="main-content" sx={{ marginTop: 2 }}>
       { errorMsg && 
@@ -280,7 +283,7 @@ export const Check = () => {
               variant='h3' 
               color={theme.colors.primary.dark}
             >
-              {t('Scale One')}
+              {t('Check One')}
             </Typography>
           }
           { actualStep.routeName.includes('two') &&
@@ -288,7 +291,7 @@ export const Check = () => {
               variant='h3' 
               color={theme.colors.primary.dark}
             >
-              {t('Scale Two')}
+              {t('Check Two')}
             </Typography>
           }
         </Box>

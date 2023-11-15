@@ -32,7 +32,7 @@ export const appPages: PagesStatus[] = [
     visible: false,
   },
   {
-    path: 'admin-dashboard',
+    path: 'admin-journeys-dashboard',
     name: 'Administration Panel',
     title: 'Manage daily your work',
     svgPath: '/static/images/illustrations/handshake.svg',

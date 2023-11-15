@@ -26,6 +26,10 @@ export const DriverRegistrationForm: FC<IContainerFormProps> = ({modalAction}: I
       identification: ''
   }
 
+  const handleBack = () => {
+    navigate('/')
+  }
+
   const handleSubmit = async (values: any,
     { setErrors, setStatus, setSubmitting }: any): Promise<void> => {
       try {
@@ -46,6 +50,7 @@ export const DriverRegistrationForm: FC<IContainerFormProps> = ({modalAction}: I
       }
       modalAction();
   }
+
 
   return(
     <Formik
@@ -112,6 +117,21 @@ export const DriverRegistrationForm: FC<IContainerFormProps> = ({modalAction}: I
             variant='contained'
           >
             {t('Save')}
+          </Button>
+          <Button
+            sx={{
+              mt: 4,
+              mb: 2
+            }}
+            style={{ background: theme.colors.secondary.dark, marginLeft: 12 }}
+            startIcon={isSubmitting ? <CircularProgress size="1-rem"/> : null}
+            disabled={isSubmitting}
+            type='submit'
+            size='large'
+            variant='contained'
+            onClick={handleBack}
+          >
+            {t('Go back to main page')}
           </Button>
         </form>
       )}

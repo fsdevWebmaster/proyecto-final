@@ -27,6 +27,8 @@ import useWS from "@hooks/useWS";
 import { PageHelper } from "@helpers/pageHelper";
 import { CustomDialog } from "@components/Dialog/CustomDialog";
 import { ButtonConfig } from '@common/interfaces';
+import { useNavigate } from 'react-router';
+
 
 const MainContent = styled(Box)(
   () =>`
@@ -124,6 +126,11 @@ const Gate = () => {
       }
     }
   }
+  const navigate = useNavigate();
+
+  const handleBack = () => {
+    navigate('/')
+  }
 
   useEffect(() => {
     const loadSteps = async () => {
@@ -143,9 +150,9 @@ const Gate = () => {
       seoTitle= {t('Gate')}
       title= {t('Gate')}
       buttonConfig= {{
-        visible: false, 
-        title: t('Create User'), 
-        action: () => alert('To-do')}
+        visible: true, 
+        title: t('Go Back to main page'), 
+        action: () => handleBack()}
       }>
       <MainContent>
         <TopWrapper>

@@ -7,7 +7,7 @@ import { useTranslation } from "react-i18next";
 import { ChangeEvent, useEffect, useState } from "react";
 import { ContainerModel, JourneyLog } from "@models";
 import DeleteIcon from '@mui/icons-material/Delete';
-import { useLocation } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 import { journeyApi } from "@services/api/journeyApi";
 import { JourneyModel } from "@models/Journey/Journey";
 import { StepModel } from "@models/Step/Step";
@@ -166,11 +166,13 @@ export const Scale = () => {
         return item.step
       }
     })
+    console.log('actualStep: ',actualStep)
     if(sList && actualStep){
       setActualStepsList(stpList)
       setActualStep(actualStep.step)
     }
     const scaleType = actualStep?.step.routeName
+    console.log('scaleType: ',scaleType)
     if (scaleType) {
       switch (scaleType) {
         case "scale-one":
@@ -182,16 +184,20 @@ export const Scale = () => {
       }
     }
   }, [])
-  
+  const navigate = useNavigate();
+
+  const handleBack = () => {
+    navigate('/')
+  }
 
   return (
     <PageLayout
-      seoTitle= {t('Scale dashboard')}
-      title= {t('Scale dashboard')}
+      seoTitle= {t(scaleTitle)}
+      title= {t('scaleTitle')}
       buttonConfig={{
-        visible: false, 
-        title: '', 
-        action: () => alert('To-do')}
+        visible: true, 
+        title: 'Go Back to main page', 
+        action: () => handleBack()}
     }>
       <MainContent className="main-content" sx={{ marginTop: 2 }}>
         { stepMessage && 
