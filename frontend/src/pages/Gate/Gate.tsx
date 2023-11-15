@@ -127,16 +127,12 @@ const Gate = () => {
 
   useEffect(() => {
     const loadSteps = async () => {
-      if(stepsList.length === 0) {
-        const steps = await MxStepStore.handleSteps();
-        MxStepStore.setStepsList(steps.data);
-        const step = PageHelper.getStepInfoByRouteName(location.pathname, steps.data);
-        setActualStep(step?.step);
-      }
+      const step = PageHelper.getStepInfoByRouteName(location.pathname, stepsList);
+      setActualStep(step?.step);
     };
     
     loadSteps();
-  }, [stepsList.length]);
+  }, [stepsList]);
 
   return (
     <PageLayout
