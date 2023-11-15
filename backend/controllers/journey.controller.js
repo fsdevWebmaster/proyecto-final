@@ -90,7 +90,7 @@ export const createJourneyLog = async (req, res, next) => {
       // update journey
       await result.populate("journey")
       let journey = result.journey
-      journey.sav()
+      journey.save()
         .then((journeyResult) => {
           return res.json({
             journeyResult,
@@ -112,7 +112,7 @@ export const updateJourneyLog = (req, res, next) => {
     return next(new Error("Missing data"))
   }
   try {
-    JourneyLog.findByIdAndUpdat(journeyLogId, { stepValue }, { new: true })
+    JourneyLog.findByIdAndUpdate(journeyLogId, { stepValue }, { new: true })
       .then((result) => {
         return res.json(result)
       }).catch((err) => {

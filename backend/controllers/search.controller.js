@@ -12,6 +12,23 @@ export const search = async (req, res, next) => {
       found = await Container.find({ 
         "containerNumber": { "$regex": searchString }
       }).exec()
+
+      const isActive = await Journey.findOne({
+        "containerNumber": { "$regex": searchString },
+        "status": { $in: ['IN_PROGRESS', 'ON_HOLD'] }
+      }).exec()
+      
+      if (isActive) {
+        let filtered = []
+        found.filter(item => {
+          if (item.containerNumber !== isActive.containerNumber) {
+            filtered = [ ...filtered, item ]
+          }
+        })
+        if (filtered.length > 0) {
+          found = filtered
+        }
+      }
     }
     else if (stepId !== gateId && searchType === 'containers') {
       found = await Journey.find({ 
