@@ -32,7 +32,7 @@ export const createJourney = async (req, res, next) => {
   }
 
   try {
-    const journey = new Journe(createData)
+    const journey = new Journey(createData)
     await journey.save()
     await journey.populate("container")
     await journey.populate("driver")
@@ -130,7 +130,7 @@ export const getJourneyLog = (req, res, next) => {
   }
 
   try {
-    JourneyLog.fin({journey, step})
+    JourneyLog.find({journey, step})
       .then((result) => {
         if (result.length === 0) {
           next(Error('Not found'));

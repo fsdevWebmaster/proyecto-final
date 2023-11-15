@@ -71,7 +71,6 @@ export const Scale = () => {
   const [openDialog, setOpenDialog] = useState(false);
 
   const handleSelected = async (selected:SearchItem) => {
-
     // get journey
     try {
       const journeyResp = await journeyApi.getJourneyByContainerNumber(selected.containerNumber)
@@ -254,12 +253,13 @@ export const Scale = () => {
           </InfoContainer>
         }
 
-        { !selectedContainer && 
+        { !selectedContainer && actualStep &&
           <SearchContainer>
             <SearchForm
               sendSelected={(selected) =>handleSelected(selected)}
               searchType="containers"
               formTitle={t("Search containers")}
+              actualStep={actualStep}
             />
           </SearchContainer>
         }

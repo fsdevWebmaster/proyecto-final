@@ -8,14 +8,17 @@ import { SearchItem, useSearch } from './useSearch';
 import { BasicTable } from '@components/Tables/BasicTable';
 import { AddCircleOutlineOutlined } from '@mui/icons-material';
 import { TableAction } from '@components/Tables/TableAction';
+import { StepModel } from '@models/Step/Step';
+import { ChangeEvent, useEffect } from 'react';
 
 type Props = {
   sendSelected: (selectedItem:SearchItem) => void
   searchType: string
   formTitle: string
+  actualStep: StepModel
 }
 
-export const SearchForm = ({ sendSelected, searchType, formTitle }: Props) => {
+export const SearchForm = ({ sendSelected, searchType, formTitle, actualStep }: Props) => {
   const { t }: { t: any } = useTranslation()
   const { handleSearchItem, baseList, showField, searchValue, handleNewItem } = useSearch(searchType)
   const theme = useTheme();
@@ -36,13 +39,16 @@ export const SearchForm = ({ sendSelected, searchType, formTitle }: Props) => {
       {/* { searchValue } */}
       </Typography>    
       <Box>
-        <TextField sx={{ mb: 1 }}
-          variant='outlined'
-          label={formTitle}
-          name="seachField" 
-          onChange={(e) => handleSearchItem(e)}
-          fullWidth
-        />
+        { actualStep && 
+          <TextField sx={{ mb: 1 }}
+            variant='outlined'
+            label={formTitle}
+            name="seachField" 
+            onChange={(e) => handleSearchItem(e, actualStep)}
+            fullWidth
+            placeholder={actualStep.name}
+          />
+        }
         { searchValue && baseList.length > 0 &&
           <>
             <Card>
@@ -79,7 +85,7 @@ export const SearchForm = ({ sendSelected, searchType, formTitle }: Props) => {
             </Card>
           </>
         }
-        { searchValue && baseList.length === 0 &&
+        { searchValue && baseList.length === 0 && actualStep.name === 'Portería' &&
           <Alert severity="info" sx={{ display: "flex", alignItems: "center" }}>
             <span>No se ha encontrado ningún resultado</span>
             <Button onClick={ handleNewItem }>
