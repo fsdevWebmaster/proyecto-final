@@ -5,6 +5,7 @@ const exitId = "652d7e154bf411f7d939495b"
 
 export const getJourneyByContainerNumber = (req, res, next) => {
   const { containerNumber } = req.params;
+
   if (!containerNumber || containerNumber.includes(":")) {
     next(new Error("Missing data"))
   }
@@ -28,10 +29,12 @@ export const createJourney = async (req, res, next) => {
   const createData = {
     driver: postData.driver.id,
     container: postData.container.id,
-    step: postData.step.id
+    step: postData.step.id,
+    user: postData.user
   }
 
   try {
+
     const journey = new Journey(createData)
     await journey.save()
     await journey.populate("container")
@@ -219,6 +222,9 @@ const stepJourneys = async (step) => {
 
 export const getStepJourneys = async (req, res, next) => {
   const { step } = req.params
+
+  console.log("step::", step)
+
   if (!step) {
     next(new Error('Missing data'))
   }
@@ -232,6 +238,9 @@ export const getStepJourneys = async (req, res, next) => {
 
 export const getJourneyByDriver = (req, res, next) => {
   const driverId = req.body.driver
+
+  console.log(driverId)
+
   if (!driverId) {
     next(new Error("Missing data"))
   }
@@ -267,6 +276,7 @@ export const getJourneyLogs = async (req, res, next) => {
     return next(error)
   }
 }
+
 export const getJourneyByDriverDocId = async (req, res, next) => {
   const { driverDocId } = req.params
   if (!driverDocId || driverDocId === ":driverDocId") {

@@ -6,18 +6,18 @@ import { search } from "../controllers/search.controller.js";
 const router = express.Router();
 
 //routes for user
-router.post('/register', userAuthWithCookie, register);
+router.post('/register', /* userAuthWithCookie, */ register);
 router.post('/login', login);
-router.post('/logout', userAuthWithCookie, logout);
-router.patch('/profile', userAuthWithCookie, updateProfile);
-router.get('/profile', userAuthWithCookie, getProfile);
-router.get('/users', userAuthWithCookie, getUsers );
+router.post('/logout', /* userAuthWithCookie, */ logout);
+router.patch('/profile', /* userAuthWithCookie, */ updateProfile);
+router.get('/profile', /* userAuthWithCookie, */ getProfile);
+router.get('/users', /* userAuthWithCookie, */ getUsers );
 
 //routes for driver
-router.post('/driver', userAuthWithCookie, newDriver);
-router.get('/driver/:id', userAuthWithCookie, getDriver);
-router.get('/search-driver/:idDoc', userAuthWithCookie, searchDriver);
-router.patch('/driver/:id', userAuthWithCookie, updateDriver);
+router.post('/driver', /* userAuthWithCookie, */ newDriver);
+router.get('/driver/:id', /* userAuthWithCookie, */ getDriver);
+router.get('/search-driver/:idDoc', /* userAuthWithCookie, */ searchDriver);
+router.patch('/driver/:id', /* userAuthWithCookie, */ updateDriver);
 
 // routes for seach
 router.post('/search', /* userAuthWithCookie, */ search);

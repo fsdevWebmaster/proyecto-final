@@ -7,7 +7,8 @@
   "scripts": {
     "dev": "nodemon server.js",
     "start": "node server.js",
-    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --watchAll"
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --watch journey.controller.test.js --",
+    "test-all": "node --experimental-vm-modules node_modules/jest/bin/jest.js --watchAll --"
   },
   "author": "Francisco Jiménez - José Manuel Zúñiga - Fidel Silva - David Calderón",
   "license": "ISC",
