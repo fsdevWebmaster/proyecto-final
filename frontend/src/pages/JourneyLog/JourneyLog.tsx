@@ -18,7 +18,8 @@ import DoneOutlineIcon from '@mui/icons-material/DoneOutline';
 import DoDisturbOnIcon from '@mui/icons-material/DoDisturbOn';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import { ColorlibStepIcon } from '@components';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
+
 
 const JourneyLog = () => {
   const { t } = useTranslation();
@@ -33,14 +34,23 @@ const JourneyLog = () => {
     type: 'success' as Status,
   }
   const { containerNumber } = useParams();
+  const navigate = useNavigate();
+
 
   useEffect(() => {
     setPercentage(currentStepPosition * 100 / totalSteps);
   }, []);
 
-
+  const handleBack = () => {
+    navigate('/admin-journeys-dashboard')
+  }
   return (
-    <PageLayout seoTitle='Journey Log' title={`Container: # ${container}`} buttonConfig={{visible: false}}>
+    <PageLayout seoTitle='Journey Log' title={`Container: # ${container}`} buttonConfig={{visible: false}}
+    backButtonConfig={{
+      visible : true,
+      title: t('Go Back to journeys dashboard'),
+      action: () => handleBack()
+    }}>
       <Grid item container direction="row" spacing={4}>
         <Grid item xs={12} display="flex" justifyContent="flex-end">
           <Stack spacing={4} width={1} overflow="auto">

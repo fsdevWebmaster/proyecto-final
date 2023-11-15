@@ -101,10 +101,10 @@ const AdminDashboard = () => {
       <PageLayout seoTitle={t('Admin Dashboard')}
         title={t('Admin Dashboard')}
         subtitle={stepName}
-        buttonConfig={{
+        backButtonConfig={{
           visible: true, 
-          title: t('Go back to Admin Containers in statios'), 
-          action: () => handleTableActionClick()}
+          title: t('Go back to main page'), 
+          action: () => handleBack()}
       }
       >
         <MainContent padding={2}>
@@ -154,10 +154,10 @@ const AdminDashboard = () => {
           variant='contained'
           startIcon={<ArrowBack />}
           sx={{ marginTop: '15px' }}
-          onClick={handleBack}
+          onClick={handleTableActionClick}
           color='secondary'
         >
-          {t('back')}
+          {t('Go back to Admin Containers in statios')}
         </Button>
     </Grid>
   )
