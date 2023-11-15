@@ -18,7 +18,7 @@ class JourneyApi {
     }
 
     async getJourneyByContainerNumber(containerNumber: string) {
-      return axiosClient.get(`${this.controller}/journey/${containerNumber}`)
+      return axiosClient.get(`${this.controller}/journey-status/${containerNumber}`)
     }
 
     async getJourneyLog(journey:JourneyModel, step:StepModel) {

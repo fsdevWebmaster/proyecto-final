@@ -8,6 +8,7 @@ import { stepApi } from '@services/api/stepApi';
 import { StepModel } from '@models/Step/Step';
 import { Link, useNavigate } from 'react-router-dom';
 import { MxJourneyStore } from '../../stores/JourneyStore';
+import { PageLayout } from '@layouts/Page/PageLayout';
 
 const MainContent = styled(Box)(
   () =>`
@@ -79,17 +80,31 @@ const AdminJourneysDashboard = () => {
     },
   }));
   
-
+  const handleBack = () => {
+    navigate('/')
+  }
 
   return(
-    <>
+    <PageLayout 
+      seoTitle={'Admin Journeys Dashboard'} 
+      title={'Admin Journeys Dashboard'}
+      backButtonConfig={{
+        visible : true,
+        title: t('Go Back to main page'),
+        action: () => handleBack()
+      }}
+      >
       <Helmet>
         <title>{t('Admin Journeys Dashboard')}</title>
       </Helmet>
-      <MainContent>
 
+
+   
+
+       {/* Table */}
+       <Grid padding={2} item lg={12} md={12} xs={12}>
         <TopWrapper>
-          <Container maxWidth="sm">
+          <Container maxWidth="lg">
             <Card
               sx={{
                 mt: 3,
@@ -111,10 +126,6 @@ const AdminJourneysDashboard = () => {
             </Card>
           </Container>
         </TopWrapper>
-      </MainContent>
-
-       {/* Table */}
-       <Grid padding={2} item lg={8} md={6} xs={12}>
        <Card>
           <TableContainer>
             <Table>
@@ -158,7 +169,7 @@ const AdminJourneysDashboard = () => {
        </Card>
 
       </Grid>
-    </>
+    </PageLayout>
   )
 }
 

@@ -27,6 +27,8 @@ import useWS from "@hooks/useWS";
 import { PageHelper } from "@helpers/pageHelper";
 import { CustomDialog } from "@components/Dialog/CustomDialog";
 import { ButtonConfig } from '@common/interfaces';
+import { useNavigate } from 'react-router';
+
 
 const MainContent = styled(Box)(
   () =>`
@@ -124,28 +126,29 @@ const Gate = () => {
       }
     }
   }
+  const navigate = useNavigate();
+
+  const handleBack = () => {
+    navigate('/')
+  }
 
   useEffect(() => {
     const loadSteps = async () => {
-      if(stepsList.length === 0) {
-        const steps = await MxStepStore.handleSteps();
-        MxStepStore.setStepsList(steps.data);
-        const step = PageHelper.getStepInfoByRouteName(location.pathname, steps.data);
-        setActualStep(step?.step);
-      }
+      const step = PageHelper.getStepInfoByRouteName(location.pathname, stepsList);
+      setActualStep(step?.step);
     };
     
     loadSteps();
-  }, [stepsList.length]);
+  }, [stepsList]);
 
   return (
     <PageLayout
       seoTitle= {t('Gate')}
       title= {t('Gate')}
       buttonConfig= {{
-        visible: false, 
-        title: t('Create User'), 
-        action: () => alert('To-do')}
+        visible: true, 
+        title: t('Go Back to main page'), 
+        action: () => handleBack()}
       }>
       <MainContent>
         <TopWrapper>

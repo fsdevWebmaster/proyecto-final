@@ -35,10 +35,10 @@ export const useSearch = (searchType:string) => {
   const handleNewItem = () => {
     switch (searchType) {
       case "containers":
-        navigate("/main/container-registry")
+        navigate("/container-registry")
       break;
       case "drivers":
-        navigate("/main/driver-registry")
+        navigate("/driver-registry")
       break;
     }
     // navigate("container-registration")

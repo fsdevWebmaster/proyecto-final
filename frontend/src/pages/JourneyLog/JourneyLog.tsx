@@ -18,6 +18,7 @@ import DoneOutlineIcon from '@mui/icons-material/DoneOutline';
 import DoDisturbOnIcon from '@mui/icons-material/DoDisturbOn';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import { ColorlibStepIcon } from '@components';
+import { useParams } from 'react-router-dom';
 
 const JourneyLog = () => {
   const { t } = useTranslation();
@@ -31,7 +32,7 @@ const JourneyLog = () => {
     level: 'In Progress',
     type: 'success' as Status,
   }
-
+  const { containerNumber } = useParams();
 
   useEffect(() => {
     setPercentage(currentStepPosition * 100 / totalSteps);

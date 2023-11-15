@@ -120,7 +120,7 @@ export const routes: RouteObject[] = [
                 element: <Containers />,
               },
               {
-                path: 'journey-status',
+                path: 'journey-status/:comtainerNumber',
                 id: 'journeyStatus',
                 element: <JourneyStatus />
               }
