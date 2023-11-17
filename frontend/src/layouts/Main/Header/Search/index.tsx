@@ -289,38 +289,7 @@ export const HeaderSearch = () => {
                           }}
                           fontSize="small"
                         />
-                        <Typography>Analytics dashboard</Typography>
-                      </Box>
-                      <Box>
-                        <Tooltip
-                          placement="top"
-                          arrow
-                          title={t('Save this search')}
-                        >
-                          <IconButton size="small" color="primary">
-                            <StarTwoToneIcon fontSize="small" />
-                          </IconButton>
-                        </Tooltip>
-                        <Tooltip
-                          placement="top"
-                          arrow
-                          title={t('Remove this search from history')}
-                        >
-                          <IconButton size="small" color="error">
-                            <CloseTwoToneIcon fontSize="small" />
-                          </IconButton>
-                        </Tooltip>
-                      </Box>
-                    </ListButton>
-                    <ListButton>
-                      <Box display="flex" alignItems="center">
-                        <RestoreTwoToneIcon
-                          sx={{
-                            mr: 1
-                          }}
-                          fontSize="small"
-                        />
-                        <Typography>Top navigation layout</Typography>
+                        <Typography>{t('Analytics dashboard')}</Typography>
                       </Box>
                       <Box>
                         <Tooltip
@@ -360,7 +329,7 @@ export const HeaderSearch = () => {
                           }}
                           fontSize="small"
                         />
-                        <Typography>Hospital overview page</Typography>
+                        <Typography>{t('Hospital overview page')}</Typography>
                       </Box>
                       <Box>
                         <Tooltip

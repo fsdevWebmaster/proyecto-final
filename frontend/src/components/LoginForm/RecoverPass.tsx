@@ -20,11 +20,10 @@ import {
 } from '@mui/material';
 import { Helmet } from 'react-helmet-async';
 import { TransitionProps } from '@mui/material/transitions';
-import {useRefMounted} from '@hooks';
+import {useRefMounted} from '@hooks/useRefMounted';
 import CloseIcon from '@mui/icons-material/Close';
 
 import { useTranslation } from 'react-i18next';
-// import Logo from 'src/components/LogoSign';
 import CheckTwoToneIcon from '@mui/icons-material/CheckTwoTone';
 
 const Transition = forwardRef(function Transition(
@@ -119,7 +118,7 @@ const RecoverPass = () => {
   return (
     <>
       <Helmet>
-        <title>Recover Password</title>
+        <title>{t('Recover Password')}</title>
       </Helmet>
       <MainContent>
         <Container maxWidth="sm">
@@ -184,7 +183,7 @@ const RecoverPass = () => {
                     sx={{
                       mt: 3
                     }}
-                    color="primary"
+                    style={{ backgroundColor: '#3E3E3E' }}
                     disabled={Boolean(touched.email && errors.email)}
                     onClick={handleOpenDialog}
                     type="submit"
@@ -207,8 +206,8 @@ const RecoverPass = () => {
             >
               {t('Want to try to sign in again?')}
             </Typography>{' '}
-            <Link component={RouterLink} to="/account/login-basic">
-              <b>Click here</b>
+            <Link component={RouterLink} to="/login">
+              <b>{t('Click here')}</b>
             </Link>
           </Box>
         </Container>

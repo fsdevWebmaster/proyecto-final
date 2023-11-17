@@ -1,12 +1,24 @@
 {
-    "meta": {
-        "title": "Master Project - Fullstack",
-        "description": "Web application - Container Flow Controller "
-    },
     "app": {
         "title": "Welcome"
     },
     "loader": {
         "text": "loading..."
+    },
+    "meta": {
+        "description": "Web application - Container Flow Controller",
+        "title": "Master Project - Fullstack"
+    },
+    "pages": {
+        "dashboard": {
+            "main": "Welcome {{name}}",
+            "title": "Dashboard"
+        },
+        "login": {
+            "btnLogin": "Submit",
+            "btnReset": "Reset",
+            "header": "Sign In",
+            "title": "Log In"
+        }
     }
 }

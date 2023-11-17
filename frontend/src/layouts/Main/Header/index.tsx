@@ -1,4 +1,3 @@
-import { useContext } from 'react';
 
 import {
   Box,
@@ -12,13 +11,14 @@ import {
   useTheme
 } from '@mui/material';
 import MenuTwoToneIcon from '@mui/icons-material/MenuTwoTone';
-// import { SidebarContext } from 'src/contexts/SidebarContext';
 import CloseTwoToneIcon from '@mui/icons-material/CloseTwoTone';
 
 import { HeaderButtons } from './Buttons';
 import { HeaderUserBox } from './Userbox';
 import { HeaderSearch } from './Search';
 import { HeaderMenu } from './Menu';
+import { MxConfigStore } from '@stores';
+import { observer } from 'mobx-react';
 
 const HeaderWrapper = styled(Box)(
   ({ theme }) => `
@@ -39,11 +39,14 @@ const HeaderWrapper = styled(Box)(
 `
 );
 
-export const Header = () => {
-  // const { sidebarToggle, toggleSidebar } = useContext(SidebarContext);
-  // TO-DO
-  const sidebarToggle = true;
+export const Header = observer(() => {
+  const { sidebar } = MxConfigStore
+  const sidebarToggle = false;
   const theme = useTheme();
+
+  const toggleSidebarHandler = () => {
+    MxConfigStore.setSideBar(!sidebar)
+  }
 
   return (
     <HeaderWrapper
@@ -65,17 +68,7 @@ export const Header = () => {
               )}`
       }}
     >
-      <Stack
-        direction="row"
-        divider={<Divider orientation="vertical" flexItem />}
-        alignItems="center"
-        spacing={2}
-      >
-        <HeaderSearch />
-        <HeaderMenu />
-      </Stack>
-      <Box display="flex" alignItems="center">
-        <HeaderButtons />
+      <Box display="flex" alignItems="center" justifyContent="flex-end" width={1}>
         <HeaderUserBox />
         <Box
           component="span"
@@ -85,8 +78,8 @@ export const Header = () => {
           }}
         >
           <Tooltip arrow title="Toggle Menu">
-            <IconButton color="primary" /*onClick={toggleSidebar}*/>
-              {!sidebarToggle ? (
+            <IconButton color="primary" onClick={toggleSidebarHandler}>
+              {!sidebar ? (
                 <MenuTwoToneIcon fontSize="small" />
               ) : (
                 <CloseTwoToneIcon fontSize="small" />
@@ -97,4 +90,4 @@ export const Header = () => {
       </Box>
     </HeaderWrapper>
   );
-}
+})
