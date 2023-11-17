@@ -14,4 +14,5 @@ export type User = {
   email: string;
   idDoc: number | string;
   roles: Role[];
+  password?: string;
 }

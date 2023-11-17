@@ -7,7 +7,7 @@ import {
   CircularProgress,
   Typography
 } from "@mui/material";
-import { useRefMounted } from "@hooks";
+import { useRefMounted } from "@hooks/useRefMounted";
 import { useTranslation } from "react-i18next";
 
 export const journeyStatusForm: FC = () => {

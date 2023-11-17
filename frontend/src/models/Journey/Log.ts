@@ -4,7 +4,7 @@ import { JourneyModel } from "./Journey"
 export type JourneyLog = {
   id: string,
   journey: JourneyModel,
-  step: string,
+  step: StepModel,
   stepValue: string | number | null
   user: string
   description: string

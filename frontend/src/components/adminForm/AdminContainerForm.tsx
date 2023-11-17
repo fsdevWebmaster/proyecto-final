@@ -8,7 +8,7 @@ import {
   InputBase
 } from "@mui/material";
 import SearchIcon from '@mui/icons-material/Search';
-import { useRefMounted } from "@hooks";
+import { useRefMounted } from "@hooks/useRefMounted";
 import { useTranslation } from "react-i18next";
 
 const Search = styled('div')(({ theme }) => ({

@@ -20,7 +20,7 @@ import {
 } from '@mui/material';
 import { Helmet } from 'react-helmet-async';
 import { TransitionProps } from '@mui/material/transitions';
-import {useRefMounted} from '@hooks';
+import {useRefMounted} from '@hooks/useRefMounted';
 import CloseIcon from '@mui/icons-material/Close';
 
 import { useTranslation } from 'react-i18next';
