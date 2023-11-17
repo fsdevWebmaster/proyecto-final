@@ -27,7 +27,7 @@ app.use('/api', containerRouter);
 // error handling
 app.use((err, req, res, next) => {
   let message = "Server error"
-  
+  res.status(500)
   if (
     err.message.includes("validation failed") || 
     err.message.includes("is not valid JSON") ||

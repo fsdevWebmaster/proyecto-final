@@ -84,6 +84,7 @@ const createIniLogs = async (journey, postData) => {
 export const createJourneyLog = async (req, res, next) => {
   const createData = req.body
   const creatingLog = new JourneyLog(createData)
+
   creatingLog.save()
     .then(async (result) => {
       // update journey
@@ -107,27 +108,40 @@ export const createJourneyLog = async (req, res, next) => {
 
 export const updateJourneyLog = (req, res, next) => {
   const { journeyLogId, stepValue } = req.body
-  JourneyLog.findByIdAndUpdate(journeyLogId, { stepValue }, { new: true })
-    .then((result) => {
-      return res.json(result)
-    }).catch((err) => {
-      next(err)
-    });
+  if (!journeyLogId || !stepValue) {
+    return next(new Error("Missing data"))
+  }
+  try {
+    JourneyLog.findByIdAndUpdate(journeyLogId, { stepValue }, { new: true })
+      .then((result) => {
+        return res.json(result)
+      }).catch((err) => {
+        next(err)
+      });    
+  } catch (error) {
+    next(error)
+  }
 }
 
 export const getJourneyLog = (req, res, next) => {
   const { journey, step } = req.body
-
   if(!journey || !step) {
     next(Error('Missing data'))
   }
 
-  JourneyLog.find({journey, step})
-    .then((result) => {
-      return res.json(result[0])
-    }).catch((err) => {
-      next(err)
-    });
+  try {
+    JourneyLog.find({journey, step})
+      .then((result) => {
+        if (result.length === 0) {
+          next(Error('Not found'));
+        }
+        return res.json(result[0])
+      }).catch((err) => {
+        next(err)
+      });
+  } catch (error) {
+    next(error)    
+  }
 }
 
 export const updateJourney = async (req, res, next) => {
@@ -201,15 +215,19 @@ export const journeyToUnload = async (req, res, next) => {
 }
 
 export const getSteps = async (req, res, next) => {
-  const steps = await Step.find();
-  let stepsData = steps.map(async (step) => {
-    let stepRow = {}
-    const journeys = await stepJourneys(step)
-    stepRow = {...stepRow, step: step, journeys: journeys }
-    return stepRow
-  })
-  stepsData = await Promise.all(stepsData);
-  return res.json(stepsData)
+  try {
+    const steps = await Step.find();
+    let stepsData = steps.map(async (step) => {
+      let stepRow = {}
+      const journeys = await stepJourneys(step)
+      stepRow = {...stepRow, step: step, journeys: journeys }
+      return stepRow
+    })
+    stepsData = await Promise.all(stepsData);
+    return res.json(stepsData)    
+  } catch (error) {
+    next(error)
+  }
 }
 
 export const getStations = async (req, res, next) => {

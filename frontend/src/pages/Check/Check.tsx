@@ -85,7 +85,7 @@ export const Check = () => {
   const navigate = useNavigate()
   const { stepsList } = MxStepStore
 
-  const [selectedContainer, setSelectedContainer] = useState<ContainerModel | null>()
+  const [selectedContainer, setSelectedContainer] = useState<ContainerModel | SearchItem | null>()
   const [selectedType, setSelectedType] = useState<string | null>(null)
   const [ctPat, setCtPat] = useState(false)
   const [openDialog, setOpenDialog] = useState(false);
@@ -130,8 +130,8 @@ export const Check = () => {
     }    
   }, [])
   
-  const handleSelected = async (selected:SearchItem) => {
-    setSelectedContainer(selected as ContainerModel)
+  const handleSelected = async (selected:ContainerModel | SearchItem) => {
+    setSelectedContainer(selected)
     setErrorMsg(null)
     try {
       const journeyResp = await journeyApi.getJourneyByContainerNumber(selected.containerNumber)
@@ -299,12 +299,13 @@ export const Check = () => {
           }
         </Box>
       }
-      { !selectedContainer &&
+      { !selectedContainer && actualStep &&
         <SearchContainer>
           <SearchForm
-            sendSelected={(selected) =>handleSelected(selected)}
+            sendSelected={(selected) => handleSelected(selected)}
             searchType="containers"
             formTitle="Seach containers"
+            actualStep={actualStep}
           />
         </SearchContainer>
       }
