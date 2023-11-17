@@ -19,6 +19,7 @@ import { ScaleOutlined } from "@mui/icons-material"
 import { green, grey } from "@mui/material/colors"
 import { CustomDialog } from "@components/Dialog/CustomDialog"
 import { ButtonConfig } from "@common/interfaces"
+import useWS from '@hooks/useWS';
 
 const SearchContainer = styled(Box)(
   () => `
@@ -80,6 +81,7 @@ interface CheckData {
 export const Check = () => {
   const {t} = useTranslation()
   const theme = useTheme()
+  const socket = useWS();
   const navigate = useNavigate()
   const { stepsList } = MxStepStore
 
@@ -233,7 +235,8 @@ export const Check = () => {
           patchData = { ...patchData, value: { stamps } }
         break;      
       }
-      await journeyApi.updateJourney(patchData)
+      const rsData = await journeyApi.updateJourney(patchData);
+      if (rsData.data && socket) socket?.emit('journey:send_journey', { id: journey.id});
       handleDialog();
       resetValues()
     }

@@ -27,6 +27,7 @@ journeyRouter.post('/find-journey-log', userAuthWithCookie, getJourneyLog);
 journeyRouter.post('/finish-journey', userAuthWithCookie, finishJourney);
 journeyRouter.patch('/journey', userAuthWithCookie, updateJourney);
 journeyRouter.patch('/journey-log', userAuthWithCookie, updateJourneyLog);
+journeyRouter.get('/logsByJourney/:journeyId', userAuthWithCookie, getJourneyLogs);
 journeyRouter.get('/step-journeys/:step', userAuthWithCookie, getStepJourneys);
 journeyRouter.get('/steps', userAuthWithCookie, getSteps);
 journeyRouter.get('/journey-status/:containerNumber', userAuthWithCookie, getJourneyByContainerNumber)
