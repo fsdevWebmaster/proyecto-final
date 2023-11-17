@@ -73,7 +73,9 @@ const Yard = () => {
       const routeName = location.pathname
       const route = routeName.split('/')[1]
       const actualStep = stepsList.find(item => item.step.routeName === route)
-      setActualStep(actualStep)
+      if (actualStep) {
+        setActualStep(actualStep as StepJourney)
+      }
     }
   }, [stepsList])
   

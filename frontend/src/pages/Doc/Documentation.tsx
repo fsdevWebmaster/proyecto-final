@@ -46,7 +46,7 @@ const Documentation = () => {
     }
 ];
 
-const mockLogs: JourneyLog[] = [
+const mockLogs: any[] = [
   {
     step: 'Patio',
     value: '',
