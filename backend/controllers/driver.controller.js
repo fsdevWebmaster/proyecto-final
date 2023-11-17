@@ -73,7 +73,7 @@ export const getDriver = (req, res, next) => {
     const { idDoc } = body;
 
     if (!idDoc) {
-      next(new Error("Missing data"));
+      return next(new Error("Missing data"));
     }
 
     Driver.find({ idDoc })
@@ -81,7 +81,7 @@ export const getDriver = (req, res, next) => {
         const driverFound = result[0];
 
         if(!driverFound) {
-          next(new Error("Driver not found"))
+          return next(new Error("Driver not found"))
         }
 
         // generate jwt
