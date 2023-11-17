@@ -6,7 +6,7 @@ import { search } from "../controllers/search.controller.js";
 const router = express.Router();
 
 //routes for user
-router.post('/register', /*userAuthWithCookie,*/ register);
+router.post('/register', userAuthWithCookie, register);
 router.post('/login', login);
 router.post('/logout', userAuthWithCookie, logout);
 router.patch('/profile', userAuthWithCookie, updateProfile);
