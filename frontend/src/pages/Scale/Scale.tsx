@@ -17,6 +17,7 @@ import { ScaleOutlined } from "@mui/icons-material";
 import { observer } from "mobx-react";
 import { CustomDialog } from '@components/Dialog/CustomDialog';
 import { ButtonConfig } from '@common/interfaces';
+import useWS from '@hooks/useWS';
 
 const MainContent = styled(Box)(
   () =>`
@@ -55,6 +56,7 @@ export const Scale = () => {
   const { t } = useTranslation();
   const theme = useTheme()
   const location = useLocation()
+  const socket = useWS();
   const { stepsList } = MxStepStore
 
   const [scaleType, setScaleType] = useState<string | null>()
@@ -71,7 +73,6 @@ export const Scale = () => {
   const [openDialog, setOpenDialog] = useState(false);
 
   const handleSelected = async (selected:SearchItem) => {
-
     // get journey
     try {
       const journeyResp = await journeyApi.getJourneyByContainerNumber(selected.containerNumber)
@@ -134,7 +135,9 @@ export const Scale = () => {
           status: 'IN_PROGRESS',
           userId: MxUserStore.user.id
         }
-        await journeyApi.updateJourney(patchData)
+        const updateData = await journeyApi.updateJourney(patchData)
+        if (updateData.data && socket) socket?.emit('journey:send_journey', { id: updateData.data.journey});
+        
         setSelectedContainer(null)
         setSelectedWeight(null)
         handleDialog();
@@ -254,12 +257,13 @@ export const Scale = () => {
           </InfoContainer>
         }
 
-        { !selectedContainer && 
+        { !selectedContainer && actualStep &&
           <SearchContainer>
             <SearchForm
               sendSelected={(selected) =>handleSelected(selected)}
               searchType="containers"
               formTitle={t("Search containers")}
+              actualStep={actualStep}
             />
           </SearchContainer>
         }

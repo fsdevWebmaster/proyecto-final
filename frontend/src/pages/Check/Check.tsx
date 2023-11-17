@@ -19,6 +19,7 @@ import { ScaleOutlined } from "@mui/icons-material"
 import { green, grey } from "@mui/material/colors"
 import { CustomDialog } from "@components/Dialog/CustomDialog"
 import { ButtonConfig } from "@common/interfaces"
+import useWS from '@hooks/useWS';
 
 const SearchContainer = styled(Box)(
   () => `
@@ -80,10 +81,11 @@ interface CheckData {
 export const Check = () => {
   const {t} = useTranslation()
   const theme = useTheme()
+  const socket = useWS();
   const navigate = useNavigate()
   const { stepsList } = MxStepStore
 
-  const [selectedContainer, setSelectedContainer] = useState<ContainerModel | null>()
+  const [selectedContainer, setSelectedContainer] = useState<ContainerModel | SearchItem | null>()
   const [selectedType, setSelectedType] = useState<string | null>(null)
   const [ctPat, setCtPat] = useState(false)
   const [openDialog, setOpenDialog] = useState(false);
@@ -128,8 +130,8 @@ export const Check = () => {
     }    
   }, [])
   
-  const handleSelected = async (selected:SearchItem) => {
-    setSelectedContainer(selected as ContainerModel)
+  const handleSelected = async (selected:ContainerModel | SearchItem) => {
+    setSelectedContainer(selected)
     setErrorMsg(null)
     try {
       const journeyResp = await journeyApi.getJourneyByContainerNumber(selected.containerNumber)
@@ -233,7 +235,8 @@ export const Check = () => {
           patchData = { ...patchData, value: { stamps } }
         break;      
       }
-      await journeyApi.updateJourney(patchData)
+      const rsData = await journeyApi.updateJourney(patchData);
+      if (rsData.data && socket) socket?.emit('journey:send_journey', { id: journey.id});
       handleDialog();
       resetValues()
     }
@@ -296,12 +299,13 @@ export const Check = () => {
           }
         </Box>
       }
-      { !selectedContainer &&
+      { !selectedContainer && actualStep &&
         <SearchContainer>
           <SearchForm
-            sendSelected={(selected) =>handleSelected(selected)}
+            sendSelected={(selected) => handleSelected(selected)}
             searchType="containers"
             formTitle="Seach containers"
+            actualStep={actualStep}
           />
         </SearchContainer>
       }

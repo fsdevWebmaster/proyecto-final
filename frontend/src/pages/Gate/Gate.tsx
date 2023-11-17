@@ -222,18 +222,20 @@ const Gate = () => {
               }
 
               {/* forms */}
-              { !container && 
+              { !container && actualStep &&
                 <SearchForm 
                   searchType="containers"
                   formTitle="Search containers"
                   sendSelected={(container) => handleContainer(container)} 
+                  actualStep={actualStep}
                 />
               }
-              { !driver && 
+              { !driver && actualStep &&
                 <SearchForm 
                   searchType="drivers"
                   formTitle="Search drivers"
                   sendSelected={(driver) => handleDriver(driver)} 
+                  actualStep={actualStep}
                 />
               }
             </Card>

@@ -14,6 +14,10 @@ router.get('/profile', userAuthWithCookie, getProfile);
 router.get('/users', userAuthWithCookie, getUsers );
 
 //routes for driver
+router.post('/driver', userAuthWithCookie, newDriver);
+router.get('/driver/:id', userAuthWithCookie, getDriver);
+router.get('/search-driver/:idDoc', userAuthWithCookie, searchDriver);
+router.patch('/driver/:id', userAuthWithCookie, updateDriver);
 router.post('/login-driver/', loginDriver);
 router.post('/driver', userAuthWithCookie, newDriver);
 router.get('/driver/:id', userAuthWithCookie, getDriver);
@@ -21,10 +25,10 @@ router.get('/search-driver/:idDoc', userAuthWithCookie, searchDriver);
 router.patch('/driver/:id', userAuthWithCookie, updateDriver);
 
 // routes for search
-router.post('/search', /* userAuthWithCookie, */ search);
+router.post('/search', userAuthWithCookie, search);
 
 // routes for roles
-router.get('/roles', /* userAuthWithCookie, */ getRoles);
+router.get('/roles', userAuthWithCookie, getRoles);
 
 
 

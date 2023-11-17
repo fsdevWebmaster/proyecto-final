@@ -17,11 +17,13 @@ import { LocalShipping, Warehouse } from '@mui/icons-material';
 import { ButtonConfig } from '@common/interfaces';
 import { CustomDialog } from '@components/Dialog/CustomDialog';
 import { useNavigate } from 'react-router';
+import useWS from '@hooks/useWS';
 
 
 const Yard = () => {
   const { t }: { t: any } = useTranslation();
   const theme = useTheme();
+  const socket = useWS();
   const { stepsList } = MxStepStore
   const { user } = MxUserStore
   const [actualStep, setActualStep] = useState<StepJourney | undefined>(undefined)
@@ -55,7 +57,9 @@ const Yard = () => {
       if (actualStep) {
         const journeysLeft = actualStep.journeys.filter(j => j.id !== journey.id)
         setActualStep({ ...actualStep, journeys: journeysLeft })
-        await journeyApi.updateJourney(updData)
+        const updateData = await journeyApi.updateJourney(updData);
+
+        if (updateData.data && socket) socket?.emit('journey:send_journey', { id: updateData.data.journey});
         handleDialog();
       }      
     }
