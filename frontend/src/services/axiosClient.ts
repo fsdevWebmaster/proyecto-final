@@ -8,9 +8,12 @@ const axiosInstance = (instance: AxiosInstance | null = null): AxiosInstance => 
 
   const axiosInterceptors = axios.create({
     baseURL,
-  });*/ 
+  });*/
 
-  const axiosInterceptors = axios.create();
+  const baseURL = 'https://pfm-backend.onrender.com';
+  const axiosInterceptors = axios.create({
+    baseURL,
+  });
 
   const axiosSetup = instance || axiosInterceptors
 
