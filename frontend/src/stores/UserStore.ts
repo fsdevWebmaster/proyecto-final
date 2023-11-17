@@ -32,7 +32,7 @@ class UserStore {
             id: rs.data.id,
             lastName: rs.data.lastName,
             name: rs.data.name,
-            personalId: rs.data.idDoc,
+            idDoc: rs.data.idDoc,
             roles: [],
           }
 

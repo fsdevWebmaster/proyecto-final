@@ -84,9 +84,9 @@ const getUserRoleLabel = (userRoles: Role[]) => {
   const roleLabels: React.ReactNode[] = [];
 
   userRoles.map(uRole => {
-    const uRoles = roles.filter(role => role.id === uRole)
+    const uRoles = roles.filter(role => role.id === uRole.id)
     if (uRoles.length > 0) {
-      uRoles.map(item => {
+      uRoles.map((item:any) => {
         const { text, color }: any = map[item.name]
         roleLabels.push(<Label color={color} key={item.id}>{text}</Label>)
       })

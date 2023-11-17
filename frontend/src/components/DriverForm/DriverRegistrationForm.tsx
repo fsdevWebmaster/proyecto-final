@@ -9,7 +9,7 @@ import {
 } from "@mui/material";
 
 import { useNavigate } from "react-router";
-import { useRefMounted } from "@hooks"
+import { useRefMounted } from "@hooks/useRefMounted"
 import { useTranslation } from "react-i18next";
 
 export const DriverRegistrationForm: FC = () => {

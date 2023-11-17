@@ -190,7 +190,7 @@ const JourneyLog = () => {
                 <Divider sx={{ width: 1, backgroundColor: 'primary', height: '2px'}}/>
               </Grid>
               {logs.map((log: JourneyLog, index: number) => {
-                const currentStep = stepsList.find(step => step.step.id === log.step);
+                const currentStep = stepsList.find(step => step.step.id === log.step.id);
                 return currentStep && (
                   <Grid item container key={`item-${currentStep?.step.routeName}`} alignItems="center">
                     <Grid item xs={4}>

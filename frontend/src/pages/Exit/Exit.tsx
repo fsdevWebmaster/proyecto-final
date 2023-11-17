@@ -57,7 +57,7 @@ export const Exit = () => {
   const socket = useWS();
   const { stepsList } = MxStepStore
   
-  const [selectedContainer, setSelectedContainer] = useState<ContainerModel | null>()
+  const [selectedContainer, setSelectedContainer] = useState<ContainerModel | SearchItem | null>()
   const [actualStep, setActualStep] = useState<StepModel | undefined>(undefined)
   const [actualStepsList, setActualStepsList] = useState<StepModel[]>([])
   const [journey, setJourney] = useState<JourneyModel | null>(null)
@@ -67,7 +67,7 @@ export const Exit = () => {
 
 
   const handleSelected = async (selected:SearchItem) => {
-    setSelectedContainer(selected as ContainerModel)
+    setSelectedContainer(selected)
     try {
       const resp = await journeyApi.getJourneyByContainerNumber(selected.containerNumber)
       setJourney(resp.data)
@@ -192,12 +192,13 @@ export const Exit = () => {
           </InfoContainer>
         }
 
-        { !selectedContainer && 
+        { !selectedContainer && actualStep &&
           <SearchContainer>
             <SearchForm
               sendSelected={(selected) =>handleSelected(selected)}
               searchType="containers"
               formTitle={t("Seach containers")}
+              actualStep={actualStep}
             />
           </SearchContainer>
         }

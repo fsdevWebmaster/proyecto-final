@@ -9,7 +9,7 @@ import {
   TextField
 } from "@mui/material";
 
-import { useRefMounted } from "@hooks";
+import { useRefMounted } from "@hooks/useRefMounted";
 import { useTranslation } from "react-i18next";
 
 export const ProfileForm: FC = () => {

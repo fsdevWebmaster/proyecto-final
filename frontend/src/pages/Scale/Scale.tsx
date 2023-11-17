@@ -61,7 +61,7 @@ export const Scale = () => {
 
   const [scaleType, setScaleType] = useState<string | null>()
   const [scaleTitle, setScaleTitle] = useState<string | null>()
-  const [selectedContainer, setSelectedContainer] = useState<ContainerModel | null>()
+  const [selectedContainer, setSelectedContainer] = useState<ContainerModel | SearchItem |null>()
   const [selectedWeight, setSelectedWeight] = useState<number | null>()
   const [weight, setWeight] = useState(0)
   const [validWeight, setValidWeight] = useState(false)
@@ -80,7 +80,7 @@ export const Scale = () => {
       setJourney(journey)
       if(journey && actualStep) {
         if (actualStep.id === journey.step.id) {
-          setSelectedContainer(selected as ContainerModel)
+          setSelectedContainer(selected)
           const journeyLog = await journeyApi.getJourneyLog(journey, actualStep)
           setJourneyLog(journeyLog.data)
         }

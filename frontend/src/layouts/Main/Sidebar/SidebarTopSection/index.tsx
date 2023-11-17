@@ -9,8 +9,7 @@ import {
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { observer } from 'mobx-react';
-import { MxLoginStore } from '@stores/LoginStore';
-import { MxUserStore } from '@stores/UserStore';
+import { MxUserStore, MxLoginStore } from '@stores';
 
 export const SidebarTopSection = observer(() => {
   const { t }: { t: any } = useTranslation();

@@ -12,7 +12,7 @@ import {
   Box
 } from '@mui/material';
 
-import {useRefMounted} from '@hooks';
+import {useRefMounted} from '@hooks/useRefMounted';
 import { useTranslation } from 'react-i18next';
 import { Role } from '@models/Role/Role';
 import { roleApi } from '@services/api/roleApi';

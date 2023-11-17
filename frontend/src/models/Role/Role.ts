@@ -12,6 +12,7 @@ export type Role = {
   id: string;
   code: number;
   role: UserRole;
+  name?: string;
 }
 
 export const rolePermissions: Record<UserRole, string[]> = {
