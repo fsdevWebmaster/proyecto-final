@@ -56,7 +56,8 @@ export const login = async (req, res, next) => {
 
           res.cookie('jwt', token, {
             httpOnly: true,
-            maxAge: maxAge * 1000
+            maxAge: maxAge * 1000,
+            sameSite: "none"
           });
 
           await userFound.save();
