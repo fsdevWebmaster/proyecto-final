@@ -15,6 +15,10 @@ class ContainerApi {
     createContainer = (createData: ContainerModel) => {
       return axiosClient.post(`${this.controller}/container`, createData)
     }
+
+    async getContainerByNumber(containerNumber: string) {
+      return axiosClient.get(`${this.controller}/container/${containerNumber}`);
+    }
 }
 
 export const containerApi = new ContainerApi();

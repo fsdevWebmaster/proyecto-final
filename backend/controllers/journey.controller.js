@@ -259,7 +259,7 @@ export const getJourneyByDriver = (req, res, next) => {
 
 export const getJourneyLogs = async (req, res, next) => {
   const { journeyId } = req.params
-  if (!journeyId || journeyId === ':journeyId') {
+  if (!journeyId) {
     return next(new Error('Missing data'))
   }
   try {

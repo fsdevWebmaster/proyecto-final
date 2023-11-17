@@ -2,7 +2,7 @@ import {  Box, Grid, Typography, useTheme } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import { PageLayout } from "@layouts/Page/PageLayout";
 import { StepModel } from "@models/Step/Step";
-import { useCallback, useEffect } from "react";
+import { useEffect } from "react";
 import { MxDriverStore, MxStepStore } from "@stores";
 import { JWTHelper } from "@helpers/jwtHelper";
 import { useNavigate } from "react-router-dom";
@@ -36,7 +36,8 @@ const DriverDashboard = () => {
   const { currentJourneyId, driver, journeyLogs } = MxDriverStore;
   const { stepsList } = MxStepStore;
 
-  const currentJourneyLog = journeyLogs?.at(-1);
+  const logsIndex = journeyLogs.length === 2 ? 0 : -1;
+  const currentJourneyLog = journeyLogs?.at(logsIndex);
   const stepsInfo = JourneyHelper.findStepInfoById(currentJourneyLog?.step!, stepsList as []);
   const totalSteps = stepsList.length > 0 ? stepsList.length : 100;
   const currentStepPosition = stepsInfo[0]?.order ? (stepsInfo[0]?.order - 1) : 1;
@@ -45,9 +46,9 @@ const DriverDashboard = () => {
 
   const redirectPage = () => navigate('/login', { replace: true });
 
-  const showJourneyLogs = useCallback(async (journeyId: string | null) => {
+  const showJourneyLogs = async (journeyId: string | null) => {
     await MxDriverStore.setCurrentStationInLogByJourneyId(journeyId);
-  }, []);
+  };
 
   const initPanel = async(driverId?: string) => {
     const journeyId = await MxDriverStore.getJourneyByDriverId(driverId || '');
@@ -90,10 +91,13 @@ const DriverDashboard = () => {
   // WebSocket
   useEffect(() => {
     if (socket) {
-      socket.on('journey:updated_journey', (data) => {
+      socket.on('journey:updated_journey', async (data) => {
         if (data.journeyUpdate) {
-          initPanel(driver?.idDoc);
-          showJourneyLogs(currentJourneyId)
+          const journeyId = await MxDriverStore.getJourneyByDriverId(driver?.idDoc || '');
+          if (journeyId) {
+            MxDriverStore.setCurrentJourneyId(journeyId);
+            showJourneyLogs(journeyId);
+          }
         }
       });
     }
@@ -143,7 +147,7 @@ const DriverDashboard = () => {
           >
             {currentJourneyId ? (
               <Box display="flex" justifyContent="center" alignItems="center" width={1} flexDirection="column">
-                <Typography fontSize="medium" variant="h3">{t('Estación Actual')}</Typography>
+                <Typography fontSize="medium" variant="h3">{t('Estación Actual')}:</Typography>
                 <Box
                   display="flex"
                   flexDirection="row"
@@ -205,7 +209,7 @@ const DriverDashboard = () => {
                         <ColorlibStepIcon icon={step.order} />
                         <Typography fontSize="medium" fontWeight="bold" mt={1} color={index > 0 ? theme.colors.secondary.lighter : theme.colors.success.light}>{`${step.name}`}</Typography>
                       </Step>
-                      <Box className="arrow" display={index === 0 ? 'block' : 'none'}>
+                      <Box className="arrow" display={index === 0 && step.routeName !== 'exit' ? 'block' : 'none'}>
                         <span></span>
                         <span></span>
                         <span></span>
