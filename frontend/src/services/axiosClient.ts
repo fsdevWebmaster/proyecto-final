@@ -15,7 +15,7 @@ const axiosInstance = (instance: AxiosInstance | null = null): AxiosInstance => 
     baseURL
   });
 
-  const axiosSetup = instance || axiosInterceptors
+  const axiosSetup = instance || axiosInterceptors;
 
   const onRequest = (config: InternalAxiosRequestConfig): InternalAxiosRequestConfig => {
     //console.info(`[request] [${JSON.stringify(config)}]`);
