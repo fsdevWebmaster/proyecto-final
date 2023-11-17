@@ -13,10 +13,9 @@ const axiosInstance = (instance: AxiosInstance | null = null): AxiosInstance => 
   const baseURL = 'https://pfm-backend.onrender.com';
   const axiosInterceptors = axios.create({
     baseURL,
-    withCredentials: true
   });
 
-  const axiosSetup = instance || axiosInterceptors;
+  const axiosSetup = instance || axiosInterceptors
 
   const onRequest = (config: InternalAxiosRequestConfig): InternalAxiosRequestConfig => {
     //console.info(`[request] [${JSON.stringify(config)}]`);
