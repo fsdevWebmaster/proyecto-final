@@ -30,6 +30,9 @@ router.post('/search', userAuthWithCookie, search);
 // routes for roles
 router.get('/roles', userAuthWithCookie, getRoles);
 
+// health test
+router.get('/health-test', (req, res) => { return res.json({ ok: true }) })
+
 
 
 export default router;
