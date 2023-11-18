@@ -11,12 +11,14 @@ const mockDrivers:Driver[] = [
   {
     name: 'Fidel',
     idDoc: "91",
-    email: "fidel@mail.com"
+    email: "fidel@mail.com",
+    id: "1"
   },
   {
     name: 'Juan',
     idDoc: "92",
-    email: "juan@mail.com"
+    email: "juan@mail.com",
+    id: "2"
   }
 ]
 
