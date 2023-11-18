@@ -91,6 +91,9 @@ export const logout = (req, res, next) => {
 
 export const getProfile = (req, res, next) => {
   const { userId } = req.query
+
+  console.log(":::USER ID::::", userId)
+
   if (!userId) {
     return res.status(404).json({ error: 'Missing user id.' })
   }

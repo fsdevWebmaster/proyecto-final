@@ -7,9 +7,6 @@ const localMongoURI = process.env.LOCAL_MONGO_URI; // Obtener la URL de conexió
 //Para trabajo en Prod
 const prodMongoURI = process.env.PROD_MONGO_URI; // Obtener la URL de conexión para producción desde las variables de entorno
 
-
-console.log(process.env)
-
 export const connectDB = async () => {
   try {
     let mongoURI = localMongoURI; // Configuración inicial para desarrollo local
@@ -30,6 +27,3 @@ export const connectDB = async () => {
   }
 };
 
-// module.exports = connectDB;
-
-// module.exports = config;
