@@ -11,8 +11,8 @@ router.post('/register', userAuthWithCookie, register);
 router.post('/login', login);
 router.post('/logout', userAuthWithCookie, logout);
 router.patch('/profile', userAuthWithCookie, updateProfile);
-router.get('/profile', /*userAuthWithCookie,*/ getProfile);
-router.get('/profile', testMiddleware, getProfile);
+router.get('/profile', userAuthWithCookie, getProfile);
+// router.get('/profile', testMiddleware, getProfile);
 
 router.get('/users', userAuthWithCookie, getUsers );
 
