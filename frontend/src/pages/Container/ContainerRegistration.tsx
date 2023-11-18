@@ -1,4 +1,4 @@
-import React, { MouseEvent, useCallback } from 'react';
+import React, { MouseEvent, useCallback, useRef } from 'react';
 import {
   Alert,
   Box,
@@ -16,6 +16,7 @@ import { useNavigate } from "react-router";
 import { useState } from "react";
 import { CustomDialog } from "@components/Dialog/CustomDialog";
 import { ButtonConfig } from "@common/interfaces";
+import { DriverRegistrationFormRef } from '@components/DriverRegistrationForm/DriverRegistrationForm';
 
 const MainContent = styled(Box)(
   () => `
@@ -36,25 +37,52 @@ const TopWrapper = styled(Box)(
 )
 
 const ContainerRegistry = () => {
+  const formRef = useRef<DriverRegistrationFormRef>(null);
+
+
+  type ModalState = {
+    open: boolean;
+    type: "error" | "success" | "info" | "warning";
+    message: string;
+  };
+
+  const [modalState, setModalState] = useState<ModalState>({
+    open: false,
+    type: 'success',
+    message: ''
+  });
+  
   const navigate = useNavigate()
   const { t } = useTranslation();
-  const [openDialog, setOpenDialog] = useState(false);
 
   const handleBack = () => {
     navigate('/containers')
   }
 
-  const handleDialog =  useCallback(() => {
-    setOpenDialog(!openDialog);
+  const handleDialog = useCallback((type: "error" | "success" | "info" | "warning", message = '') => {
+    setModalState(prevState => ({
+      ...prevState,
+      open: !prevState.open,
+      type,
+      message
+    }));
   }, []);
+
+  const handleClose = (ev: MouseEvent<HTMLButtonElement>) => {
+    ev.preventDefault();
+    if (formRef.current) {
+      formRef.current.resetForm();
+    }
+    setModalState(prevState => ({
+      ...prevState,
+      open: false
+    }));
+  };
 
   const dialogButtons: ButtonConfig[] = [
     {
-      action: (ev: MouseEvent<HTMLButtonElement>) => {
-        ev.preventDefault();
-        handleDialog();
-      },
-      title: t('Cerrar'),
+      action: handleClose,
+      title: t('Cerrar')
     }
   ];   
 
@@ -96,9 +124,9 @@ const ContainerRegistry = () => {
           </Container>
         </TopWrapper>
         <CustomDialog
-          isOpen={openDialog}
-          type="success"
-          header={t('Se ha creado un nuevo contenedor')}
+          isOpen={modalState.open}
+          type={modalState.type}
+          header={modalState.message}
           configBtn={dialogButtons}
         />        
       </MainContent>
