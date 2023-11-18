@@ -33,6 +33,8 @@ router.post('/search', userAuthWithCookie, search);
 // routes for roles
 router.get('/roles', userAuthWithCookie, getRoles);
 
+// health check
+router.get('/health-check', (req, res) => { return res.json({ ok: true }) })
 
 
 export default router;
