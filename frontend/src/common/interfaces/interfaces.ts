@@ -6,7 +6,10 @@ export interface IPageHeaderProps {
   icon?: React.ReactNode;
   sx?: SxProps;
 }
-
 export interface IContainerFormProps {
-  modalAction: () => void;
+  modalAction: (type: "error" | "success" | "info" | "warning", message?: string) => void;
 }
+
+// export interface IContainerFormProps {
+//   modalAction: () => void;
+// }

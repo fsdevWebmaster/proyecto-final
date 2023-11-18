@@ -1,4 +1,4 @@
-import React, { MouseEvent, useCallback, useState } from 'react';
+import React, { MouseEvent, useCallback, useRef, useState } from 'react';
 import {
   Box,
   Card,
@@ -8,9 +8,10 @@ import {
 } from "@mui/material";
 import { Helmet } from "react-helmet-async";
 import { useTranslation } from "react-i18next";
-import { DriverRegistrationForm } from "@components/DriverRegistrationForm/DriverRegistrationForm";
+import { DriverRegistrationForm, DriverRegistrationFormRef } from "@components/DriverRegistrationForm/DriverRegistrationForm";
 import { ButtonConfig } from '@common/interfaces';
 import { CustomDialog } from '@components/Dialog/CustomDialog';
+
 
 const MainContent = styled(Box)(
   () => `
@@ -32,19 +33,48 @@ const TopWrapper = styled(Box)(
 
 const DriverRegistration = () => {
 
-  const { t } = useTranslation();
-  const [openDialog, setOpenDialog] = useState(false);
 
-  const handleDialog =  useCallback(() => {
-    setOpenDialog(!openDialog);
+  const formRef = useRef<DriverRegistrationFormRef>(null);
+
+  type ModalState = {
+    open: boolean;
+    type: "error" | "success" | "info" | "warning";
+    message: string;
+  };
+
+  const [modalState, setModalState] = useState<ModalState>({
+    open: false,
+    type: 'success',
+    message: ''
+  });
+  
+  const { t } = useTranslation();
+  //const [openDialog, setOpenDialog] = useState(false);
+
+  const handleDialog = useCallback((type: "error" | "success" | "info" | "warning", message = '') => {
+    setModalState(prevState => ({
+      ...prevState,
+      open: !prevState.open,
+      type,
+      message
+    }));
   }, []);
+
+  const handleClose = (ev: MouseEvent<HTMLButtonElement>) => {
+    ev.preventDefault();
+    if (formRef.current) {
+      formRef.current.resetForm();
+    }
+    setModalState(prevState => ({
+      ...prevState,
+      open: false
+    }));
+  };
+
 
   const dialogButtons: ButtonConfig[] = [
     {
-      action: (ev: MouseEvent<HTMLButtonElement>) => {
-        ev.preventDefault();
-        handleDialog();
-      },
+      action: handleClose,
       title: t('Cerrar'),
     }
   ];   
@@ -74,14 +104,14 @@ const DriverRegistration = () => {
                   {t('Driver Registration')}
                 </Typography>
               </Box>
-              <DriverRegistrationForm modalAction={handleDialog} />
+              <DriverRegistrationForm ref={formRef}  modalAction={handleDialog} />
             </Card>
           </Container>
         </TopWrapper>
         <CustomDialog
-          isOpen={openDialog}
-          type="success"
-          header={t('Nuevo chofer ingresado al sistema')}
+          isOpen={modalState.open}
+          type={modalState.type}
+          header={modalState.message}
           configBtn={dialogButtons}
         />
       </MainContent>
