@@ -24,16 +24,14 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        // target: 'http://localhost:8000', developmemt
-        target: 'https://pfm-backend.onrender.com',
+        target: 'http://localhost:8000',
         changeOrigin: true,
       },
-      /*'/socket.io': {
-        // target: 'http://localhost:8000',
-        target: 'ws://localhost:8000',
+      '/socket.io': {
+        target: 'http://localhost:8000',
         changeOrigin: true,
         ws: true,
-      }*/
+      }
     },
   }
 })

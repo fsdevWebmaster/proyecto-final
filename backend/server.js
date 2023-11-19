@@ -14,10 +14,25 @@ import { initSocketEvents } from './socket/socketEvents.js';
 dotenv.config();
 const app = express();
 
+const corsOptions = {
+  origin: [
+    'http://localhost:4173',
+    process.env.ORIGIN,
+  ],
+  credentials: true,
+  methods: ['GET', 'PUT', 'POST', 'DELETE', 'OPTIONS'],
+  allowedHeaders: [
+    'Access-Control-Allow-Origin',
+    'Content-Type',
+    'Authorization'
+  ],
+};
+
 // cors - json
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use(cookieParser());
+
 
 // routes
 app.use('/api', routes);
@@ -58,10 +73,7 @@ connectDB()
 
 const server = http.createServer(app);
 const io = new Server(server, {
-  cors: {
-    // origin: 'http://localhost:5173',
-    methods: ['GET', 'POST']
-  }
+  cors: corsOptions
 });
 
 initSocketEvents(io);
