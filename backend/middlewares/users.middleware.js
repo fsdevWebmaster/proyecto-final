@@ -54,8 +54,9 @@ export const userAuthWithCookie = (req, res, next) => {
     }
 
   } else {
-    return res.status(400).json({
-      error: 'Missing cookie.'
-    })    
+    next()
+    // return res.status(400).json({
+    //   error: 'Missing cookie.'
+    // })    
   }
 }

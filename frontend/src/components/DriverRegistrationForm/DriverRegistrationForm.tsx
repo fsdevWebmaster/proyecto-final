@@ -39,16 +39,16 @@ export const DriverRegistrationForm = forwardRef<DriverRegistrationFormRef, ICon
         if (response.data && response.status === 200) {
           formikBag.setStatus({ success: true });
           formikBag.setSubmitting(false);
-          modalAction('success', 'Conductor registrado con éxito');
+          modalAction('success', 'Driver successfully registered');
         }else{
-          throw new Error(response.data.error || 'Error al registrar el conductor');
+          throw new Error(response.data.error || 'Driver registration error');
         }
       } catch (error: any) {
         console.error(error);
         if (isMountedRef.current) {
           formikBag.setStatus({ success: false, errorMessage: error.message });
           formikBag.setSubmitting(false);
-          modalAction('error', 'Error al registrar el conductor');
+          modalAction('error', 'Driver registration error');
         }
         }
       }

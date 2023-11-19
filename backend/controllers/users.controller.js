@@ -56,6 +56,7 @@ export const login = async (req, res, next) => {
 
           res.cookie('jwt', token, {
             httpOnly: true,
+            secure: true,
             maxAge: maxAge * 1000
           });
 
@@ -91,6 +92,9 @@ export const logout = (req, res, next) => {
 
 export const getProfile = (req, res, next) => {
   const { userId } = req.query
+
+  console.log(":::USER ID::::", userId)
+
   if (!userId) {
     return res.status(404).json({ error: 'Missing user id.' })
   }

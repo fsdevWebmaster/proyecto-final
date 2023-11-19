@@ -3,6 +3,7 @@ import { register, login, getProfile, updateProfile, logout, getRoles, getUsers 
 import { newDriver, getDriver, searchDriver, updateDriver, loginDriver } from "../controllers/driver.controller.js"
 import { userAuthWithCookie } from "../middlewares/users.middleware.js";
 import { search } from "../controllers/search.controller.js";
+import { testMiddleware } from "../middlewares/test.middleware.js";
 const router = express.Router();
 
 //routes for user
@@ -11,6 +12,8 @@ router.post('/login', login);
 router.post('/logout', userAuthWithCookie, logout);
 router.patch('/profile', userAuthWithCookie, updateProfile);
 router.get('/profile', userAuthWithCookie, getProfile);
+// router.get('/profile', testMiddleware, getProfile);
+
 router.get('/users', userAuthWithCookie, getUsers );
 
 //routes for driver
@@ -30,6 +33,8 @@ router.post('/search', userAuthWithCookie, search);
 // routes for roles
 router.get('/roles', userAuthWithCookie, getRoles);
 
+// health check
+router.get('/health-check', (req, res) => { return res.json({ ok: true }) })
 
 
 export default router;

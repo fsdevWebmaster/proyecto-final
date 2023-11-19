@@ -1,7 +1,9 @@
 import * as Yup from 'yup';
-import { ChangeEvent, FC, useEffect, useState, MouseEvent } from "react";
+import { ChangeEvent, FC, useEffect, useState } from "react";
 import { Formik } from "formik";
 import { useNavigate } from "react-router";
+import React, { forwardRef, useImperativeHandle } from 'react';
+
 
 import {
   Alert,
@@ -14,7 +16,12 @@ import { useTranslation } from "react-i18next";
 import { containerApi } from '@services/api/containerApi';
 import { IContainerFormProps } from '@common/interfaces';
 
-export const ContainerRegistryForm: FC<IContainerFormProps> = ({modalAction}: IContainerFormProps) => {
+export type ContainerRegistrationFormRef = {
+  resetForm: () => void;
+};
+
+export const ContainerRegistryForm = forwardRef<ContainerRegistrationFormRef, IContainerFormProps>(
+  ({ modalAction }, ref) => {
   const isMountedRef = useRefMounted();
   const { t }: { t: any } = useTranslation();
   const navigate = useNavigate();
@@ -32,6 +39,7 @@ export const ContainerRegistryForm: FC<IContainerFormProps> = ({modalAction}: IC
         if (isMountedRef.current) {
             setStatus({ success: true })
             setSubmitting(false)
+            modalAction('success', 'Container successfully registered');
         }
       } catch (error: any) {
         if (isMountedRef.current) {
@@ -39,9 +47,10 @@ export const ContainerRegistryForm: FC<IContainerFormProps> = ({modalAction}: IC
             setStatus({ success: false })
             setErrors({ submit: error.message })
             setSubmitting(false)
+            modalAction('error', 'Error registering container');
         }
       }
-      modalAction();
+      
     }
   
 
@@ -91,5 +100,6 @@ export const ContainerRegistryForm: FC<IContainerFormProps> = ({modalAction}: IC
         )}
       </Formik>
     </>
-  )
-}
+  );
+  } 
+)
