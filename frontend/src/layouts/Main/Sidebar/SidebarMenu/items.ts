@@ -36,14 +36,14 @@ const menuItems: MenuItems[] = [
     heading: 'Principal',
     items: [
       {
-        name: 'Usuarios',
-        link: 'users',
+        name: 'Users',
+        link: '/users',
         icon: DesignServicesTwoToneIcon
       },
       {
         name: 'Containers',
         icon: SupportTwoToneIcon,
-        link: 'containers'
+        link: '/containers'
       }
     ]
   }

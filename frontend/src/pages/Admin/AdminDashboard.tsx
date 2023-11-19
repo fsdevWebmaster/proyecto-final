@@ -26,6 +26,7 @@ import { MxJourneyStore } from '../../stores/JourneyStore';
 import { StepModel } from '@models/Step/Step';
 import { ContainerModel } from '@models';
 import { ArrowBack } from '@mui/icons-material';
+import { format } from 'date-fns';
 
 
 
@@ -50,29 +51,30 @@ const AdminDashboard = () => {
   const { step } = useParams();
   const [stepsData, setStepsData] = useState<StepData[]>([]);
   const stepName = MxJourneyStore.stepName;
-
+  
   interface StepData {
-      driver: string,
-      container: string,
-      step: StepModel,
+    driver: string,
+    container: string,
+    step: StepModel,
       createdAt: string,
       updatedAt: string,
       containerNumber: string,
       driverDoc: string,
       id: string
-  }
- 
-
-  useEffect(() => {
-    if (step) {
-      journeyApi.getStepJourneys(step)
+    }
+    
+    
+    useEffect(() => {
+      if (step) {
+        journeyApi.getStepJourneys(step)
         .then((response) => {
           setStepsData(response.data);
         })
         .catch((error) => console.error('Error fetching data:', error));
-    }
-  }, [step]);
-
+      }
+    }, [step]);
+    
+  
   const handleTableActionClick = () => {
     navigate(`/admin-journeys-dashboard/`)
   };
@@ -119,13 +121,17 @@ const AdminDashboard = () => {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  { stepsData.map((journey) => (
-                    <TableRow key={journey.id}>
+                {stepsData.map((journey) => {
+                    
+                    const journeyDate = new Date(journey.createdAt);
+
+                    return (
+                      <TableRow key={journey.id}>
                       <TableCell align='center'>
                         {journey.containerNumber}
                       </TableCell>
                       <TableCell align='center'>
-                        {journey.createdAt}
+                        {format(journeyDate, 'dd MMMM yyyy')}
                       </TableCell>
                       <TableCell align="center">
                           <Typography noWrap>
@@ -143,7 +149,8 @@ const AdminDashboard = () => {
                           </Typography>
                         </TableCell>
                     </TableRow>
-                  ))}
+                    );
+                  })}
                 </TableBody>
               </Table>
             </TableContainer>
@@ -153,7 +160,7 @@ const AdminDashboard = () => {
         <Button
           variant='contained'
           startIcon={<ArrowBack />}
-          sx={{ marginTop: '15px' }}
+          sx={{ marginTop: '15px', marginLeft: '15px' }}
           onClick={handleTableActionClick}
           color='secondary'
         >

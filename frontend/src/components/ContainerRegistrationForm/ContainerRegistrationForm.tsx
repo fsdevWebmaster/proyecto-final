@@ -39,7 +39,7 @@ export const ContainerRegistryForm = forwardRef<ContainerRegistrationFormRef, IC
         if (isMountedRef.current) {
             setStatus({ success: true })
             setSubmitting(false)
-            modalAction('success', 'Contenedor registrado con éxito');
+            modalAction('success', 'Container successfully registered');
         }
       } catch (error: any) {
         if (isMountedRef.current) {
@@ -47,7 +47,7 @@ export const ContainerRegistryForm = forwardRef<ContainerRegistrationFormRef, IC
             setStatus({ success: false })
             setErrors({ submit: error.message })
             setSubmitting(false)
-            modalAction('error', 'Error al registrar el contendor');
+            modalAction('error', 'Error registering container');
         }
       }
       
