@@ -41,11 +41,18 @@ const Containers = () => {
 
   return (
     <>
-    <PageLayout seoTitle='Container List' title='Containers' buttonConfig={{ visible: false }}>
+    <PageLayout seoTitle='Container List' title='Containers' 
+        buttonConfig={{
+          visible: true, 
+          title: t('Create container'), 
+          color: 'primary',
+          action: () => handleCreate()}
+      }
+      >
       <Grid item>
       </Grid>
-      <Grid item lg={8} md={6} xs={12}>
-        <Button
+      <Grid item lg={16} md={6} xs={12}>
+        {/* <Button
           variant='contained'
           color='primary'
           startIcon={<Add />}
@@ -53,7 +60,7 @@ const Containers = () => {
           onClick={handleCreate}
         >
           {t('Create container')}
-        </Button>
+        </Button> */}
         <Card>
           <TableContainer>
             <Table>

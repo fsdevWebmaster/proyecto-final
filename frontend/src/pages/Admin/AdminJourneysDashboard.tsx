@@ -54,7 +54,6 @@ const AdminJourneysDashboard = () => {
     stepApi.getSteps()
       .then((response) => {
         setStepsData(response.data);
-        console.log(response.data);
         
       })
       .catch((error) => console.error('Error fetching data:', error));
@@ -64,7 +63,6 @@ const AdminJourneysDashboard = () => {
     MxJourneyStore.setStepId(stepId); 
     MxJourneyStore.setStepName(stepName); 
     navigate(`/admin-dashboard/${stepId}`)
-    console.log("Stored stepId:", MxJourneyStore.stepId, "Stored stepName:", MxJourneyStore.stepName);
 
   };
   

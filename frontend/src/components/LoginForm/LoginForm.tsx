@@ -1,7 +1,8 @@
-import { type FC } from 'react';
+import { useState, type FC } from 'react';
 import * as Yup from 'yup';
 import { Formik } from 'formik';
 import { useNavigate } from 'react-router-dom';
+import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
 
 import {
   Button,
@@ -19,6 +20,7 @@ export const LoginForm: FC = observer(() => {
   const isMountedRef = useRefMounted();
   const { t }: { t: any } = useTranslation();
   const navigate = useNavigate();
+  const [errorDialog, setErrorDialog] = useState({ open: false, message: '' });
 
   const initValues = {
     email: '',
@@ -46,11 +48,13 @@ export const LoginForm: FC = observer(() => {
         callback!();        
       } else {
         MxLoginStore.resetAuth();
-        MxLoginStore.setSession(null, false);        
+        MxLoginStore.setSession(null, false);
+        setErrorDialog({ open: true, message: 'User not found.' });        
       }
 
     } catch (error) {
       console.error(error);
+      setErrorDialog({ open: true, message: 'An error occurred during login or User not found.' });
     }
   }
 
@@ -76,6 +80,7 @@ export const LoginForm: FC = observer(() => {
   }
 
   return (
+    <>
     <Formik
       name="login-user"
       initialValues={initValues}
@@ -145,5 +150,24 @@ export const LoginForm: FC = observer(() => {
         </form>
       )}
     </Formik>
+    <Dialog
+        open={errorDialog.open}
+        onClose={() => setErrorDialog({ ...errorDialog, open: false })}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">{"Login error"}</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            {errorDialog.message}
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setErrorDialog({ ...errorDialog, open: false })} color="primary">
+            Close
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </>
   );
 });

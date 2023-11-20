@@ -131,7 +131,7 @@ export const Exit = () => {
         ev.preventDefault();
         handleDialog();
       },
-      title: t('Cerrar'),
+      title: t('Close'),
     }
   ];
 

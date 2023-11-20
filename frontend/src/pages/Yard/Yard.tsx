@@ -41,7 +41,7 @@ const Yard = () => {
         ev.preventDefault();
         handleDialog();
       },
-      title: t('Cerrar'),
+      title: t('Close'),
     }
   ];
 
@@ -72,8 +72,8 @@ const Yard = () => {
     if (stepsList.length > 0) {
       const routeName = location.pathname
       const route = routeName.split('/')[1]
-      const actualStep = stepsList.find(item => item.step.routeName === route)
-      if (actualStep) {
+            const actualStep = stepsList.find(item => item.step.routeName === route)
+            if (actualStep) {
         setActualStep(actualStep as StepJourney)
       }
     }
@@ -147,7 +147,7 @@ const Yard = () => {
       <CustomDialog
         isOpen={openDialog}
         type="success"
-        header={t('Contenedor movido a la siguiente estación')}
+        header={t('Container moved to next station')}
         configBtn={dialogButtons}
       />      
     </PageLayout>

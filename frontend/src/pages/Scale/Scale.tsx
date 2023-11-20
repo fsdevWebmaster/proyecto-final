@@ -155,7 +155,7 @@ export const Scale = () => {
         ev.preventDefault();
         handleDialog();
       },
-      title: t('Cerrar'),
+      title: t('Close'),
     }
   ];
 
