@@ -35,7 +35,7 @@ export const LogItem = ({log, status}: ILogItemProps) => {
         }}
         color="text.secondary"
       >
-        {log.step.name}
+        {log.step.toString()}
       </TimelineOppositeContent>
       <TimelineSeparator
         sx={{
