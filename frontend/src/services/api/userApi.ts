@@ -12,7 +12,7 @@ class UserApi {
         return axiosClient.get(`${this.controller}/profile`, {
             params: {
                 userId,
-            }
+            }, withCredentials: true
         })
     }
 

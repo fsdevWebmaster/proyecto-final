@@ -32,7 +32,7 @@ class LoginStore {
         };
     }
 
-    setSession = (token: string | null, status: boolean): void => {
+    setSession = async (token: string | null, status: boolean): Promise<void> => {
         if (token) {
             localStorage.setItem('accTkn', token);
             // axiosClient.defaults.headers.common.Authorization = `Bearer ${token}`; keep it for later

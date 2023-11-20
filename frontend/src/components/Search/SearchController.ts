@@ -21,4 +21,3 @@ const mockDrivers:Driver[] = [
     id: "2"
   }
 ]
-

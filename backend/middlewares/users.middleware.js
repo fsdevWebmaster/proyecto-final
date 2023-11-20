@@ -27,9 +27,8 @@ export const userAuthWithBearer = (req, res, next) => {
 }
 
 export const userAuthWithCookie = (req, res, next) => {
+  console.log(req.cookies);
   if (req.cookies.jwt) {
-
-    console.log(req.cookies)
 
     const token = req.cookies.jwt;
 
@@ -54,9 +53,8 @@ export const userAuthWithCookie = (req, res, next) => {
     }
 
   } else {
-    next()
-    // return res.status(400).json({
-    //   error: 'Missing cookie.'
-    // })    
+    return res.status(400).json({
+      error: 'Missing cookie!',
+    })    
   }
 }

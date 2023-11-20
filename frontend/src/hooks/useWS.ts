@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { io, Socket } from "socket.io-client";
 
 const useWS = (url?: string) => {
-  const DEFAULT_URL = url || '';
+  const DEFAULT_URL = url || import.meta.env.VITE_APP_SOCKET;
   const [socket, setSocket] = useState<Socket>();
 
   const wsConnect = () => {

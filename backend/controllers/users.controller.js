@@ -3,6 +3,9 @@ import jwt from 'jsonwebtoken';
 import User from '../models/user.model.js';
 import Role from '../models/role.model.js';
 import { getToken } from '../utils/app.utils.js';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 export const register = (req, res, next) => {
   let { body } = req;
@@ -54,11 +57,14 @@ export const login = async (req, res, next) => {
 
           userFound.token =  token;
 
-          res.cookie('jwt', token, {
+          const cookieConfig = {
+            secure: process.env.NODE_ENV !== 'development',
             httpOnly: true,
-            secure: true,
-            maxAge: maxAge * 1000
-          });
+            maxAge: maxAge * 1000,
+            sameSite: process.env.NODE_ENV !== 'development' ? 'None' : 'lax',
+          }
+
+          res.cookie('jwt', token, cookieConfig);
 
           await userFound.save();
 
@@ -84,7 +90,10 @@ export const logout = (req, res, next) => {
     if (token === cookieToken) {
       result.token = '';
       result.save();
-      return res.clearCookie('jwt').status(200).json({ logged: false, user: null})
+
+      res.clearCookie('jwt');
+
+      return res.status(200).json({ logged: false, user: null})
     }
 
   }).catch((error) => next(err));

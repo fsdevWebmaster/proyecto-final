@@ -1,18 +1,14 @@
 import axios, { AxiosError, AxiosInstance, AxiosResponse, InternalAxiosRequestConfig } from "axios";
 
 const axiosInstance = (instance: AxiosInstance | null = null): AxiosInstance => {
-  /*
-   review vite proxy configuration
-  const viteEnv = import.meta.env.VITE_APP_APIS;
-  const baseURL = viteEnv;
+  
+  // review vite proxy configuration
+
+  const viteEnv = import.meta.env.VITE_APP_API;
 
   const axiosInterceptors = axios.create({
-    baseURL,
-  });*/
-
-  const baseURL = 'https://pfm-backend.onrender.com';
-  const axiosInterceptors = axios.create({
-    baseURL,
+    baseURL: viteEnv,
+    withCredentials: true,
   });
 
   const axiosSetup = instance || axiosInterceptors
