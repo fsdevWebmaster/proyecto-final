@@ -62,7 +62,6 @@ const AdminJourneysDashboard = () => {
     MxJourneyStore.setStepId(stepId); 
     MxJourneyStore.setStepName(stepName); 
     navigate(`/admin-dashboard/${stepId}`)
-    console.log("Stored stepId:", MxJourneyStore.stepId, "Stored stepName:", MxJourneyStore.stepName);
 
   };
   

@@ -70,7 +70,7 @@ const JourneyLog = () => {
         handleDialog();
         navigate('/')
       },
-      title: t('Cerrar'),
+      title: t('Close'),
     }
   ];
 

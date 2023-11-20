@@ -88,7 +88,7 @@ const Gate = () => {
         ev.preventDefault();
         handleDialog();
       },
-      title: t('Cerrar'),
+      title: t('Close'),
     }
   ];
 
@@ -245,7 +245,7 @@ const Gate = () => {
       <CustomDialog
         isOpen={openDialog}
         type="success"
-        header={t('Ha iniciado el flujo del contenedor')}
+        header={t('Container flow has started')}
         configBtn={dialogButtons}
       />
     </PageLayout>

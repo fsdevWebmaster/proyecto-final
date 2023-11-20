@@ -75,7 +75,7 @@ const DriverRegistration = () => {
   const dialogButtons: ButtonConfig[] = [
     {
       action: handleClose,
-      title: t('Cerrar'),
+      title: t('Close'),
     }
   ];   
 

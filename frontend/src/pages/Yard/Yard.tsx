@@ -41,7 +41,7 @@ const Yard = () => {
         ev.preventDefault();
         handleDialog();
       },
-      title: t('Cerrar'),
+      title: t('Close'),
     }
   ];
 
@@ -153,7 +153,7 @@ const Yard = () => {
       <CustomDialog
         isOpen={openDialog}
         type="success"
-        header={t('Contenedor movido a la siguiente estación')}
+        header={t('Container moved to next station')}
         configBtn={dialogButtons}
       />      
     </PageLayout>

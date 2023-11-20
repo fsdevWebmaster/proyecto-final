@@ -212,7 +212,7 @@ export const Check = () => {
         ev.preventDefault();
         handleDialog();
       },
-      title: t('Cerrar'),
+      title: t('Close'),
     }
   ];  
 
