@@ -71,6 +71,7 @@ export const Scale = () => {
   const [journeyLog, setJourneyLog] = useState<JourneyLog | undefined>()
   const [stepMessage, setStepMessage] = useState<string | null>(null)
   const [openDialog, setOpenDialog] = useState(false);
+  const [actualPath, setActualPath] = useState("")
 
   const handleSelected = async (selected:SearchItem) => {
     // get journey
@@ -169,13 +170,13 @@ export const Scale = () => {
         return item.step
       }
     })
-    console.log('actualStep: ',actualStep)
+
+    
     if(sList && actualStep){
       setActualStepsList(stpList)
       setActualStep(actualStep.step)
     }
     const scaleType = actualStep?.step.routeName
-    console.log('scaleType: ',scaleType)
     if (scaleType) {
       switch (scaleType) {
         case "scale-one":

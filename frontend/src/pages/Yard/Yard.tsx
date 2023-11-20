@@ -68,15 +68,21 @@ const Yard = () => {
     }
   }
 
+
   useEffect(() => {
-    if (stepsList.length > 0) {
-      const routeName = location.pathname
-      const route = routeName.split('/')[1]
-            const actualStep = stepsList.find(item => item.step.routeName === route)
-            if (actualStep) {
-        setActualStep(actualStep as StepJourney)
+    const handleStepsList = async () => {
+      if (stepsList.length > 0) {
+        const routeName = location.pathname
+        const route = routeName.split('/')[1]
+        const actualStep = stepsList.find(item => item.step.routeName === route)
+        if (actualStep) {
+          setActualStep(actualStep as StepJourney)
+        }
       }
     }
+
+    handleStepsList()
+
   }, [stepsList])
   
   const navigate = useNavigate();
