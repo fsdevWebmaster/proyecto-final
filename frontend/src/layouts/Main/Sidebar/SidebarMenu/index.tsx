@@ -1,8 +1,11 @@
 import { ListSubheader, alpha, Box, List, styled } from '@mui/material';
-import { useLocation, matchPath } from 'react-router-dom';
+import { useLocation, matchPath, useNavigate } from 'react-router-dom';
 import {SidebarMenuItem} from './item';
 import menuItems, { MenuItem } from './items';
 import { useTranslation } from 'react-i18next';
+import { MxConfigStore } from '@stores';
+import { observer } from 'mobx-react';
+import { PagesStatus } from 'src/types/common';
 
 const MenuWrapper = styled(Box)(
   ({ theme }) => `
@@ -146,6 +149,15 @@ const SubMenuWrapper = styled(Box)(
 `
 );
 
+const SidebarItem = styled(Box)(
+  () => `
+    cursor: pointer;
+    &:hover {
+      color: rgba(255, 255, 255, 0.2);
+    }
+  `
+)
+
 const reduceChildRoutes = ({
   ev,
   path,
@@ -236,24 +248,33 @@ const renderSidebarMenuItems = ({
   </SubMenuWrapper>
 );
 
-export const SidebarMenu = () => {
+
+export const SidebarMenu = observer (() => {
+  
   const location = useLocation();
+  const navigate = useNavigate();
   const { t }: { t: any } = useTranslation();
+
+  const handleSelected = (section:PagesStatus) => {
+    navigate(section.path)
+  }
 
   return (
     <>
-      {menuItems.map((section) => (
-        <MenuWrapper key={section.heading}>
+      {MxConfigStore.pagesStatus.map((section) => (
+        <MenuWrapper key={section.name}>
           <List
             component="div"
             subheader={
               <ListSubheader component="div" disableSticky>
-                {t(section.heading)}
+                <SidebarItem onClick={() => handleSelected(section)}>
+                  {t(section.name)}
+                </SidebarItem>
               </ListSubheader>
             }
           >
             {renderSidebarMenuItems({
-              items: section.items,
+              items: [],
               path: location.pathname
             })}
           </List>
@@ -261,4 +282,4 @@ export const SidebarMenu = () => {
       ))}
     </>
   );
-}
+})
