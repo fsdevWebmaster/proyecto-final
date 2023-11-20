@@ -16,7 +16,7 @@ export const getDriver = (req, res, next) => {
     if (!id) {
       return next(new Error('Missing data'))
     }
-    Driver.findByI(id)
+    Driver.findById(id)
       .then((result) => {
         return res.json(result)
       }).catch((err) => {

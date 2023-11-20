@@ -1,7 +1,7 @@
 import { StepModel } from "@models/Step/Step";
 
 export class JourneyHelper {
-  static findStepInfoById(stepId: string, steps: StepModel[]): StepModel[] {
+  static findStepInfoById(stepId: string | StepModel, steps: StepModel[]): StepModel[] {
     const foundSteps: StepModel[] = [];
 
     if (steps.length === 0) return [];

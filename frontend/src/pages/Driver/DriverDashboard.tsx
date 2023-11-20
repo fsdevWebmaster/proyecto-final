@@ -38,7 +38,7 @@ const DriverDashboard = () => {
 
   const logsIndex = journeyLogs.length === 2 ? 0 : -1;
   const currentJourneyLog = journeyLogs?.at(logsIndex);
-  const stepsInfo = JourneyHelper.findStepInfoById(currentJourneyLog?.step.id!, stepsList as []);
+  const stepsInfo = JourneyHelper.findStepInfoById(currentJourneyLog?.step!, stepsList as []);
   const totalSteps = stepsList.length > 0 ? stepsList.length : 100;
   const currentStepPosition = stepsInfo[0]?.order ? (stepsInfo[0]?.order - 1) : 1;
 

@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState, MouseEvent } from 'react';
+import React, { useCallback, useEffect, useState, MouseEvent, useMemo } from 'react';
 import { observer } from 'mobx-react';
 import { PageLayout } from '@layouts/Page/PageLayout';
 import { Box, Card, Divider, Grid, IconButton, Stack, Step, StepLabel, Stepper, Tooltip, Typography } from '@mui/material';
@@ -45,6 +45,7 @@ const JourneyLog = () => {
   const matchStepIndex = steps.findIndex(step => step.id === journey?.step.id);
   const stepIndex = matchStepIndex < 0 ? 0 : matchStepIndex;
   const currentStep = steps[matchStepIndex];
+
   const progress = {
     level: 'In Progress',
     type: 'success' as Status,
@@ -52,14 +53,13 @@ const JourneyLog = () => {
 
   const calculatePercentage = useCallback(() => {
     const totalSteps = stepsList.length > 0 ? stepsList.length : 0;
-    const logsIndex = logs.length === 2 ? 0 : -1;
-  
+ 
     let total = 0;
     if (totalSteps) {
       total = stepIndex * 100 / totalSteps;
     }
 
-    setPercentage(Math.round(total));
+    return Math.round(total);
   }, [stepsList]);
 
 
@@ -121,9 +121,10 @@ const JourneyLog = () => {
     }
   }, [socket]);
 
-  useEffect(() => {    
-    calculatePercentage();
-  }, [calculatePercentage]);  
+  useEffect(() => {
+    const total = calculatePercentage();
+    setPercentage(total);
+  }, [calculatePercentage]);
 
   return (
     <PageLayout seoTitle='Journey Log' title={`Container: # ${containerNumber}`} buttonConfig={{visible: false}}
@@ -146,26 +147,26 @@ const JourneyLog = () => {
         </Grid>
         <Grid item xs={12} display="flex">
           <Card sx={{ padding: 3, width: 1}}>
-            <Typography variant='h3' gutterBottom>{t('Informacion de Recorrido')}</Typography>
+            <Typography variant='h3' gutterBottom>{t('Container status')}</Typography>
             {currentStep && <ProgressBar type={progress.type} percentage={percentage} status={progress.level} currentLocation={currentStep.name || ''}/>}
             <Grid item container direction="row" mt={6}>
 
               <Grid item xs={4}>
-                <Typography variant='h6' fontWeight="bold" gutterBottom>{t('Fecha de ingreso')}:</Typography>
+                <Typography variant='h6' fontWeight="bold" gutterBottom>{t('Date Created')}:</Typography>
               </Grid>
               <Grid item xs={6}>
                 <Typography variant='h6'>{format(date, 'dd MMMM yyyy')}</Typography>
               </Grid>
 
               <Grid item xs={4}>
-                <Typography variant='h6' fontWeight="bold" gutterBottom>{t('Hora')}:</Typography>
+                <Typography variant='h6' fontWeight="bold" gutterBottom>{t('Time')}:</Typography>
               </Grid>
               <Grid item xs={6}>
                 <Typography variant='h6'>{format(date, 'HH:mm a')}</Typography>
               </Grid>
 
               <Grid item xs={4}>
-                <Typography variant='h6' fontWeight="bold" gutterBottom>{t('Contenedor')}:</Typography>
+                <Typography variant='h6' fontWeight="bold" gutterBottom>{t('Container')}:</Typography>
               </Grid>
               <Grid item xs={6}>
               <Box display="flex" justifyContent="flex-start">
@@ -175,7 +176,7 @@ const JourneyLog = () => {
               </Grid>
 
               <Grid item xs={4}>
-                <Typography variant='h6' fontWeight="bold" gutterBottom>{t('Chofer')}:</Typography>
+                <Typography variant='h6' fontWeight="bold" gutterBottom>{t('Driver')}:</Typography>
               </Grid>
               <Grid item xs={6}>
                 <Box display="flex" justifyContent="flex-start">
@@ -190,7 +191,7 @@ const JourneyLog = () => {
                 <Divider sx={{ width: 1, backgroundColor: 'primary', height: '2px'}}/>
               </Grid>
               {logs.map((log: JourneyLog, index: number) => {
-                const currentStep = stepsList.find(step => step.step.id === log.step.id);
+                const currentStep = stepsList.find(step => step.step.id === log.step);
                 return currentStep && (
                   <Grid item container key={`item-${currentStep?.step.routeName}`} alignItems="center">
                     <Grid item xs={4}>
@@ -216,7 +217,7 @@ const JourneyLog = () => {
       <CustomDialog
         isOpen={openDialog}
         type="warning"
-        header={t('El contenedor no ha sido encontrado.')}
+        header={t('Container was not found!.')}
         configBtn={dialogButtons}
       />      
     </PageLayout>

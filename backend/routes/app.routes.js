@@ -12,7 +12,6 @@ router.post('/login', login);
 router.post('/logout', userAuthWithCookie, logout);
 router.patch('/profile', userAuthWithCookie, updateProfile);
 router.get('/profile', userAuthWithCookie, getProfile);
-// router.get('/profile', testMiddleware, getProfile);
 
 router.get('/users', userAuthWithCookie, getUsers );
 
@@ -20,10 +19,8 @@ router.get('/users', userAuthWithCookie, getUsers );
 router.post('/driver', userAuthWithCookie, newDriver);
 router.get('/driver/:id', userAuthWithCookie, getDriver);
 router.get('/search-driver/:idDoc', userAuthWithCookie, searchDriver);
-router.patch('/driver/:id', userAuthWithCookie, updateDriver);
 router.post('/login-driver/', loginDriver);
 router.post('/driver', userAuthWithCookie, newDriver);
-router.get('/driver/:id', userAuthWithCookie, getDriver);
 router.get('/search-driver/:idDoc', userAuthWithCookie, searchDriver);
 router.patch('/driver/:id', userAuthWithCookie, updateDriver);
 
