@@ -20,11 +20,11 @@ export const InfoStep = ({ step, data }: IInfoStepProsp): React.ReactNode => {
         return <Typography variant='h6' ml={1}>{t('En espera!')}</Typography>;
     case 'scale-one':
     case 'scale-two':
-        return <Typography variant='h6' ml={1}>{`${data} Kg`}</Typography>;
+        return <Typography variant='h6' ml={1}>{`${data !== null ? data : 0} Kg`}</Typography>;
     case 'check-one':
     case 'check-two':
-      const { stamps, ctPat } = data;
-      if (stamps || ctPat) {
+      if (data) {
+        const { stamps, ctPat } = data;
         return (
           <Box display="flex" flexDirection="row">
             <DoneOutlineIcon color='success' />
@@ -38,6 +38,6 @@ export const InfoStep = ({ step, data }: IInfoStepProsp): React.ReactNode => {
         </Box>               
       }
     default:
-      return <Typography variant='h6' ml={1}>{data}</Typography>;
+      return <Typography variant='h6' ml={1}>{data || ' - '}</Typography>;
   }
 }

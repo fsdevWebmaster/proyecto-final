@@ -27,7 +27,6 @@ export const userAuthWithBearer = (req, res, next) => {
 }
 
 export const userAuthWithCookie = (req, res, next) => {
-  console.log(req.cookies);
   if (req.cookies.jwt) {
 
     const token = req.cookies.jwt;

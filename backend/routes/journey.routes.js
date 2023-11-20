@@ -47,6 +47,5 @@ journeyRouter.get('/step-journeys/:step',userAuthWithCookie, getStepJourneys);
 journeyRouter.get('/steps',userAuthWithCookie, getSteps);
 journeyRouter.get('/journey/:containerNumber',userAuthWithCookie, getJourneyByContainerNumber)
 journeyRouter.get('/journey-logs/:journeyId', getJourneyLogs);
-journeyRouter.get('/journey-by-driver-doc-id/:driverDocId', getJourneyByDriverDocId);
 
 export default journeyRouter;
